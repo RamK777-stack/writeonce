@@ -1,18 +1,18 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
-import Logo from '../../assets/images/logo.svg'
+import { Fragment } from "react";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
+import Logo from "../../assets/images/logo.svg";
 
 const navigation = [
-  { name: 'Home', href: '#', current: true },
-  { name: 'Post', href: '#', current: false },
-  { name: 'Hashtag', href: '#', current: false },
-]
+  { name: "Home", href: "#", current: true },
+  { name: "Post", href: "#", current: false },
+  { name: "Hashtag", href: "#", current: false },
+];
 
 const classNames = (...classes) => {
-  return classes.filter(Boolean).join(' ')
-}
+  return classes.filter(Boolean).join(" ");
+};
 
 const Header = () => {
   return (
@@ -41,7 +41,6 @@ const Header = () => {
                     alt="Workflow"
                   />
                 </div>
-
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {/* <div className="hidden sm:block sm:ml-6">
@@ -99,8 +98,8 @@ const Header = () => {
                               <a
                                 href="#"
                                 className={classNames(
-                                  active ? 'bg-gray-100' : '',
-                                  'block px-4 py-2 text-sm text-gray-700'
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
                                 )}
                               >
                                 Your Profile
@@ -112,8 +111,8 @@ const Header = () => {
                               <a
                                 href="#"
                                 className={classNames(
-                                  active ? 'bg-gray-100' : '',
-                                  'block px-4 py-2 text-sm text-gray-700'
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
                                 )}
                               >
                                 Settings
@@ -125,8 +124,8 @@ const Header = () => {
                               <a
                                 href="#"
                                 className={classNames(
-                                  active ? 'bg-gray-100' : '',
-                                  'block px-4 py-2 text-sm text-gray-700'
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
                                 )}
                               >
                                 Sign out
@@ -149,10 +148,12 @@ const Header = () => {
                   key={item.name}
                   href={item.href}
                   className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block px-3 py-2 rounded-md text-base font-medium'
+                    item.current
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                    "block px-3 py-2 rounded-md text-base font-medium"
                   )}
-                  aria-current={item.current ? 'page' : undefined}
+                  aria-current={item.current ? "page" : undefined}
                 >
                   {item.name}
                 </a>
@@ -162,6 +163,6 @@ const Header = () => {
         </>
       )}
     </Disclosure>
-  )
-}
-export default Header
+  );
+};
+export default Header;
