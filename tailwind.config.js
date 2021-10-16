@@ -1,31 +1,34 @@
-
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    fontSmoothing: ['hover', 'focus'],
+    fontSmoothing: ["hover", "focus"],
     fontWeight: {
-      'extra-light': 100,
+      "extra-light": 100,
       light: 300,
       normal: 400,
       medium: 500,
       bold: 700,
-      'extra-bold': 800,
+      "extra-bold": 800,
       black: 900,
     },
     letterSpacing: {
-      tightest: '-.075em',
-      tighter: '-.05em',
-      normal: '0',
-      wider: '.05em',
-      widest: '.25em',
-    }
+      tightest: "-.075em",
+      tighter: "-.05em",
+      normal: "0",
+      wider: ".05em",
+      widest: ".25em",
+    },
+    extend: {
+      fontFamily: {
+        sans: ["Roboto", "Helvetica", "Arial", "sans-serif"],
+      },
+    },
+    fontFamily: {
+      sans: ["Roboto", "Helvetica", "Arial", "sans-serif"],
+      serif: ["Merriweather", "serif"],
+    },
   },
-  fontFamily: {
-    sans: ['Graphik', 'sans-serif'],
-    serif: ['Merriweather', 'serif'],
-  },
-  plugins: [
-    require('@tailwindcss/forms')
-  ]
-}
+
+  plugins: [require("@tailwindcss/forms")],
+};

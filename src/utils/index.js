@@ -3,6 +3,7 @@ export const uid = () => {
 };
 
 export const setCaretToEnd = (element) => {
+  console.log(element)
   const range = document.createRange();
   const selection = window.getSelection();
   range.selectNodeContents(element);

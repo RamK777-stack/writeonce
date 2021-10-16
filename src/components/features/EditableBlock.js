@@ -45,7 +45,6 @@ class EditableBlock extends React.Component {
 
   closeSelectMenuHandler = () => {
     this.setState({
-      htmlBackup: null,
       selectMenuIsOpen: false,
       selectMenuPosition: { x: null, y: null },
     });
@@ -54,12 +53,28 @@ class EditableBlock extends React.Component {
 
   tagSelectionHandler = (tag) => {
     this.setState({ tag: tag, html: this.state.htmlBackup }, () => {
-      setCaretToEnd(this.contentEditable.current);
+      //   setCaretToEnd(this.contentEditable.current);
+      //   this.contentEditable.current.focus();
       this.closeSelectMenuHandler();
     });
   };
 
   onKeyDownHandler = (e) => {
+    console.log(e.key);
+    if (e.key === "ArrowUp") {
+      this.props.moveToBlock({
+        id: this.props.id,
+        ref: this.contentEditable.current,
+        direction: "up",
+      });
+    }
+    if (e.key === "ArrowDown") {
+      this.props.moveToBlock({
+        id: this.props.id,
+        ref: this.contentEditable.current,
+        direction: "down",
+      });
+    }
     if (e.key === "/") {
       this.setState({ htmlBackup: this.state.html });
     }
@@ -82,10 +97,11 @@ class EditableBlock extends React.Component {
     this.setState({ previousKey: e.key });
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    const htmlChanged = prevState.html !== this.state.html;
-    const tagChanged = prevState.tag !== this.state.tag;
-    if (htmlChanged || tagChanged) {
+  componentDidUpdate() {
+    const htmlChanged = this.props.html !== this.state.html;
+    const tagChanged = this.props.tag !== this.state.tag;
+    const imageChanged = this.props.imageUrl !== this.state.imageUrl;
+    if (htmlChanged || tagChanged || imageChanged) {
       this.props.updatePage({
         id: this.props.id,
         html: this.state.html,
@@ -98,6 +114,16 @@ class EditableBlock extends React.Component {
     this.setState({ html: e.target.value });
   }
 
+  getClassName = () => {
+    const size = {
+      h1: "text-4xl",
+      h2: "text-3xl",
+      h3: "text-2xl",
+      p: "text-xl",
+    };
+    return size[this.state.tag]
+  };
+
   render() {
     return (
       <>
@@ -109,7 +135,7 @@ class EditableBlock extends React.Component {
           />
         )}
         <ContentEditable
-          className="Block"
+          className={`Block ${this.getClassName()}`}
           innerRef={this.contentEditable}
           html={this.state.html}
           tagName={this.state.tag}

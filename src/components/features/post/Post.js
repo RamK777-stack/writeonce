@@ -8,13 +8,10 @@ const initialBlock = { id: uid(), html: "Test", tag: "p" };
 class Post extends React.Component {
   constructor(props) {
     super(props);
-    this.updatePageHandler = this.updatePageHandler.bind(this);
-    this.addBlockHandler = this.addBlockHandler.bind(this);
-    this.deleteBlockHandler = this.deleteBlockHandler.bind(this);
     this.state = { blocks: [initialBlock] };
   }
 
-  updatePageHandler(updatedBlock) {
+  updatePageHandler = (updatedBlock) => {
     const blocks = this.state.blocks;
     const index = blocks.map((b) => b.id).indexOf(updatedBlock.id);
     const updatedBlocks = [...blocks];
@@ -26,19 +23,29 @@ class Post extends React.Component {
     this.setState({ blocks: updatedBlocks });
   }
 
-  addBlockHandler(currentBlock) {
+  moveToBlock = (currentBlock) => {
+    const index = this.state.blocks.map((b) => b.id).indexOf(currentBlock.id);
+    if(currentBlock.direction === 'up' && currentBlock.ref.previousElementSibling){
+       currentBlock.ref.previousElementSibling.focus()
+    }else if(currentBlock.direction === 'down' && currentBlock.ref.nextElementSibling){
+        currentBlock.ref.nextElementSibling.focus()
+    }
+  }
+
+  addBlockHandler = (currentBlock) => {
     const newBlock = { id: uid(), html: "", tag: "p" };
     const blocks = this.state.blocks;
     const index = blocks.map((b) => b.id).indexOf(currentBlock.id);
     const updatedBlocks = [...blocks];
+    console.log(updatedBlocks)
     updatedBlocks.splice(index + 1, 0, newBlock);
     this.setState({ blocks: updatedBlocks }, () => {
-      console.log(currentBlock.ref.nextElementSibling.focus);
+      console.log(currentBlock);
       currentBlock.ref.nextElementSibling.focus();
     });
   }
 
-  deleteBlockHandler(currentBlock) {
+  deleteBlockHandler = (currentBlock) => {
     const previousBlock = currentBlock.ref.previousElementSibling;
     if (previousBlock) {
       const blocks = this.state.blocks;
@@ -54,7 +61,7 @@ class Post extends React.Component {
 
   render() {
     return (
-      <div className="Page flex justify-center">
+      <div className="Page flex justify-center mt-20">
         <div>
           {this.state.blocks.map((block, key) => {
             return (
@@ -66,6 +73,7 @@ class Post extends React.Component {
                 updatePage={this.updatePageHandler}
                 addBlock={this.addBlockHandler}
                 deleteBlock={this.deleteBlockHandler}
+                moveToBlock={this.moveToBlock}
               />
             );
           })}

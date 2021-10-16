@@ -81,8 +81,8 @@ const SelectMenu = (props) => {
     }
   }, [command]);
 
-  const x = props.position.x;
-  const y = props.position.y - MENU_HEIGHT;
+  const x = props.position.x + 25;
+  const y = props.position.y + 25;
   const positionAttributes = { top: y, left: x };
   return (
     <div className="SelectMenuWrapper" style={positionAttributes}>
