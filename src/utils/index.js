@@ -2,6 +2,18 @@ export const uid = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
 
+export const objectId = () => {
+  const timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
+  return (
+    timestamp +
+    "xxxxxxxxxxxxxxxx"
+      .replace(/[x]/g, function () {
+        return ((Math.random() * 16) | 0).toString(16);
+      })
+      .toLowerCase()
+  );
+};
+
 export const setCaretToEnd = (element) => {
   const range = document.createRange();
   const selection = window.getSelection();

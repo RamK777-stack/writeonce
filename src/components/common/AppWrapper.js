@@ -8,7 +8,7 @@ export const AppWrapper = (Content) => {
   class Hoc extends Component {
     render() {
       return (
-        <div className="flex relative min-h-screen font-sans text-gray-500 subpixel-antialiased">
+        <div className="flex relative min-h-screen font-sans text-gray-600 subpixel-antialiased">
           <Sidebar {...this.props} />
           <div className="flex-1">
             <Header {...this.props} />

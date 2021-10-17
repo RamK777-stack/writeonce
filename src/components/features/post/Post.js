@@ -1,94 +1,152 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AppWrapper } from "../../common/AppWrapper";
-import { uid, setCaretToEnd } from "../../../utils/index";
+import { uid, objectId, setCaretToEnd } from "../../../utils/index";
 import EditableBlock from "../EditableBlock";
 import Publish from "./Publish";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { usePrevious } from "../../hooks/usePrevious";
 
-const initialBlock = { id: uid(), html: "Untitled", tag: "h1" };
+const initialBlock = [{ _id: uid(), html: "", tag: "h1" }];
 
-class Post extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { blocks: [initialBlock] };
-  }
+const Post = ({ id, fetchedBlocks, err }) => {
+  const [blocks, setBlocks] = useState(initialBlock);
+  const [currentBlockId, setCurrentBlockId] = useState(null);
 
-  updatePageHandler = (updatedBlock) => {
-    const blocks = this.state.blocks;
-    const index = blocks.map((b) => b.id).indexOf(updatedBlock.id);
+  const prevBlocks = usePrevious(blocks);
+
+  // Handling the cursor and focus on adding and deleting blocks
+  useEffect(() => {
+    console.log(prevBlocks, blocks);
+    // If a new block was added, move the caret to it
+    if (prevBlocks && prevBlocks.length + 1 === blocks.length) {
+      const nextBlockPosition =
+        blocks.map((b) => b._id).indexOf(currentBlockId) + 1 + 1;
+      const nextBlock = document.querySelector(
+        `[data-position="${nextBlockPosition}"]`
+      );
+      console.log(currentBlockId, nextBlockPosition, nextBlock, "111");
+      if (nextBlock) {
+        nextBlock.focus();
+      }
+    }
+    // If a block was deleted, move the caret to the end of the last block
+    if (prevBlocks && prevBlocks.length - 1 === blocks.length) {
+      const lastBlockPosition = prevBlocks
+        .map((b) => b._id)
+        .indexOf(currentBlockId);
+      const lastBlock = document.querySelector(
+        `[data-position="${lastBlockPosition}"]`
+      );
+      if (lastBlock) {
+        setCaretToEnd(lastBlock);
+      }
+    }
+  }, [blocks, prevBlocks, currentBlockId]);
+
+  const updateBlockHandler = (currentBlock) => {
+    const index = blocks.map((b) => b._id).indexOf(currentBlock.id);
+    const oldBlock = blocks[index];
     const updatedBlocks = [...blocks];
     updatedBlocks[index] = {
       ...updatedBlocks[index],
-      tag: updatedBlock.tag,
-      html: updatedBlock.html,
+      tag: currentBlock.tag,
+      html: currentBlock.html,
+      imageUrl: currentBlock.imageUrl,
     };
-    this.setState({ blocks: updatedBlocks });
+    setBlocks(updatedBlocks);
   };
 
-  moveToBlock = (currentBlock) => {
-    const index = this.state.blocks.map((b) => b.id).indexOf(currentBlock.id);
-    if (
-      currentBlock.direction === "up" &&
-      currentBlock.ref.previousElementSibling
-    ) {
-      currentBlock.ref.previousElementSibling.focus();
-    } else if (
-      currentBlock.direction === "down" &&
-      currentBlock.ref.nextElementSibling
-    ) {
-      currentBlock.ref.nextElementSibling.focus();
-    }
-  };
-
-  addBlockHandler = (currentBlock) => {
-    const newBlock = { id: uid(), html: "", tag: "p" };
-    const blocks = this.state.blocks;
-    const index = blocks.map((b) => b.id).indexOf(currentBlock.id);
+  const addBlockHandler = (currentBlock) => {
+    setCurrentBlockId(currentBlock.id);
+    const index = blocks.map((b) => b._id).indexOf(currentBlock.id);
     const updatedBlocks = [...blocks];
+    const newBlock = { _id: objectId(), tag: "p", html: "", imageUrl: "" };
     updatedBlocks.splice(index + 1, 0, newBlock);
-    this.setState({ blocks: updatedBlocks }, () => {
-      currentBlock.ref.nextElementSibling.focus();
-    });
+    updatedBlocks[index] = {
+      ...updatedBlocks[index],
+      tag: currentBlock.tag,
+      html: currentBlock.html,
+      imageUrl: currentBlock.imageUrl,
+    };
+    console.log(updatedBlocks);
+    setBlocks(updatedBlocks);
   };
 
-  deleteBlockHandler = (currentBlock) => {
-    const previousBlock = currentBlock.ref.previousElementSibling;
-    if (previousBlock) {
-      const blocks = this.state.blocks;
-      const index = blocks.map((b) => b.id).indexOf(currentBlock.id);
+  const deleteBlockHandler = (currentBlock) => {
+    if (blocks.length > 1) {
+      setCurrentBlockId(currentBlock.id);
+      const index = blocks.map((b) => b._id).indexOf(currentBlock.id);
+      const deletedBlock = blocks[index];
       const updatedBlocks = [...blocks];
       updatedBlocks.splice(index, 1);
-      this.setState({ blocks: updatedBlocks }, () => {
-        setCaretToEnd(previousBlock);
-        previousBlock.focus();
-      });
+      setBlocks(updatedBlocks);
     }
   };
 
-  render() {
-    return (
-      <div className="Page flex justify-center mt-20 flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">
-        <div className="w-full lg:w-3/4 ml-24">
-          {this.state.blocks.map((block, key) => {
-            return (
-              <EditableBlock
-                key={key}
-                id={block.id}
-                tag={block.tag}
-                html={block.html}
-                updatePage={this.updatePageHandler}
-                addBlock={this.addBlockHandler}
-                deleteBlock={this.deleteBlockHandler}
-                moveToBlock={this.moveToBlock}
-              />
-            );
-          })}
-        </div>
-        <div className="w-full lg:w-1/4 text-left pl-5">
-          <Publish />
-        </div>
-      </div>
+  const onDragEndHandler = (result) => {
+    const { destination, source } = result;
+
+    // If we don't have a destination (due to dropping outside the droppable)
+    // or the destination hasn't changed, we change nothing
+    if (!destination || destination.index === source.index) {
+      return;
+    }
+
+    const updatedBlocks = [...blocks];
+    const removedBlocks = updatedBlocks.splice(source.index - 1, 1);
+    updatedBlocks.splice(destination.index - 1, 0, removedBlocks[0]);
+    setBlocks(updatedBlocks);
+  };
+
+  const moveToBlock = (currentBlock) => {
+    console.log(currentBlock, blocks);
+    const nextBlockPosition =
+      blocks.map((b) => b._id).indexOf(currentBlock.id);
+    const nextBlock = document.querySelector(
+      `[data-position="${nextBlockPosition + (currentBlock.direction === "up" ? 0 : 2)}"]`
     );
-  }
-}
+    if (nextBlock) {
+      nextBlock.focus();
+    }
+  };
+
+  return (
+    <div className="Page flex justify-center mt-20 flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">
+      <div className="w-full lg:w-3/4 ml-24">
+        <DragDropContext onDragEnd={onDragEndHandler}>
+          <Droppable droppableId={uid()}>
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {blocks.map((block) => {
+                  const position =
+                    blocks.map((b) => b._id).indexOf(block._id) + 1;
+                  return (
+                    <EditableBlock
+                      key={block._id}
+                      position={position}
+                      id={block._id}
+                      tag={block.tag}
+                      html={block.html}
+                      imageUrl={block.imageUrl}
+                      pageId={id}
+                      addBlock={addBlockHandler}
+                      deleteBlock={deleteBlockHandler}
+                      updateBlock={updateBlockHandler}
+                      moveToBlock={moveToBlock}
+                    />
+                  );
+                })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
+      <div className="w-full lg:w-1/4 text-left pl-5">
+        <Publish />
+      </div>
+    </div>
+  );
+};
 
 export default AppWrapper(Post);

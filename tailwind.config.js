@@ -29,6 +29,11 @@ module.exports = {
       serif: ["Merriweather", "serif"],
     },
   },
+  variants: {
+    extend: {
+      visibility: ["group-hover"],
+    },
+  },
 
   plugins: [require("@tailwindcss/forms")],
 };
