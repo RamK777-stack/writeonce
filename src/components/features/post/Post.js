@@ -5,8 +5,10 @@ import EditableBlock from "../EditableBlock";
 import Publish from "./Publish";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { usePrevious } from "../../hooks/usePrevious";
+import { PhotographIcon } from "@heroicons/react/outline";
 
-const initialBlock = [{ _id: uid(), html: "", tag: "h1" }];
+
+const initialBlock = [{ _id: uid(), html: "", tag: "h1" }, { _id: uid(), html: "", tag: "p" }];
 
 const Post = ({ id, fetchedBlocks, err }) => {
   const [blocks, setBlocks] = useState(initialBlock);
@@ -105,6 +107,8 @@ const Post = ({ id, fetchedBlocks, err }) => {
     const nextBlock = document.querySelector(
       `[data-position="${nextBlockPosition + (currentBlock.direction === "up" ? 0 : 2)}"]`
     );
+    console.log(nextBlockPosition,';;', currentBlock.direction)
+    console.log(`[data-position="${nextBlockPosition + (currentBlock.direction === "up" ? 0 : 2)}"]`)
     if (nextBlock) {
       nextBlock.focus();
     }
@@ -113,6 +117,9 @@ const Post = ({ id, fetchedBlocks, err }) => {
   return (
     <div className="Page flex justify-center mt-20 flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">
       <div className="w-full lg:w-3/4 ml-24">
+        <div className="ml-12 flex mb-5">
+          <PhotographIcon className="h-5 w-5 mr-2"/> Add cover image
+        </div>
         <DragDropContext onDragEnd={onDragEndHandler}>
           <Droppable droppableId={uid()}>
             {(provided) => (

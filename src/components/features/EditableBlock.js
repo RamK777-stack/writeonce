@@ -58,10 +58,10 @@ class EditableBlock extends React.Component {
   addPlaceholder = ({ block, position, content }) => {
     const isFirstBlockWithoutHtml = position === 1 && !content;
     const isFirstBlockWithoutSibling = !block.parentElement.nextElementSibling;
-    if (isFirstBlockWithoutHtml && isFirstBlockWithoutSibling) {
+    if (isFirstBlockWithoutHtml) {
       this.setState({
         ...this.state,
-        html: "Type a page title...",
+        html: "Type / for commands",
         tag: "h1",
         placeholder: true,
         isTyping: false,
