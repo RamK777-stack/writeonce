@@ -121,7 +121,7 @@ class EditableBlock extends React.Component {
       h3: "text-2xl",
       p: "text-xl",
     };
-    return size[this.state.tag]
+    return size[this.state.tag];
   };
 
   render() {

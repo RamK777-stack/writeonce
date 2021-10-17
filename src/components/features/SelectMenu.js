@@ -91,7 +91,9 @@ const SelectMenu = (props) => {
           const isSelected = items.indexOf(item) === selectedItem;
           return (
             <div
-              className={`${isSelected && "Selected"} border-b-2 p-2 border-light-blue-500 transition duration-200 hover:bg-blue-100`}
+              className={`${
+                isSelected && "Selected"
+              } border-b-2 p-2 border-light-blue-500 transition duration-200 hover:bg-blue-100`}
               key={key}
               role="button"
               tabIndex="0"
