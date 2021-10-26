@@ -1,7 +1,10 @@
 import React from "react";
 import { XIcon } from "@heroicons/react/outline";
+import { savePost } from "./postSlice";
+import { useDispatch } from "react-redux";
 
 export default function Publish() {
+  const dispatch = useDispatch();
   return (
     <div>
       <p>Publish to</p>
@@ -89,7 +92,7 @@ export default function Publish() {
               </div>
             </div>
           </div>
-          <div class="my-3 flex flex-row space-x-1 flex-wrap space-y-1">
+          <div class="my-3 flex flex-row space-x-1 flex-wrap">
             <button class="inline-flex flex-none p-2 items-center px-2 text-xs border-2 border-blue-300 hover:bg-blue-300 hover:text-white w-auto text-gray-600 font-bold rounded-full">
               <span>Nodejs</span>
               <XIcon
@@ -120,6 +123,17 @@ export default function Publish() {
             </button>
           </div>
         </fieldset>
+        <button
+          class="bg-blue-500 text-white font-bold py-2 px-6 rounded"
+          onClick={() => {
+            dispatch(savePost());
+          }}
+        >
+          Publish
+        </button>
+        <button class="bg-gray-500 text-white font-bold py-2 px-6 rounded ml-2">
+          Save as Draft
+        </button>
       </div>
     </div>
   );
