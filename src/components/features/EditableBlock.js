@@ -61,7 +61,7 @@ class EditableBlock extends React.Component {
     if (isFirstBlockWithoutHtml) {
       this.setState({
         ...this.state,
-        html: "Type / for commands",
+        html: "Post title here",
         tag: "h1",
         placeholder: true,
         isTyping: false,

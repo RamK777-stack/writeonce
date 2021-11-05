@@ -10,13 +10,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { getPosts } from "./postSlice";
 
 const initialBlock = [
-  { _id: uid(), html: "", tag: "h1" },
   { _id: uid(), html: "", tag: "p" },
+  {
+    _id: uid(),
+    html: 'Html tag <b> bold text </b> <span class="text-purple-600">colored text</span>',
+    tag: "p",
+  },
 ];
 
 const Post = ({ id, fetchedBlocks, err }) => {
   const [blocks, setBlocks] = useState(initialBlock);
   const [currentBlockId, setCurrentBlockId] = useState(null);
+  const [coverImage, setCoverImage] = useState(null);
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post.posts);
 
@@ -36,7 +41,6 @@ const Post = ({ id, fetchedBlocks, err }) => {
       const nextBlock = document.querySelector(
         `[data-position="${nextBlockPosition}"]`
       );
-      console.log(currentBlockId, nextBlockPosition, nextBlock, "111");
       if (nextBlock) {
         nextBlock.focus();
       }
@@ -80,7 +84,6 @@ const Post = ({ id, fetchedBlocks, err }) => {
       html: currentBlock.html,
       imageUrl: currentBlock.imageUrl,
     };
-    console.log(updatedBlocks);
     setBlocks(updatedBlocks);
   };
 
@@ -118,24 +121,44 @@ const Post = ({ id, fetchedBlocks, err }) => {
         nextBlockPosition + (currentBlock.direction === "up" ? 0 : 2)
       }"]`
     );
-    console.log(nextBlockPosition, ";;", currentBlock.direction);
-    console.log(
-      `[data-position="${
-        nextBlockPosition + (currentBlock.direction === "up" ? 0 : 2)
-      }"]`
-    );
     if (nextBlock) {
       nextBlock.focus();
     }
   };
-  
+
+  const chooseCoverImage = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      const url = reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setCoverImage(reader.result);
+      };
+    }
+  };
 
   return (
-    <div className="Page flex justify-center mt-20 flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">
-      <div className="w-full lg:w-3/4 ml-24">
-        <div className="ml-12 flex mb-5">
-          <PhotographIcon className="h-5 w-5 mr-2" /> Add cover image
-        </div>
+    <div className="Page flex justify-center mt-18 flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">
+      <div className="w-full lg:w-3/4 ml-20">
+        <label for="cover">
+          <div className="ml-12 flex mb-5">
+            {!coverImage && (
+              <>
+                <PhotographIcon className="h-5 w-5 mr-2" /> Add cover image
+              </>
+            )}
+            {coverImage && (
+              <img src={coverImage} className="h-60 w-full" />
+            )}
+            <input
+              type="file"
+              id="cover"
+              accept="image/*"
+              className="hidden"
+              onChange={chooseCoverImage}
+            />
+          </div>
+        </label>
         <DragDropContext onDragEnd={onDragEndHandler}>
           <Droppable droppableId={uid()}>
             {(provided) => (

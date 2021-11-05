@@ -3,6 +3,8 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import Logo from "../../assets/images/feather.svg";
+import ThemeToggle from "./ThemeToggle";
+import { MoonIcon, SunIcon } from "@heroicons/react/outline";
 
 const navigation = [
   { name: "Home", href: "#", current: true },
@@ -16,7 +18,7 @@ const classNames = (...classes) => {
 
 const Header = () => {
   return (
-    <Disclosure as="nav" className="bg-gray-100">
+    <Disclosure as="nav" className="dark:bg-gray-800 bg-gray-100 mb-10">
       {({ open }) => (
         <>
           <div className="mx-auto px-3 sm:px-6">
@@ -34,6 +36,7 @@ const Header = () => {
                 </Disclosure.Button>
               </div>
               <div className="flex-1 flex justify-end sm:items-stretch sm:justify-end absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                <ThemeToggle />
                 <button className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
