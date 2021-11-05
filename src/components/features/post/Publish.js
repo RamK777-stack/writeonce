@@ -93,38 +93,38 @@ export default function Publish() {
             </div>
           </div>
           <div class="my-3 flex flex-row gap-2 flex-wrap">
-            <button class="inline-flex flex-none p-2 items-center px-2 text-xs dark:bg-blue-800 dark:text-white bg-blue-200 w-auto text-blue-600 font-bold rounded-full">
-              <span>Nodejs</span>
+            <button class="inline-flex flex-none p-2 items-center px-2 text-xs dark:bg-blue-900 dark:text-white bg-blue-200 w-auto text-blue-600 font-bold rounded-full">
+              <span className="ml-2">Nodejs</span>
               <XIcon
-                className="h-4 w-4 z-40 dark:text-blue-200 text-blue-500 ml-2"
+                className="h-4 w-4 z-40 dark:text-blue-300 text-blue-500 ml-2"
                 aria-hidden="true"
               />
             </button>
-            <button class="inline-flex flex-none p-2 items-center px-2 text-xs dark:bg-blue-800 dark:text-white bg-blue-200 w-auto text-blue-600 font-bold rounded-full">
-              <span>Reactjs</span>
+            <button class="inline-flex flex-none p-2 items-center px-2 text-xs dark:bg-blue-900 dark:text-white bg-blue-200 w-auto text-blue-600 font-bold rounded-full">
+              <span className="ml-2">Reactjs</span>
               <XIcon
-                className="h-4 w-4 z-40 dark:text-blue-200 text-blue-500 ml-2"
+                className="h-4 w-4 z-40 dark:text-blue-300 text-blue-500 ml-2"
                 aria-hidden="true"
               />
             </button>
-            <button class="inline-flex flex-none p-2 items-center px-2 text-xs dark:bg-blue-800 dark:text-white bg-blue-200 w-auto text-blue-600 font-bold rounded-full">
-              <span>Nextjs</span>
+            <button class="inline-flex flex-none p-2 items-center px-2 text-xs dark:bg-blue-900 dark:text-white bg-blue-200 w-auto text-blue-600 font-bold rounded-full">
+              <span className="ml-2">Nextjs</span>
               <XIcon
-                className="h-4 w-4 z-40 dark:text-blue-200 text-blue-500 ml-2"
+                className="h-4 w-4 z-40 dark:text-blue-300 text-blue-500 ml-2"
                 aria-hidden="true"
               />
             </button>
-            <button class="inline-flex flex-none p-2 items-center px-2 text-xs dark:bg-blue-800 dark:text-white bg-blue-200 w-auto text-blue-600 font-bold rounded-full">
-              <span>Electron</span>
+            <button class="inline-flex flex-none p-2 items-center px-2 text-xs dark:bg-blue-900 dark:text-white bg-blue-200 w-auto text-blue-600 font-bold rounded-full">
+              <span className="ml-2">Electron</span>
               <XIcon
-                className="h-4 w-4 z-40 dark:text-blue-200 text-blue-500 ml-2"
+                className="h-4 w-4 z-40 dark:text-blue-300 text-blue-500 ml-2"
                 aria-hidden="true"
               />
             </button>
           </div>
         </fieldset>
         <button
-          class="mt-5 dark:bg-blue-800 bg-blue-500 text-white font-bold py-2 px-6 rounded"
+          class="mt-5 dark:bg-blue-900 bg-blue-500 text-white font-bold py-2 px-6 rounded"
           onClick={() => {
             dispatch(savePost());
           }}
