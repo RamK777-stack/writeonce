@@ -1,9 +1,8 @@
 import React from "react";
 import { XIcon } from "@heroicons/react/outline";
-import { savePost } from "./postSlice";
 import { useDispatch } from "react-redux";
 
-export default function Publish() {
+export default function Publish({ savePost }) {
   const dispatch = useDispatch();
   return (
     <div className="dark:text-white">
@@ -21,7 +20,10 @@ export default function Publish() {
                 />
               </div>
               <div className="ml-3 text-sm">
-                <label htmlFor="comments" className="font-medium text-gray-700 dark:text-white">
+                <label
+                  htmlFor="comments"
+                  className="font-medium text-gray-700 dark:text-white"
+                >
                   Medium
                 </label>
               </div>
@@ -54,7 +56,10 @@ export default function Publish() {
                 />
               </div>
               <div className="ml-3 text-sm">
-                <label htmlFor="offers" className="font-medium text-gray-700 dark:text-white">
+                <label
+                  htmlFor="offers"
+                  className="font-medium text-gray-700 dark:text-white"
+                >
                   hashnode
                 </label>
               </div>
@@ -69,7 +74,10 @@ export default function Publish() {
                 />
               </div>
               <div className="ml-3 text-sm">
-                <label htmlFor="ownblog" className="font-medium text-gray-700 dark:text-white">
+                <label
+                  htmlFor="ownblog"
+                  className="font-medium text-gray-700 dark:text-white"
+                >
                   My Blog
                 </label>
               </div>
@@ -82,9 +90,9 @@ export default function Publish() {
           </legend>
           <div className="mt-1 space-y-4">
             <div class="pt-2 relative mx-auto text-gray-600">
-              <div className="absolut">
+              <div className="">
                 <input
-                  class="border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-900 bg-white h-10 px-5 rounded-lg text-sm focus:outline-none"
+                  class="dark:text-gray-100 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-900 bg-white h-10 px-5 rounded-lg text-sm focus:outline-none"
                   type="search"
                   name="search"
                   placeholder="Search"
@@ -124,14 +132,15 @@ export default function Publish() {
           </div>
         </fieldset>
         <button
-          class="mt-5 dark:bg-blue-900 bg-blue-500 text-white font-bold py-2 px-6 rounded"
-          onClick={() => {
-            dispatch(savePost());
-          }}
+          class="mt-5 dark:bg-blue-900  bg-blue-500 text-white font-bold py-2 px-6 rounded"
+          onClick={() => savePost(false)}
         >
           Publish
         </button>
-        <button class="mt-5 dark:bg-gray-700 bg-gray-500 text-white font-bold py-2 px-6 rounded ml-2">
+        <button
+          class="mt-5 dark:bg-gray-700 bg-gray-500 text-white font-bold py-2 px-6 rounded ml-2"
+          onClick={() => savePost(true)}
+        >
           Save as Draft
         </button>
       </div>

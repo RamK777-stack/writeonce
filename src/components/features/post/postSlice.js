@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchPosts, savePostAPI } from "./postAPI";
+import { fetchPosts, savePostAPI, saveDraftAPI, fetchDrafts } from "./postAPI";
 
 const initialState = {
   posts: [],
@@ -21,10 +21,31 @@ export const getPosts = createAsyncThunk(
   }
 );
 
-export const savePost = createAsyncThunk(
-  "post/savePost",
+export const getDrafts = createAsyncThunk(
+  "post/getDrafts",
   async (dispatch, getState) => {
-    const response = await savePostAPI();
+    const response = await fetchDrafts();
+    // The value we return becomes the `fulfilled` action payload
+    return response;
+  }
+);
+
+export const savePost = createAsyncThunk("post/savePost", async (params) => {
+  console.log(params);
+  const response = await savePostAPI();
+  return response;
+});
+
+export const saveAsDraft = createAsyncThunk(
+  "post/saveDrafts",
+  async (content) => {
+    console.log(content);
+    const params = {
+      title: content[0].description,
+      draft_blocks: content.slice(1),
+    };
+    console.log(params, ";11111111");
+    const response = await saveDraftAPI(params);
     return response;
   }
 );
@@ -60,6 +81,16 @@ export const postSlice = createSlice({
       state.isLoading = false;
     },
     [getPosts.rejected]: (state, action) => {
+      state.isLoading = false;
+    },
+    [getDrafts.pending]: (state, action) => {
+      state.isLoading = true;
+    },
+    [getDrafts.fulfilled]: (state, action) => {
+      state.drafts = action.payload;
+      state.isLoading = false;
+    },
+    [getDrafts.rejected]: (state, action) => {
       state.isLoading = false;
     },
     [savePost.pending]: (state, action) => {

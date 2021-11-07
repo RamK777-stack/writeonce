@@ -3,13 +3,23 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import "./assets/css/style.css";
 import Post from "./components/features/post/Post";
+import PostFeed from "./components/features/post/PostFeed";
 import reportWebVitals from "./components/reportWebVitals";
 import { store } from "./store";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { URL_PATH } from "./utils/urlPath";
+import Draft from "./components/features/post/Draft";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Post />
+      <BrowserRouter>
+        <Routes>
+          <Route path={URL_PATH.HOME} element={<PostFeed />} />
+          <Route path={URL_PATH.POST} element={<Post />} />
+          <Route path={URL_PATH.DRAFT} element={<Draft />} />
+        </Routes>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")

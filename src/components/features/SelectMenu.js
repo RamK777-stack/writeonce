@@ -24,6 +24,16 @@ const SelectMenu = (props) => {
       tag: "p",
       label: "Paragraph",
     },
+    {
+      id: "blockquote",
+      tag: "blockquote",
+      label: "Blockquote",
+    },
+    {
+      id: "code",
+      tag: "code",
+      label: "code",
+    },
   ];
   const [command, setCommand] = useState("");
   const [items, setItems] = useState(allowedTags);
@@ -71,33 +81,35 @@ const SelectMenu = (props) => {
   const mounted = useRef();
 
   useEffect(() => {
-    if (!mounted.current) {
-      document.addEventListener("keydown", keyDownHandler);
-    } else {
-      if (prevState.command !== command) {
-        const items = matchSorter(allowedTags, command, { keys: ["tag"] });
-        setItems(items);
-      }
+    if (props.selectMenuIsOpen && prevState.command !== command) {
+      const items = matchSorter(allowedTags, command, { keys: ["tag"] });
+      setItems(items);
     }
-  }, [command]);
+  }, [props.selectMenuIsOpen, command]);
 
   const x = props.position.x + 25;
   const y = props.position.y + 25;
   const positionAttributes = { top: y, left: x };
+
+  const handleClickOption = (item, key) => {
+    setSelectedItem(key);
+    props.onSelect(item.tag);
+  };
+
   return (
-    <div className="SelectMenuWrapper" style={positionAttributes}>
-      <div className="SelectMenu">
+    <div className={`SelectMenuWrapper`} style={positionAttributes}>
+      <div className={`SelectMenu dark:bg-gray-700 ${!props.selectMenuIsOpen && "hidden"}`}>
         {items.map((item, key) => {
           const isSelected = items.indexOf(item) === selectedItem;
           return (
             <div
               className={`${
                 isSelected && "Selected"
-              } border-b-2 p-2 border-light-blue-500 transition duration-200 hover:bg-blue-100`}
+              } border-b-1 p-2 border-light-blue-500 dark:border-gray-100 transition duration-200 hover:bg-blue-100 dark:hover:bg-gray-500`}
               key={key}
               role="button"
               tabIndex="0"
-              onClick={() => props.onSelect(item.tag)}
+              onClick={() => handleClickOption(item, key)}
             >
               {item.label}
             </div>

@@ -5,6 +5,8 @@ import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import Logo from "../../assets/images/feather.svg";
 import ThemeToggle from "./ThemeToggle";
 import { MoonIcon, SunIcon } from "@heroicons/react/outline";
+import { Link } from 'react-router-dom';
+import { URL_PATH } from "../../utils/urlPath";
 
 const navigation = [
   { name: "Home", href: "#", current: true },
@@ -35,9 +37,10 @@ const Header = () => {
                   )}
                 </Disclosure.Button>
               </div>
-              <div className="flex-1 flex justify-end sm:items-stretch sm:justify-end absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <div className="flex flex-1 items-start justify-end sm:items-stretch sm:justify-end absolute inset-y-0 right-0 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                <Link to={URL_PATH.POST} className="py-2 px-6 bg-gray-600 text-white font-bold rounded mr-5">Write an article</Link>
                 <ThemeToggle />
-                <button className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                <button className="h-8 mr-2 bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>

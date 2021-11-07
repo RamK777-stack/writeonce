@@ -15,7 +15,9 @@ import Logo from "../../assets/images/feather.svg";
 import Home from "../../assets/images/Home.svg";
 import Post from "../../assets/images/Post.svg";
 import Tag from "../../assets/images/Tag.svg";
-import ReactTooltip from 'react-tooltip';
+import ReactTooltip from "react-tooltip";
+import { Link } from "react-router-dom";
+import { URL_PATH } from "../../utils/urlPath";
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
@@ -35,32 +37,34 @@ const Sidebar = () => {
         href="#"
         className="flex items-center spacing-x-2 py-2.5 px-4 mt-5 transition duration-200 ease-in-out"
       >
-        <img src={Logo} classNam=""></img>
+        <Link to={URL_PATH.HOME}>
+          <img src={Logo}></img>
+        </Link>
       </a>
       <nav className="mt-4">
-        <a
-          href="#"
+        <Link
+          to={URL_PATH.HOME}
           data-tip="Home"
           className="px-4 py-3 block rounded transition duration-200 hover:bg-blue-700"
         >
           <HomeIcon className="h-7 w-7" />
-        </a>
-        <a
-          href="#"
+        </Link>
+        <Link
+          to={URL_PATH.DRAFT}
           data-tip="Drafts"
           className="px-4 py-3 block rounded transition duration-200 hover:bg-blue-700"
         >
           <DocumentTextIcon className="h-7 w-7" />
-        </a>
-        <a
-          href="#"
+        </Link>
+        <Link
+          to={URL_PATH.BOOKMARKS}
           data-tip="Bookmarks"
           className="px-4 py-3 block rounded transition duration-200 hover:bg-blue-700"
         >
           <BookmarkIcon className="h-7 w-7" />
-        </a>
+        </Link>
       </nav>
-      <ReactTooltip place="right" effect="float"/>
+      <ReactTooltip place="right" effect="float" />
     </div>
   );
 };

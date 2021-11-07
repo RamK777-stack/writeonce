@@ -7,13 +7,14 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { usePrevious } from "../../hooks/usePrevious";
 import { PhotographIcon } from "@heroicons/react/outline";
 import { useSelector, useDispatch } from "react-redux";
-import { getPosts } from "./postSlice";
+import { getPosts, savePost, saveAsDraft } from "./postSlice";
+import { NodeHtmlMarkdown, NodeHtmlMarkdownOptions } from "node-html-markdown";
 
 const initialBlock = [
-  { _id: uid(), html: "", tag: "p" },
+  { _id: uid(), description: "Title here", tag: "h1" },
   {
     _id: uid(),
-    html: 'Html tag <b> bold text </b> <span class="text-purple-600">colored text</span>',
+    description: "Enter your content",
     tag: "p",
   },
 ];
@@ -22,6 +23,7 @@ const Post = ({ id, fetchedBlocks, err }) => {
   const [blocks, setBlocks] = useState(initialBlock);
   const [currentBlockId, setCurrentBlockId] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
+  const [mark, setMark] = useState("");
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post.posts);
 
@@ -33,11 +35,11 @@ const Post = ({ id, fetchedBlocks, err }) => {
 
   // Handling the cursor and focus on adding and deleting blocks
   useEffect(() => {
-    console.log(prevBlocks, blocks);
     // If a new block was added, move the caret to it
     if (prevBlocks && prevBlocks.length + 1 === blocks.length) {
-      const nextBlockPosition =
-        blocks.map((b) => b._id).indexOf(currentBlockId) + 1 + 1;
+      let nextBlockPosition =
+        blocks.map((b) => b._id).indexOf(currentBlockId) + 1;
+      nextBlockPosition = blocks[nextBlockPosition]._id;
       const nextBlock = document.querySelector(
         `[data-position="${nextBlockPosition}"]`
       );
@@ -47,9 +49,10 @@ const Post = ({ id, fetchedBlocks, err }) => {
     }
     // If a block was deleted, move the caret to the end of the last block
     if (prevBlocks && prevBlocks.length - 1 === blocks.length) {
-      const lastBlockPosition = prevBlocks
-        .map((b) => b._id)
-        .indexOf(currentBlockId);
+      let lastBlockPosition =
+        prevBlocks.map((b) => b._id).indexOf(currentBlockId) - 1;
+      lastBlockPosition =
+        lastBlockPosition >= 0 && prevBlocks[lastBlockPosition]._id;
       const lastBlock = document.querySelector(
         `[data-position="${lastBlockPosition}"]`
       );
@@ -66,9 +69,18 @@ const Post = ({ id, fetchedBlocks, err }) => {
     updatedBlocks[index] = {
       ...updatedBlocks[index],
       tag: currentBlock.tag,
-      html: currentBlock.html,
+      description: currentBlock.description,
       imageUrl: currentBlock.imageUrl,
     };
+    if (index === blocks.length - 1 && (currentBlock.tag === 'code' || currentBlock.tag === 'blockquote')) {
+      const newBlock = {
+        _id: objectId(),
+        tag: "p",
+        description: "",
+        imageUrl: "",
+      };
+      updatedBlocks.splice(index + 1, 0, newBlock);
+    }
     setBlocks(updatedBlocks);
   };
 
@@ -76,12 +88,20 @@ const Post = ({ id, fetchedBlocks, err }) => {
     setCurrentBlockId(currentBlock.id);
     const index = blocks.map((b) => b._id).indexOf(currentBlock.id);
     const updatedBlocks = [...blocks];
-    const newBlock = { _id: objectId(), tag: "p", html: "", imageUrl: "" };
-    updatedBlocks.splice(index + 1, 0, newBlock);
+    const newBlock = [
+      {
+        _id: objectId(),
+        tag: "p",
+        description: "",
+        imageUrl: "",
+      },
+    ];
+
+    updatedBlocks.splice(index + 1, 0, ...newBlock);
     updatedBlocks[index] = {
       ...updatedBlocks[index],
       tag: currentBlock.tag,
-      html: currentBlock.html,
+      description: currentBlock.description,
       imageUrl: currentBlock.imageUrl,
     };
     setBlocks(updatedBlocks);
@@ -103,7 +123,11 @@ const Post = ({ id, fetchedBlocks, err }) => {
 
     // If we don't have a destination (due to dropping outside the droppable)
     // or the destination hasn't changed, we change nothing
-    if (!destination || destination.index === source.index) {
+    if (
+      !destination ||
+      destination.index === source.index ||
+      destination.index === 1
+    ) {
       return;
     }
 
@@ -114,12 +138,14 @@ const Post = ({ id, fetchedBlocks, err }) => {
   };
 
   const moveToBlock = (currentBlock) => {
-    console.log(currentBlock, blocks);
-    const nextBlockPosition = blocks.map((b) => b._id).indexOf(currentBlock.id);
+    let nextBlockPosition = blocks.map((b) => b._id).indexOf(currentBlock.id);
+    nextBlockPosition += currentBlock.direction === "up" ? -1 : 1;
+    nextBlockPosition =
+      nextBlockPosition >= 0 && blocks[nextBlockPosition]
+        ? blocks[nextBlockPosition]._id
+        : null;
     const nextBlock = document.querySelector(
-      `[data-position="${
-        nextBlockPosition + (currentBlock.direction === "up" ? 0 : 2)
-      }"]`
+      `[data-position="${nextBlockPosition}"]`
     );
     if (nextBlock) {
       nextBlock.focus();
@@ -137,8 +163,26 @@ const Post = ({ id, fetchedBlocks, err }) => {
     }
   };
 
+  const handleSavePost = async (isDraft) => {
+    if (isDraft) {
+      const nhm = new NodeHtmlMarkdown();
+      blocks.forEach((item) => {
+        let mark = nhm.translate(
+          `<${item.tag}>${item.description}</${item.tag}>`
+        );
+        item.description = `<${item.tag}>${item.description}</${item.tag}>`
+        console.log(mark);
+        setMark(mark);
+      });
+      await dispatch(saveAsDraft(blocks, isDraft));
+    } else {
+      await dispatch(savePost(blocks, isDraft));
+    }
+  };
+
   return (
     <div className="Page flex justify-center mt-18 flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">
+      {/* <p>{mark}</p> */}
       <div className="w-full lg:w-3/4 ml-20">
         <label for="cover">
           <div className="ml-12 flex mb-5">
@@ -147,9 +191,7 @@ const Post = ({ id, fetchedBlocks, err }) => {
                 <PhotographIcon className="h-5 w-5 mr-2" /> Add cover image
               </>
             )}
-            {coverImage && (
-              <img src={coverImage} className="h-60 w-full" />
-            )}
+            {coverImage && <img src={coverImage} className="h-60 w-full object-cover" />}
             <input
               type="file"
               id="cover"
@@ -163,22 +205,24 @@ const Post = ({ id, fetchedBlocks, err }) => {
           <Droppable droppableId={uid()}>
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
-                {blocks.map((block) => {
+                {blocks.map((block, i) => {
                   const position =
                     blocks.map((b) => b._id).indexOf(block._id) + 1;
                   return (
                     <EditableBlock
+                      index={position}
                       key={block._id}
-                      position={position}
+                      position={block._id}
                       id={block._id}
                       tag={block.tag}
-                      html={block.html}
+                      description={block.description}
                       imageUrl={block.imageUrl}
                       pageId={id}
                       addBlock={addBlockHandler}
                       deleteBlock={deleteBlockHandler}
                       updateBlock={updateBlockHandler}
                       moveToBlock={moveToBlock}
+                      isDragDisabled={i === 0}
                     />
                   );
                 })}
@@ -189,7 +233,7 @@ const Post = ({ id, fetchedBlocks, err }) => {
         </DragDropContext>
       </div>
       <div className="w-full lg:w-1/4 text-left pl-5">
-        <Publish />
+        <Publish savePost={handleSavePost} />
       </div>
     </div>
   );

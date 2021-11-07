@@ -11,7 +11,7 @@ class EditableBlock extends React.Component {
     this.onChangeHandler = this.onChangeHandler.bind(this);
     this.contentEditable = React.createRef();
     this.state = {
-      html: "",
+      description: "",
       tag: "p",
       tag: "p",
       previousKey: "",
@@ -29,15 +29,15 @@ class EditableBlock extends React.Component {
     const hasPlaceholder = this.addPlaceholder({
       block: this.contentEditable.current,
       position: this.props.position,
-      content: this.props.html || this.props.imageUrl,
+      content: this.props.description || this.props.imageUrl,
     });
-    if (!hasPlaceholder) {
-      this.setState({
-        ...this.state,
-        html: this.props.html,
-        tag: this.props.tag,
-      });
-    }
+    // if (!hasPlaceholder) {
+    //   this.setState({
+    //     ...this.state,
+    //     description: this.props.description,
+    //     tag: this.props.tag,
+    //   });
+    // }
   }
 
   componentWillUnmount() {
@@ -61,7 +61,7 @@ class EditableBlock extends React.Component {
     if (isFirstBlockWithoutHtml) {
       this.setState({
         ...this.state,
-        html: "Post title here",
+        description: "Post title here",
         tag: "h1",
         placeholder: true,
         isTyping: false,
@@ -83,7 +83,7 @@ class EditableBlock extends React.Component {
     if (this.state.placeholder) {
       this.setState({
         ...this.state,
-        html: "",
+        description: "",
         placeholder: false,
         isTyping: true,
       });
@@ -97,7 +97,7 @@ class EditableBlock extends React.Component {
     const hasPlaceholder = this.addPlaceholder({
       block: this.contentEditable.current,
       position: this.props.position,
-      content: this.state.html || this.state.imageUrl,
+      content: this.props.description || this.props.imageUrl,
     });
     if (!hasPlaceholder) {
       this.setState({ ...this.state, isTyping: false });
@@ -122,11 +122,18 @@ class EditableBlock extends React.Component {
   };
 
   tagSelectionHandler = (tag) => {
-    this.setState({ tag: tag, html: this.state.htmlBackup }, () => {
-      //   setCaretToEnd(this.contentEditable.current);
-      //   this.contentEditable.current.focus();
-      this.closeSelectMenuHandler();
+    this.props.updateBlock({
+      id: this.props.id,
+      description: this.state.htmlBackup,
+      tag: tag,
+      imageUrl: this.props.imageUrl,
     });
+    // this.setState({ tag: tag, description: this.state.htmlBackup }, () => {
+    // setCaretToEnd(this.contentEditable.current);
+    // this.contentEditable.current.focus();
+    // console.log(this.props.id, this.state.description);
+    this.closeSelectMenuHandler();
+    // });
   };
 
   onKeyDownHandler = (e) => {
@@ -145,21 +152,21 @@ class EditableBlock extends React.Component {
       });
     }
     if (e.key === "/") {
-      this.setState({ htmlBackup: this.state.html });
+      this.setState({ htmlBackup: this.props.description });
     }
     if (e.key === "Enter") {
-      if (this.state.previousKey !== "Shift") {
+      if (this.state.previousKey !== "Shift" && this.props.tag !== 'code') {
         e.preventDefault();
         this.props.addBlock({
           id: this.props.id,
-          html: this.state.html,
-          tag: this.state.tag,
-          imageUrl: this.state.imageUrl,
+          description: this.props.description,
+          tag: this.props.tag,
+          imageUrl: this.props.imageUrl,
           ref: this.contentEditable.current,
         });
       }
     }
-    if (e.key === "Backspace" && !this.state.html) {
+    if (e.key === "Backspace" && !this.props.description) {
       e.preventDefault();
       this.props.deleteBlock({
         id: this.props.id,
@@ -171,20 +178,27 @@ class EditableBlock extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const hasNoPlaceholder = !this.state.placeholder;
-    const htmlChanged = this.props.html !== this.state.html;
+    const htmlChanged = this.props.description !== this.state.description;
     const tagChanged = this.props.tag !== this.state.tag;
-    if ((htmlChanged || tagChanged) && hasNoPlaceholder) {
-      this.props.updateBlock({
-        id: this.props.id,
-        html: this.state.html,
-        tag: this.state.tag,
-        imageUrl: this.state.imageUrl,
-      });
-    }
+    // if ((htmlChanged || tagChanged) && hasNoPlaceholder) {
+    //   this.props.updateBlock({
+    //     id: this.props.id,
+    //     description: this.state.description,
+    //     tag: this.state.tag,
+    //     imageUrl: this.state.imageUrl,
+    //   });
+    // }
   }
 
   onChangeHandler(e) {
-    this.setState({ html: e.target.value });
+    // this.setState({ description: e.target.value });
+    console.log(e.currentTarget.outerHTML)
+    this.props.updateBlock({
+      id: this.props.id,
+      description: e.target.value,
+      tag: this.props.tag,
+      imageUrl: this.props.imageUrl,
+    });
   }
 
   getClassName = () => {
@@ -193,21 +207,25 @@ class EditableBlock extends React.Component {
       h2: "text-3xl",
       h3: "text-2xl",
       p: "text-xl",
+      blockquote: "bg-gray-200 border-l-4 border-gray-300 dark:bg-gray-700",
+      code: "bg-gray-100 dark:bg-gray-700",
     };
-    return size[this.state.tag];
+    return size[this.props.tag];
   };
-
   render() {
     return (
       <>
-        {this.state.selectMenuIsOpen && (
-          <SelectMenu
-            position={this.state.selectMenuPosition}
-            onSelect={this.tagSelectionHandler}
-            close={this.closeSelectMenuHandler}
-          />
-        )}
-        <Draggable draggableId={this.props.id} index={this.props.position}>
+        <SelectMenu
+          position={this.state.selectMenuPosition}
+          onSelect={this.tagSelectionHandler}
+          close={this.closeSelectMenuHandler}
+          selectMenuIsOpen={this.state.selectMenuIsOpen}
+        />
+        <Draggable
+          draggableId={this.props.id}
+          index={this.props.index}
+          isDragDisabled={this.props.isDragDisabled}
+        >
           {(provided, snapshot) => (
             <div
               ref={provided.innerRef}
@@ -225,8 +243,8 @@ class EditableBlock extends React.Component {
               <ContentEditable
                 className={`Block ${this.getClassName()} flex-1 focus:bg-gray-20 focus:outline-none`}
                 innerRef={this.contentEditable}
-                html={this.state.html}
-                tagName={this.state.tag}
+                html={this.props.description}
+                tagName={this.props.tag}
                 onChange={this.onChangeHandler}
                 onKeyDown={this.onKeyDownHandler}
                 onKeyUp={this.onKeyUpHandler}
