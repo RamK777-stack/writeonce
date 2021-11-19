@@ -15,13 +15,23 @@ export const objectId = () => {
 };
 
 export const setCaretToEnd = (element) => {
-  const range = document.createRange();
-  const selection = window.getSelection();
-  range.selectNodeContents(element);
-  range.collapse(false);
-  selection.removeAllRanges();
-  selection.addRange(range);
-  element.focus();
+  if (
+    typeof window.getSelection != "undefined" &&
+    typeof document.createRange != "undefined"
+  ) {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    element.focus();
+  } else if (typeof document.body.createTextRange != "undefined") {
+    let textRange = document.body.createTextRange();
+    textRange.moveToElementText(element);
+    textRange.collapse(false);
+    textRange.select();
+  }
 };
 
 export const getCaretCoordinates = () => {

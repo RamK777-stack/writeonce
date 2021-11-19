@@ -19,10 +19,10 @@ export default function PostListItem() {
         </div>
       </div>
       <div className="mt-5 ml-1">
-        <h4 className="text-2xl text-gray-900 dark:text-white">
+        <h4 className="text-xl text-gray-900 dark:text-white">
           5 Anti-Patterns to Avoid in Lambda based Apps
         </h4>
-        <h4 className="text-xl mt-3">
+        <h4 className="text-l mt-3">
           Lambda is not a prescriptive service and provides broad functionality
           for you to build applications as needed. While this flexibility is
           important...

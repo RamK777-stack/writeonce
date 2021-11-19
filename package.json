@@ -31,6 +31,7 @@
     "react-tooltip": "^4.2.21",
     "react-useanimations": "^2.0.6",
     "redux-logger": "^3.0.6",
+    "sanitize-html": "^2.5.3",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

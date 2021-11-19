@@ -1,6 +1,6 @@
 import React from "react";
 import ContentEditable from "react-contenteditable";
-import { setCaretToEnd, getCaretCoordinates } from "../../utils";
+import { setCaretToEnd, getCaretCoordinates, objectId } from "../../utils";
 import SelectMenu from "./SelectMenu";
 import { Draggable } from "react-beautiful-dnd";
 import { ViewGridIcon, ViewListIcon } from "@heroicons/react/outline";
@@ -136,6 +136,19 @@ class EditableBlock extends React.Component {
     // });
   };
 
+  isListEnter = () => {
+    return (
+      ["ol", "ul"].includes(this.props.tag) &&
+      this.state.previousKey === "Enter"
+    );
+  };
+
+  stripeHTML = (html) => {
+    let tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  };
+
   onKeyDownHandler = (e) => {
     if (e.key === "ArrowUp") {
       this.props.moveToBlock({
@@ -155,23 +168,122 @@ class EditableBlock extends React.Component {
       this.setState({ htmlBackup: this.props.description });
     }
     if (e.key === "Enter") {
-      if (this.state.previousKey !== "Shift" && this.props.tag !== 'code') {
+      if (
+        this.state.previousKey !== "Shift" &&
+        (!["code", "ol", "ul"].includes(this.props.tag) || this.isListEnter())
+      ) {
         e.preventDefault();
-        this.props.addBlock({
+        const selection = window.getSelection();
+
+        let rangeBefore = document.createRange();
+        let rangeAfter = document.createRange();
+        let fullRange = document.createRange();
+        const r = selection.getRangeAt(0);
+
+        rangeBefore.setStart(r.startContainer, 0);
+        rangeBefore.setEnd(r.startContainer, r.startOffset);
+
+        rangeAfter.setStart(r.endContainer, r.endOffset);
+        rangeAfter.setEnd(r.endContainer, r.endContainer.length);
+
+        fullRange.setStart(r.startContainer, 0);
+        fullRange.setEnd(r.endContainer, r.endContainer.length);
+
+        const endIndex = r.endOffset;
+        const fullLength = fullRange.toString().length;
+
+        let addAtPosition = "";
+        let newBlock = [
+          {
+            id: objectId(),
+            tag: "p",
+            description: "",
+            imageUrl: "",
+          },
+        ];
+        if (this.isListEnter()) {
+          addAtPosition = "end";
+        } else {
+          switch (endIndex) {
+            case 0:
+              addAtPosition = "start";
+              break;
+            case fullLength:
+              addAtPosition = "end";
+              break;
+            default:
+              addAtPosition = "middle";
+              newBlock[0].description = rangeAfter.toString();
+              break;
+          }
+        }
+        this.props.addBlock(
+          {
+            id: this.props.id,
+            description: this.props.description,
+            tag: this.props.tag,
+            imageUrl: this.props.imageUrl,
+            ref: this.contentEditable.current,
+            newBlock: newBlock,
+            rangeBeforeText: rangeBefore.toString(),
+          },
+          addAtPosition
+        );
+      }
+    }
+    if (e.key === "Backspace") {
+      const selection = window.getSelection();
+      let rangeBefore = document.createRange();
+      let rangeAfter = document.createRange();
+      let fullRange = document.createRange();
+      const r = selection.getRangeAt(0);
+
+      rangeBefore.setStart(r.startContainer, 0);
+      rangeBefore.setEnd(r.startContainer, r.startOffset);
+
+      rangeAfter.setStart(r.endContainer, r.endOffset);
+      rangeAfter.setEnd(r.endContainer, r.endContainer.length);
+
+      fullRange.setStart(r.startContainer, 0);
+      fullRange.setEnd(r.endContainer, r.endContainer.length);
+
+      const endIndex = r.endOffset;
+      const fullLength = fullRange.toString().length;
+      let deleteAtPosition = "";
+
+      switch (endIndex) {
+        case 0:
+          deleteAtPosition = "start";
+          break;
+        case fullLength:
+          deleteAtPosition = "end";
+          break;
+        default:
+          deleteAtPosition = "middle";
+          break;
+      }
+      if (["code", "ul", "ol"].some((i) => this.props.tag.includes(i))) {
+        console.log(this.stripeHTML(this.props.description), deleteAtPosition);
+      }
+      if (
+        ["code", "ul", "ol"].some((i) => this.props.tag.includes(i)) &&
+        !this.stripeHTML(this.props.description)
+      ) {
+        this.props.deleteBlock({
           id: this.props.id,
-          description: this.props.description,
-          tag: this.props.tag,
-          imageUrl: this.props.imageUrl,
           ref: this.contentEditable.current,
         });
       }
-    }
-    if (e.key === "Backspace" && !this.props.description) {
-      e.preventDefault();
-      this.props.deleteBlock({
-        id: this.props.id,
-        ref: this.contentEditable.current,
-      });
+      if (
+        !["code", "ul", "ol"].some((i) => this.props.tag.includes(i)) &&
+        (deleteAtPosition === "start" || !this.props.description)
+      ) {
+        this.props.deleteBlock({
+          id: this.props.id,
+          ref: this.contentEditable.current,
+          deleteAtPosition: deleteAtPosition,
+        });
+      }
     }
     this.setState({ previousKey: e.key });
   };
@@ -192,7 +304,6 @@ class EditableBlock extends React.Component {
 
   onChangeHandler(e) {
     // this.setState({ description: e.target.value });
-    console.log(e.currentTarget.outerHTML)
     this.props.updateBlock({
       id: this.props.id,
       description: e.target.value,
@@ -209,6 +320,8 @@ class EditableBlock extends React.Component {
       p: "text-xl",
       blockquote: "bg-gray-200 border-l-4 border-gray-300 dark:bg-gray-700",
       code: "bg-gray-100 dark:bg-gray-700",
+      ol: "list-decimal",
+      ul: "list-disc",
     };
     return size[this.props.tag];
   };
@@ -222,7 +335,7 @@ class EditableBlock extends React.Component {
           selectMenuIsOpen={this.state.selectMenuIsOpen}
         />
         <Draggable
-          draggableId={this.props.id}
+          draggableId={this.props.id.toString()}
           index={this.props.index}
           isDragDisabled={this.props.isDragDisabled}
         >

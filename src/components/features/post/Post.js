@@ -9,50 +9,65 @@ import { PhotographIcon } from "@heroicons/react/outline";
 import { useSelector, useDispatch } from "react-redux";
 import { getPosts, savePost, saveAsDraft } from "./postSlice";
 import { NodeHtmlMarkdown, NodeHtmlMarkdownOptions } from "node-html-markdown";
+import { useLocation, useNavigate } from "react-router-dom";
+import { URL_PATH } from "../../../utils/urlPath";
+import sanitizeHtml from "sanitize-html";
 
 const initialBlock = [
-  { _id: uid(), description: "Title here", tag: "h1" },
+  { id: uid(), description: "Title here", tag: "h1" },
   {
-    _id: uid(),
+    id: uid(),
     description: "Enter your content",
     tag: "p",
   },
 ];
 
-const Post = ({ id, fetchedBlocks, err }) => {
+const Post = (props) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [blocks, setBlocks] = useState(initialBlock);
   const [currentBlockId, setCurrentBlockId] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
   const [mark, setMark] = useState("");
+  const [draftId, setDraftId] = useState();
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.post.posts);
-
   const prevBlocks = usePrevious(blocks);
 
   useEffect(() => {
-    dispatch(getPosts());
-  }, []);
+    if (location?.state?.id) {
+      const { id, draft_blocks } = location.state;
+      setBlocks(draft_blocks);
+      setDraftId(id);
+    } else {
+      setBlocks(initialBlock);
+      setDraftId();
+    }
+    // dispatch(getPosts());
+  }, [location.state]);
 
   // Handling the cursor and focus on adding and deleting blocks
   useEffect(() => {
     // If a new block was added, move the caret to it
     if (prevBlocks && prevBlocks.length + 1 === blocks.length) {
       let nextBlockPosition =
-        blocks.map((b) => b._id).indexOf(currentBlockId) + 1;
-      nextBlockPosition = blocks[nextBlockPosition]._id;
-      const nextBlock = document.querySelector(
-        `[data-position="${nextBlockPosition}"]`
-      );
-      if (nextBlock) {
-        nextBlock.focus();
+        blocks.map((b) => b.id).indexOf(currentBlockId) + 1;
+      if (blocks[nextBlockPosition]) {
+        nextBlockPosition = blocks[nextBlockPosition].id;
+        const nextBlock = document.querySelector(
+          `[data-position="${nextBlockPosition}"]`
+        );
+        if (nextBlock) {
+          nextBlock.focus();
+        }
       }
     }
     // If a block was deleted, move the caret to the end of the last block
     if (prevBlocks && prevBlocks.length - 1 === blocks.length) {
       let lastBlockPosition =
-        prevBlocks.map((b) => b._id).indexOf(currentBlockId) - 1;
+        prevBlocks.map((b) => b.id).indexOf(currentBlockId) - 1;
       lastBlockPosition =
-        lastBlockPosition >= 0 && prevBlocks[lastBlockPosition]._id;
+        lastBlockPosition >= 0 && prevBlocks[lastBlockPosition].id;
       const lastBlock = document.querySelector(
         `[data-position="${lastBlockPosition}"]`
       );
@@ -63,18 +78,28 @@ const Post = ({ id, fetchedBlocks, err }) => {
   }, [blocks, prevBlocks, currentBlockId]);
 
   const updateBlockHandler = (currentBlock) => {
-    const index = blocks.map((b) => b._id).indexOf(currentBlock.id);
+    const index = blocks.map((b) => b.id).indexOf(currentBlock.id);
     const oldBlock = blocks[index];
     const updatedBlocks = [...blocks];
+    const { tag, description } = currentBlock;
+    console.log(sanitizeHtml(description), ";;;");
     updatedBlocks[index] = {
       ...updatedBlocks[index],
       tag: currentBlock.tag,
-      description: currentBlock.description,
+      description:
+        ["ol", "ul"].includes(tag) &&
+        !["<li>", "</li>"].includes(description) &&
+        !["<li>", "</li>"].some((i) => description.includes(i))
+          ? `<li>${description}</li>`
+          : currentBlock.description,
       imageUrl: currentBlock.imageUrl,
     };
-    if (index === blocks.length - 1 && (currentBlock.tag === 'code' || currentBlock.tag === 'blockquote')) {
+    if (
+      index === blocks.length - 1 &&
+      ["code", "blockquote"].includes(currentBlock.tag)
+    ) {
       const newBlock = {
-        _id: objectId(),
+        id: objectId(),
         tag: "p",
         description: "",
         imageUrl: "",
@@ -84,36 +109,53 @@ const Post = ({ id, fetchedBlocks, err }) => {
     setBlocks(updatedBlocks);
   };
 
-  const addBlockHandler = (currentBlock) => {
+  const addBlockHandler = (currentBlock, addAtPosition) => {
     setCurrentBlockId(currentBlock.id);
-    const index = blocks.map((b) => b._id).indexOf(currentBlock.id);
+    const index = blocks.map((b) => b.id).indexOf(currentBlock.id);
     const updatedBlocks = [...blocks];
-    const newBlock = [
-      {
-        _id: objectId(),
-        tag: "p",
-        description: "",
-        imageUrl: "",
-      },
-    ];
 
-    updatedBlocks.splice(index + 1, 0, ...newBlock);
-    updatedBlocks[index] = {
-      ...updatedBlocks[index],
-      tag: currentBlock.tag,
-      description: currentBlock.description,
-      imageUrl: currentBlock.imageUrl,
-    };
+    if (addAtPosition === "start" && currentBlock.description) {
+      if (index - 1 === -1) {
+        updatedBlocks.unshift(...currentBlock.newBlock);
+      } else {
+        updatedBlocks.splice(index, 0, ...currentBlock.newBlock);
+      }
+    } else if (addAtPosition === "middle") {
+      updatedBlocks[index] = {
+        ...updatedBlocks[index],
+        description: currentBlock.rangeBeforeText,
+      };
+      updatedBlocks.splice(index + 1, 0, ...currentBlock.newBlock);
+    } else {
+      // const newBlock = [
+      //   {
+      //     id: objectId(),
+      //     tag: "p",
+      //     descripti      //     imageUrl: "",
+      //   },
+      // ];
+      updatedBlocks.splice(index + 1, 0, ...currentBlock.newBlock);
+    }
     setBlocks(updatedBlocks);
+  };
+
+  const stripeHTML = (html) => {
+    let tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
   };
 
   const deleteBlockHandler = (currentBlock) => {
     if (blocks.length > 1) {
       setCurrentBlockId(currentBlock.id);
-      const index = blocks.map((b) => b._id).indexOf(currentBlock.id);
+      const index = blocks.map((b) => b.id).indexOf(currentBlock.id);
       const deletedBlock = blocks[index];
       const updatedBlocks = [...blocks];
-      updatedBlocks.splice(index, 1);
+      if (currentBlock.deleteAtPosition === "start" && index - 1 >= 0) {
+        updatedBlocks[index - 1].description =
+          updatedBlocks[index - 1].description + deletedBlock.description;
+      }
+      index && updatedBlocks.splice(index, 1);
       setBlocks(updatedBlocks);
     }
   };
@@ -138,11 +180,11 @@ const Post = ({ id, fetchedBlocks, err }) => {
   };
 
   const moveToBlock = (currentBlock) => {
-    let nextBlockPosition = blocks.map((b) => b._id).indexOf(currentBlock.id);
+    let nextBlockPosition = blocks.map((b) => b.id).indexOf(currentBlock.id);
     nextBlockPosition += currentBlock.direction === "up" ? -1 : 1;
     nextBlockPosition =
       nextBlockPosition >= 0 && blocks[nextBlockPosition]
-        ? blocks[nextBlockPosition]._id
+        ? blocks[nextBlockPosition].id
         : null;
     const nextBlock = document.querySelector(
       `[data-position="${nextBlockPosition}"]`
@@ -163,20 +205,31 @@ const Post = ({ id, fetchedBlocks, err }) => {
     }
   };
 
+  const concatAllBlocks = () => {
+    console.log(blocks);
+    let description = "";
+    let markdown = "";
+    const nhm = new NodeHtmlMarkdown();
+    blocks.forEach((item) => {
+      description += `<${item.tag}>${item.description}</${item.tag}> /n`;
+      markdown += `${nhm.translate(
+        `<${item.tag}>${item.description}</${item.tag}>`
+      )}  `;
+    });
+    console.log(description, markdown);
+    return { description, markdown };
+  };
+
   const handleSavePost = async (isDraft) => {
     if (isDraft) {
-      const nhm = new NodeHtmlMarkdown();
-      blocks.forEach((item) => {
-        let mark = nhm.translate(
-          `<${item.tag}>${item.description}</${item.tag}>`
-        );
-        item.description = `<${item.tag}>${item.description}</${item.tag}>`
-        console.log(mark);
-        setMark(mark);
-      });
-      await dispatch(saveAsDraft(blocks, isDraft));
+      await dispatch(saveAsDraft({ draftId, blocks, isDraft }));
+      navigate(URL_PATH.DRAFT);
     } else {
-      await dispatch(savePost(blocks, isDraft));
+      const concatedBlocks = concatAllBlocks() || {};
+      concatedBlocks['blocks'] = blocks;
+      concatedBlocks['draftId'] = draftId;
+      await dispatch(savePost(concatedBlocks, isDraft));
+      navigate(URL_PATH.HOME);
     }
   };
 
@@ -191,7 +244,9 @@ const Post = ({ id, fetchedBlocks, err }) => {
                 <PhotographIcon className="h-5 w-5 mr-2" /> Add cover image
               </>
             )}
-            {coverImage && <img src={coverImage} className="h-60 w-full object-cover" />}
+            {coverImage && (
+              <img src={coverImage} className="h-60 w-full object-cover" />
+            )}
             <input
               type="file"
               id="cover"
@@ -207,17 +262,17 @@ const Post = ({ id, fetchedBlocks, err }) => {
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {blocks.map((block, i) => {
                   const position =
-                    blocks.map((b) => b._id).indexOf(block._id) + 1;
+                    blocks.map((b) => b.id).indexOf(block.id) + 1;
                   return (
                     <EditableBlock
                       index={position}
-                      key={block._id}
-                      position={block._id}
-                      id={block._id}
+                      key={block.id}
+                      position={block.id}
+                      id={block.id}
                       tag={block.tag}
                       description={block.description}
                       imageUrl={block.imageUrl}
-                      pageId={id}
+                      pageId={props.id}
                       addBlock={addBlockHandler}
                       deleteBlock={deleteBlockHandler}
                       updateBlock={updateBlockHandler}

@@ -10,6 +10,8 @@ import {
   HomeIcon,
   BookmarkIcon,
   DocumentTextIcon,
+  LoginIcon,
+  LogoutIcon,
 } from "@heroicons/react/outline";
 import Logo from "../../assets/images/feather.svg";
 import Home from "../../assets/images/Home.svg";
@@ -18,6 +20,8 @@ import Tag from "../../assets/images/Tag.svg";
 import ReactTooltip from "react-tooltip";
 import { Link } from "react-router-dom";
 import { URL_PATH } from "../../utils/urlPath";
+import { openModal, closeModal } from "../features/auth/AuthSlice";
+import { useDispatch } from "react-redux";
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
@@ -31,11 +35,17 @@ const classNames = (...classes) => {
 };
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+
   return (
-    <div className="dark:bg-gray-900 dark:border-r dark:border-red-800 bg-blue-800 text-blue-100 w-18 px-2 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out">
+    <div
+      className="fixed dark:bg-gray-900 bg-blue-800 text-blue-100 w-16 px-1 
+     inset-y-0 transform -translate-x-full 
+    flex flex-col justify-start md:translate-x-0 transition duration-200 ease-in-out"
+    >
       <a
         href="#"
-        className="flex items-center spacing-x-2 py-2.5 px-4 mt-5 transition duration-200 ease-in-out"
+        className="items-center spacing-x-2 py-2.5 px-4 mt-5 transition duration-200 ease-in-out"
       >
         <Link to={URL_PATH.HOME}>
           <img src={Logo}></img>
@@ -64,6 +74,14 @@ const Sidebar = () => {
           <BookmarkIcon className="h-7 w-7" />
         </Link>
       </nav>
+      <div className="flex mt-auto mb-10 justify-center cursor-pointer">
+        <LoginIcon
+          className="w-8 h-8"
+          onClick={() => {
+            dispatch(openModal());
+          }}
+        />
+      </div>
       <ReactTooltip place="right" effect="float" />
     </div>
   );

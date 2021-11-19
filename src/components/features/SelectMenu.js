@@ -34,6 +34,16 @@ const SelectMenu = (props) => {
       tag: "code",
       label: "code",
     },
+    {
+      id: "ol",
+      tag: "ol",
+      label: "Ordered List",
+    },
+    {
+      id: "ul",
+      tag: "ul",
+      label: "Unordered List",
+    },
   ];
   const [command, setCommand] = useState("");
   const [items, setItems] = useState(allowedTags);
@@ -98,7 +108,17 @@ const SelectMenu = (props) => {
 
   return (
     <div className={`SelectMenuWrapper`} style={positionAttributes}>
-      <div className={`SelectMenu dark:bg-gray-700 ${!props.selectMenuIsOpen && "hidden"}`}>
+      <div
+        className={`SelectMenu dark:bg-gray-700 ${
+          !props.selectMenuIsOpen && "hidden"
+        }`}
+      >
+        <div
+          className={`border-b border-dashed border-gray-200 border-opacity-0 p-2 border-light-blue-500 dark:border-gray-100`}
+          key="ChooseBlockType"
+        >
+          Choose Block Type
+        </div>
         {items.map((item, key) => {
           const isSelected = items.indexOf(item) === selectedItem;
           return (

@@ -1,10 +1,19 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchPosts, savePostAPI, saveDraftAPI, fetchDrafts } from "./postAPI";
+import {
+  fetchPosts,
+  savePostAPI,
+  saveDraftAPI,
+  fetchDrafts,
+  fetchDraftById,
+  updateDraftAPI,
+  deleteAPI,
+} from "./postAPI";
 
 const initialState = {
   posts: [],
   isLoading: false,
   isSaving: false,
+  drafts: [],
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -30,21 +39,53 @@ export const getDrafts = createAsyncThunk(
   }
 );
 
-export const savePost = createAsyncThunk("post/savePost", async (params) => {
-  console.log(params);
-  const response = await savePostAPI();
-  return response;
-});
+export const getDraftDetails = createAsyncThunk(
+  "post/getDraftDetail",
+  async (id) => {
+    const response = await fetchDraftById(id);
+    return response;
+  }
+);
+
+export const savePost = createAsyncThunk(
+  "post/savePost",
+  async (inputParams) => {
+    console.log(inputParams);
+    const { draftId, blocks, description, markdown } = inputParams;
+    const params = {
+      title: blocks[0].description,
+      description: description,
+      markdown: markdown,
+      draftId: draftId,
+      createdBy: 1,
+    };
+    const response = await savePostAPI(params);
+    return response;
+  }
+);
+
+export const deleteDraft = createAsyncThunk(
+  "post/deleteDraft",
+  async (params) => {
+    console.log(params, ";;;;");
+    const response = await deleteAPI(params);
+    return response;
+  }
+);
 
 export const saveAsDraft = createAsyncThunk(
   "post/saveDrafts",
-  async (content) => {
-    console.log(content);
+  async (inputParams) => {
+    const { draftId, blocks } = inputParams;
     const params = {
-      title: content[0].description,
-      draft_blocks: content.slice(1),
+      title: blocks[0].description,
+      draft_blocks: blocks,
     };
-    console.log(params, ";11111111");
+    if (draftId) {
+      params["draftId"] = draftId;
+      const response = await updateDraftAPI(params);
+      return response;
+    }
     const response = await saveDraftAPI(params);
     return response;
   }
@@ -102,6 +143,13 @@ export const postSlice = createSlice({
     },
     [savePost.rejected]: (state, action) => {
       state.isSaving = false;
+    },
+    [deleteDraft.fulfilled]: (state, action) => {
+      const index = state.drafts.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      console.log(index, action.payload.id, state.drafts, "222");
+      state.drafts.splice(index, 1);
     },
   },
 });

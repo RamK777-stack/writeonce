@@ -6,9 +6,10 @@ import Post from "./components/features/post/Post";
 import PostFeed from "./components/features/post/PostFeed";
 import reportWebVitals from "./components/reportWebVitals";
 import { store } from "./store";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Router } from "react-router-dom";
 import { URL_PATH } from "./utils/urlPath";
 import Draft from "./components/features/post/Draft";
+import Signup from "./components/features/auth/Signup";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.render(
           <Route path={URL_PATH.DRAFT} element={<Draft />} />
         </Routes>
       </BrowserRouter>
+      <Signup />
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")
