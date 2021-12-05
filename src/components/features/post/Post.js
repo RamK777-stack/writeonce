@@ -12,6 +12,7 @@ import { NodeHtmlMarkdown, NodeHtmlMarkdownOptions } from "node-html-markdown";
 import { useLocation, useNavigate } from "react-router-dom";
 import { URL_PATH } from "../../../utils/urlPath";
 import sanitizeHtml from "sanitize-html";
+var htmlparser = require("htmlparser2");
 
 const initialBlock = [
   { id: uid(), description: "Title here", tag: "h1" },
@@ -206,17 +207,20 @@ const Post = (props) => {
   };
 
   const concatAllBlocks = () => {
-    console.log(blocks);
     let description = "";
     let markdown = "";
     const nhm = new NodeHtmlMarkdown();
-    blocks.forEach((item) => {
-      description += `<${item.tag}>${item.description}</${item.tag}> /n`;
-      markdown += `${nhm.translate(
-        `<${item.tag}>${item.description}</${item.tag}>`
-      )}  `;
+    blocks.forEach((item, i) => {
+      item.description = sanitizeHtml(item.description)
+      if (i) {
+        description += sanitizeHtml(
+          `<${item.tag}>${item.description}</${item.tag}> </br>`
+        );
+        markdown += `${nhm.translate(
+          `<${item.tag}>${item.description}</${item.tag}>`
+        )}  `;
+      }
     });
-    console.log(description, markdown);
     return { description, markdown };
   };
 
@@ -226,8 +230,8 @@ const Post = (props) => {
       navigate(URL_PATH.DRAFT);
     } else {
       const concatedBlocks = concatAllBlocks() || {};
-      concatedBlocks['blocks'] = blocks;
-      concatedBlocks['draftId'] = draftId;
+      concatedBlocks["blocks"] = blocks;
+      concatedBlocks["draftId"] = draftId;
       await dispatch(savePost(concatedBlocks, isDraft));
       navigate(URL_PATH.HOME);
     }

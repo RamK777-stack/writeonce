@@ -8,6 +8,7 @@ import {
   updateDraftAPI,
   deleteAPI,
 } from "./postAPI";
+import { isLoggedIn, openModal } from "../auth/AuthSlice";
 
 const initialState = {
   posts: [],
@@ -49,15 +50,15 @@ export const getDraftDetails = createAsyncThunk(
 
 export const savePost = createAsyncThunk(
   "post/savePost",
-  async (inputParams) => {
-    console.log(inputParams);
+  async (inputParams, { getState }) => {
+    const userDetails = getState().auth?.userDetails;
     const { draftId, blocks, description, markdown } = inputParams;
     const params = {
       title: blocks[0].description,
       description: description,
       markdown: markdown,
       draftId: draftId,
-      createdBy: 1,
+      author: userDetails?.id,
     };
     const response = await savePostAPI(params);
     return response;
@@ -66,8 +67,11 @@ export const savePost = createAsyncThunk(
 
 export const deleteDraft = createAsyncThunk(
   "post/deleteDraft",
-  async (params) => {
-    console.log(params, ";;;;");
+  async (params, thunkAPI) => {
+    if (!isLoggedIn()) {
+      thunkAPI.dispatch(openModal());
+      throw new Error("user not logged in");
+    }
     const response = await deleteAPI(params);
     return response;
   }
@@ -143,6 +147,9 @@ export const postSlice = createSlice({
     },
     [savePost.rejected]: (state, action) => {
       state.isSaving = false;
+    },
+    [deleteDraft.rejected]: (state, action) => {
+      state.isLoading = false;
     },
     [deleteDraft.fulfilled]: (state, action) => {
       const index = state.drafts.findIndex(

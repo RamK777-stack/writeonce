@@ -34,17 +34,20 @@ export const setCaretToEnd = (element) => {
   }
 };
 
-export const getCaretCoordinates = () => {
+export const getCaretCoordinates = (e) => {
   let x, y;
   const selection = window.getSelection();
   if (selection.rangeCount !== 0) {
     const range = selection.getRangeAt(0).cloneRange();
     range.collapse(false);
     const rect = range.getClientRects()[0];
+    const bodyRect = document.body.getBoundingClientRect();
+    const offset = rect.top - bodyRect.top;
     if (rect) {
       x = rect.left;
-      y = rect.top;
+      y = offset;
     }
+    console.log(x, y)
   }
   return { x, y };
 };

@@ -20,8 +20,11 @@ import Tag from "../../assets/images/Tag.svg";
 import ReactTooltip from "react-tooltip";
 import { Link } from "react-router-dom";
 import { URL_PATH } from "../../utils/urlPath";
-import { openModal, closeModal } from "../features/auth/AuthSlice";
+import { openModal, closeModal, logOut } from "../features/auth/AuthSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import SecureLS from "secure-ls";
+const ls = new SecureLS();
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
@@ -36,6 +39,14 @@ const classNames = (...classes) => {
 
 const Sidebar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const session = ls.get("userSession");
+
+  const handleLogOut = () => {
+    logOut();
+    navigate(URL_PATH.HOME);
+  };
 
   return (
     <div
@@ -75,14 +86,25 @@ const Sidebar = () => {
         </Link>
       </nav>
       <div className="flex mt-auto mb-10 justify-center cursor-pointer">
-        <LoginIcon
-          className="w-8 h-8"
-          onClick={() => {
-            dispatch(openModal());
-          }}
-        />
+        {session ? (
+          <LoginIcon
+            className="w-8 h-8"
+            data-tip="Logout"
+            onClick={() => {
+              handleLogOut();
+            }}
+          />
+        ) : (
+          <LogoutIcon
+            className="w-8 h-8"
+            data-tip="Login"
+            onClick={() => {
+              dispatch(openModal());
+            }}
+          />
+        )}
       </div>
-      <ReactTooltip place="right" effect="float" />
+      <ReactTooltip place="right" effect="float" type="dark"/>
     </div>
   );
 };

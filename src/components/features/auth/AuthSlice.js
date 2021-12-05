@@ -1,13 +1,64 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { sendLoginLink, validateToken, getUserDetailsAPI } from "./AuthAPI";
+import store from "store";
+import SecureLS from "secure-ls";
+const ls = new SecureLS();
 
 const initialState = {
   loggedIn: false,
   isModalOpen: false,
+  userDetails: {},
 };
 
-export const login = createAsyncThunk("auth/login", async (params) => {
-  // api call
+export const loginUsingLink = createAsyncThunk(
+  "auth/login/link",
+  async (email) => {
+    console.log(process.env.REACT_APP_REDIRECT_URI);
+    try {
+      const response = await sendLoginLink({
+        email: email,
+        redirectURI: process.env.REACT_APP_REDIRECT_URI,
+      });
+      // The value we return becomes the `fulfilled` action payload
+      return response;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+);
+
+export const login = createAsyncThunk("auth/login", async (token) => {
+  try {
+    console.log(token);
+    const response = await validateToken({ loginToken: token });
+    ls.set("userSession", response);
+    return response;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
 });
+
+export const getUserDetail = createAsyncThunk(
+  "auth/getUserDetail",
+  async () => {
+    try {
+      const response = await getUserDetailsAPI();
+      return response;
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  }
+);
+
+export const logOut = () => {
+  ls.clear();
+};
+
+export const isLoggedIn = () => {
+  return ls.get("userSession");
+};
 
 export const authSlice = createSlice({
   name: "auth",
@@ -20,7 +71,14 @@ export const authSlice = createSlice({
       state.isModalOpen = false;
     },
   },
-  extraReducers: {},
+  extraReducers: {
+    [getUserDetail.fulfilled]: (state, action) => {
+      state.userDetails = action.payload;
+    },
+    [getUserDetail.rejected]: (state, action) => {
+      state.userDetails = action.payload;
+    },
+  },
 });
 
 export const { openModal, closeModal } = authSlice.actions;

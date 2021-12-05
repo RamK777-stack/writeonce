@@ -17,8 +17,8 @@ class EditableBlock extends React.Component {
       previousKey: "",
       selectMenuIsOpen: false,
       selectMenuPosition: {
-        x: null,
-        y: null,
+        x: 100,
+        y: 0,
       },
       htmlBackup: "",
       hasPlaceholder: false,
@@ -74,7 +74,7 @@ class EditableBlock extends React.Component {
 
   onKeyUpHandler = (e) => {
     if (e.key === "/") {
-      this.openSelectMenuHandler();
+      this.openSelectMenuHandler(e);
     }
   };
 
@@ -104,11 +104,11 @@ class EditableBlock extends React.Component {
     }
   };
 
-  openSelectMenuHandler = () => {
-    const { x, y } = getCaretCoordinates();
+  openSelectMenuHandler = (e) => {
+    const { x, y } = getCaretCoordinates(e);
     this.setState({
       selectMenuIsOpen: true,
-      selectMenuPosition: { x, y },
+      selectMenuPosition: { x: Math.round(x), y: Math.round(y)},
     });
     document.addEventListener("click", this.closeSelectMenuHandler);
   };
@@ -116,7 +116,7 @@ class EditableBlock extends React.Component {
   closeSelectMenuHandler = () => {
     this.setState({
       selectMenuIsOpen: false,
-      selectMenuPosition: { x: null, y: null },
+      selectMenuPosition: { x: 100, y: null },
     });
     document.removeEventListener("click", this.closeSelectMenuHandler);
   };

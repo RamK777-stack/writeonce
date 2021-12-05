@@ -7,13 +7,29 @@ import facebook from "../../../assets/Icons/path4.svg";
 import github from "../../../assets/Icons/path33.svg";
 import { XIcon, ExclamationIcon } from "@heroicons/react/outline";
 import { Dialog, Transition } from "@headlessui/react";
-import { openModal, closeModal, isModalOpen } from "./AuthSlice";
+import {
+  openModal,
+  closeModal,
+  isModalOpen,
+  loginUsingLink,
+} from "./AuthSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-const Signup = () => {
+const Signup = ({ renderAsPage, goBack }) => {
   const dispatch = useDispatch();
-  const open = useSelector(isModalOpen);
+  const isOpen = useSelector(isModalOpen);
+  const open = renderAsPage ? true : isOpen;
   const cancelButtonRef = useRef(null);
+  const [email, setEmail] = useState("");
+  const [emailSentStatus, setEmailSentStatus] = useState(false);
+
+  const handleClickSend = async () => {
+    const result = await dispatch(loginUsingLink(email));
+    if (result) {
+      setEmailSentStatus(true);
+      setEmail("");
+    }
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -62,11 +78,13 @@ const Signup = () => {
                   <div className="">
                     <div className="grid grid-cols-2">
                       <div className="absolute top-2 right-2">
-                        <XIcon
-                          ref={cancelButtonRef}
-                          onClick={() => dispatch(closeModal())}
-                          className="h-5 w-5 cursor-pointer"
-                        />
+                        {!renderAsPage && (
+                          <XIcon
+                            ref={cancelButtonRef}
+                            onClick={() => dispatch(closeModal())}
+                            className="h-5 w-5 cursor-pointer"
+                          />
+                        )}
                       </div>
                       <div className="">
                         <img
@@ -83,8 +101,21 @@ const Signup = () => {
                         </div>
                       </div>
                       <div className="p-10 w-full">
-                        <h2 className="text-xl text-center">Connect with</h2>
+                        <h2 className="text-xl text-center">Connect with us</h2>
                         <div className="mt-10">
+                          {emailSentStatus && (
+                            <div className="flex border-blue-600 mb-5 p-2 border-l-2 bg-blue-300">
+                              <p className="text text-blue-900 flex-1">
+                                Magic link sent to your email.
+                              </p>
+                              <XIcon
+                                className="h-4 w-4 cursor-pointer m-auto"
+                                onClick={() => {
+                                  setEmailSentStatus(false);
+                                }}
+                              />
+                            </div>
+                          )}
                           <label
                             class="block text-gray-700 text-sm font-bold mb-2"
                             for="username"
@@ -95,11 +126,19 @@ const Signup = () => {
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="username"
                             type="text"
+                            value={email}
+                            onChange={(e) => {
+                              setEmail(e.target.value);
+                            }}
+                            required
                             placeholder="Enter your email address"
                           />
                           <button
                             class="mt-5 md:mb-0 bg-blue-500 border border-blue-500 px-4 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-md
                   hover:shadow-lg hover:bg-blue-600"
+                            onClick={() => {
+                              handleClickSend();
+                            }}
                           >
                             Submit
                           </button>
@@ -135,7 +174,7 @@ const Signup = () => {
                               ></img>
                             </div>
                             <div
-                              class="mt-5 md:mb-0 bg-white p-3 text-sm shadow-sm
+                              class="mt-5 md:mb-0 bg-white p-3 space-x-1 text-sm shadow-sm
                    font-medium tracking-wider border bg-blue-700 border-gray-400 text-gray-600
                    rounded-md hover:shadow-lg hover:bg-blue-800 h-12 w-12"
                             >
@@ -145,6 +184,14 @@ const Signup = () => {
                               ></img>
                             </div>
                           </div>
+                          {renderAsPage && (
+                            <div
+                              className="text-center text-medium text-blue-600 mt-8 cursor-pointer"
+                              onClick={() => goBack()}
+                            >
+                              Go back
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
