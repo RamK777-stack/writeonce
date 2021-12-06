@@ -29,3 +29,15 @@ export const updateDraftAPI = async (params) => {
 export const deleteAPI = async (params) => {
   return axiosInstance.delete(`drafts/${params.id}`).then((res) => res.data);
 };
+
+export const getBookMarkAPI = async () => {
+  return axiosInstance.get("bookmarks").then((res) => res.data);
+}
+
+export const createBookMarkAPI = async (params) => {
+  return axiosInstance.post("bookmarks", params).then((res) => res.data);
+};
+
+export const deleteBookMarkAPI = async (bookMarkId) => {
+  return axiosInstance.delete(`bookmarks/${bookMarkId}`).then((res) => res.data);
+};

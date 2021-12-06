@@ -22,7 +22,7 @@ function PostFeed() {
         <Search />
         {posts &&
           posts.map((detail) => {
-            return <PostListItem detail={detail} />;
+            return <PostListItem detail={detail} isBookmarked={false} />;
           })}
       </div>
     </>

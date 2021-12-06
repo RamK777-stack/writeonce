@@ -1,10 +1,23 @@
 import { BookmarkIcon, ChatIcon, ThumbUpIcon } from "@heroicons/react/outline";
+import { BookmarkIcon as BookmarkAltIcon } from "@heroicons/react/solid";
 import React from "react";
 import pic1 from "../../../assets/images/pic-1.jpg";
 import sanitizeHtml from "sanitize-html";
 import moment from "moment";
+import { createBookMark, deleteBookMark } from "./postSlice";
+import { useDispatch } from "react-redux";
 
-export default function PostListItem({ detail }) {
+const PostListItem = ({ detail }) => {
+  const dispatch = useDispatch();
+  const handleClickBookMark = async () => {
+    console.log(detail.isBookMarked);
+    if (detail.isBookMarked) {
+      await dispatch(deleteBookMark(detail?.bookMarkId));
+    } else {
+      await dispatch(createBookMark(detail?.id));
+    }
+  };
+
   return (
     <div className="w-3/4">
       <div className="flex items-center">
@@ -13,11 +26,21 @@ export default function PostListItem({ detail }) {
           className="object-cover rounded-full contain h-16 w-16"
         />
         <div className="flex flex-col ml-5 flex-1">
-          <p>{`${detail?.author?.user_profile?.firstName} ${detail?.author?.user_profile?.lastName}`}</p>
+          <p className="font-bold">{`${detail?.author?.user_profile?.firstName} ${detail?.author?.user_profile?.lastName}`}</p>
           <p>{moment(detail?.created_at).format("MMMM DD, yyyy")}</p>
         </div>
         <div className="justify-end text-gray-600">
-          <BookmarkIcon className="h-6 w-6 text-right cursor-pointer" />
+          {detail.isBookMarked ? (
+            <BookmarkAltIcon
+              className="h-6 w-6 text-right cursor-pointer"
+              onClick={() => handleClickBookMark()}
+            />
+          ) : (
+            <BookmarkIcon
+              className="h-6 w-6 text-right cursor-pointer"
+              onClick={() => handleClickBookMark()}
+            />
+          )}
         </div>
       </div>
       <div className="mt-5 ml-1">
@@ -39,4 +62,6 @@ export default function PostListItem({ detail }) {
       </div>
     </div>
   );
-}
+};
+
+export default PostListItem;

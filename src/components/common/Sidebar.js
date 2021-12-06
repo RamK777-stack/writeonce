@@ -54,14 +54,12 @@ const Sidebar = () => {
      inset-y-0 transform -translate-x-full 
     flex flex-col justify-start md:translate-x-0 transition duration-200 ease-in-out"
     >
-      <a
-        href="#"
+      <Link
+        to={URL_PATH.HOME}
         className="items-center spacing-x-2 py-2.5 px-4 mt-5 transition duration-200 ease-in-out"
       >
-        <Link to={URL_PATH.HOME}>
-          <img src={Logo}></img>
-        </Link>
-      </a>
+        <img src={Logo}></img>
+      </Link>
       <nav className="mt-4">
         <Link
           to={URL_PATH.HOME}
@@ -104,7 +102,7 @@ const Sidebar = () => {
           />
         )}
       </div>
-      <ReactTooltip place="right" effect="float" type="dark"/>
+      <ReactTooltip place="right" effect="float" type="dark" />
     </div>
   );
 };

@@ -7,6 +7,9 @@ import {
   fetchDraftById,
   updateDraftAPI,
   deleteAPI,
+  getBookMarkAPI,
+  createBookMarkAPI,
+  deleteBookMarkAPI,
 } from "./postAPI";
 import { isLoggedIn, openModal } from "../auth/AuthSlice";
 
@@ -15,6 +18,7 @@ const initialState = {
   isLoading: false,
   isSaving: false,
   drafts: [],
+  bookmarks: [],
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -95,6 +99,30 @@ export const saveAsDraft = createAsyncThunk(
   }
 );
 
+export const getBookMark = createAsyncThunk("post/getBookMark", async () => {
+  const response = await getBookMarkAPI();
+  return response;
+});
+
+export const createBookMark = createAsyncThunk(
+  "post/createBookMark",
+  async (postId) => {
+    const params = {
+      post: postId,
+    };
+    const response = await createBookMarkAPI(params);
+    return response;
+  }
+);
+
+export const deleteBookMark = createAsyncThunk(
+  "post/deleteBookMark",
+  async (bookMarkId) => {
+    const response = await deleteBookMarkAPI(bookMarkId);
+    return response;
+  }
+);
+
 export const postSlice = createSlice({
   name: "post",
   initialState,
@@ -155,8 +183,24 @@ export const postSlice = createSlice({
       const index = state.drafts.findIndex(
         (item) => item.id === action.payload.id
       );
-      console.log(index, action.payload.id, state.drafts, "222");
       state.drafts.splice(index, 1);
+    },
+    [createBookMark.fulfilled]: (state, action) => {
+      const index = state.posts.findIndex(
+        (item) => item.id === action.payload.post?.id
+      );
+      if (state.posts[index]) {
+        state.posts[index].isBookMarked = true;
+        state.posts[index].bookMarkId = action.payload?.id;
+      }
+    },
+    [deleteBookMark.fulfilled]: (state, action) => {
+      const index = state.posts.findIndex(
+        (item) => item.id === action.payload.post?.id
+      );
+      if (state.posts[index]) {
+        state.posts[index].isBookMarked = false;
+      }
     },
   },
 });
