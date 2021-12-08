@@ -23,6 +23,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path={URL_PATH.HOME} element={<PostFeed />} />
+          <Route path={URL_PATH.BOOKMARKS} element={<PostFeed />} />
           <Route
             path={URL_PATH.POST}
             element={<ProtectedRoute Component={Post} />}
