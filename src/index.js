@@ -6,6 +6,8 @@ import reportWebVitals from "./components/reportWebVitals";
 import { store } from "./store";
 import Signup from "./components/features/auth/Signup";
 import App from "./App";
+import "prismjs";
+import "prismjs/themes/prism-tomorrow.css";
 
 ReactDOM.render(
   <React.StrictMode>

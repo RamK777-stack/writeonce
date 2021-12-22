@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import "./assets/css/style.css";
 import Post from "./components/features/post/Post";
 import PostFeed from "./components/features/post/PostFeed";
+import PostDetail from "./components/features/post/PostDetail";
 import { BrowserRouter, Route, Routes, Router } from "react-router-dom";
 import { URL_PATH } from "./utils/urlPath";
 import Draft from "./components/features/post/Draft";
@@ -24,6 +25,7 @@ const App = () => {
         <Routes>
           <Route path={URL_PATH.HOME} element={<PostFeed />} />
           <Route path={URL_PATH.BOOKMARKS} element={<PostFeed />} />
+          <Route path={URL_PATH.POST_DETAIL} element={<PostDetail />} />
           <Route
             path={URL_PATH.POST}
             element={<ProtectedRoute Component={Post} />}

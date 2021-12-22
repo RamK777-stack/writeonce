@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { URL_PATH } from "../../../utils/urlPath";
 import NoItemsFound from "./NoItemsFound";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, generatePath } from "react-router-dom";
 
 const ls = new SecureLS();
 
@@ -30,6 +30,10 @@ function PostFeed() {
     navigate(URL_PATH.HOME);
   };
 
+  const redirectToPostDetail = (slug) => {
+    navigate(`${URL_PATH.POST}/${slug}`, { state: { slug } });
+  };
+
   const detail = {};
   return (
     <>
@@ -46,6 +50,7 @@ function PostFeed() {
             return (
               <PostListItem
                 detail={detail}
+                redirectToPostDetail={redirectToPostDetail}
                 isBookMarked={isBookMarkPage ? true : detail.isBookMarked}
               />
             );

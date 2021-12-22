@@ -5,4 +5,5 @@ export const URL_PATH = {
   BOOKMARKS: "/bookmarks",
   AUTH_CALLBACK: "/auth/callback",
   SIGN_IN: "/signin",
+  POST_DETAIL: "/post/:title"
 };

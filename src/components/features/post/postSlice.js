@@ -10,6 +10,7 @@ import {
   getBookMarkAPI,
   createBookMarkAPI,
   deleteBookMarkAPI,
+  postDetailAPI,
 } from "./postAPI";
 import { isLoggedIn, openModal } from "../auth/AuthSlice";
 
@@ -19,6 +20,7 @@ const initialState = {
   isSaving: false,
   drafts: [],
   bookmarks: [],
+  postDetail: {},
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -65,6 +67,15 @@ export const savePost = createAsyncThunk(
       author: userDetails?.id,
     };
     const response = await savePostAPI(params);
+    return response;
+  }
+);
+
+export const getPostDetail = createAsyncThunk(
+  "post/getPostDetail",
+  async (params, thunkAPI) => {
+    console.log(params)
+    const response = await postDetailAPI(params);
     return response;
   }
 );
@@ -187,6 +198,11 @@ export const postSlice = createSlice({
     },
     [savePost.rejected]: (state, action) => {
       state.isSaving = false;
+    },
+    [getPostDetail.fulfilled]: (state, action) => {
+      state.isSaving = false;
+      console.log(action.payload)
+      state.postDetail = action.payload;
     },
     [deleteDraft.rejected]: (state, action) => {
       state.isLoading = false;

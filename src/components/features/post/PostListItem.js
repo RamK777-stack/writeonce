@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-const PostListItem = ({ detail, isBookMarked }) => {
+const PostListItem = ({ detail, isBookMarked, redirectToPostDetail }) => {
   const dispatch = useDispatch();
   console.log(isBookMarked);
   const handleClickBookMark = async () => {
@@ -23,7 +23,12 @@ const PostListItem = ({ detail, isBookMarked }) => {
   };
 
   return (
-    <div className="w-3/4">
+    <div
+      className="w-3/4 cursor-pointer"
+      onClick={() => {
+        redirectToPostDetail(detail.slug);
+      }}
+    >
       <div className="flex items-center">
         {detail.img ? (
           <img

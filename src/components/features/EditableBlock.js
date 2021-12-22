@@ -1,15 +1,15 @@
-import React from "react";
-import ContentEditable from "react-contenteditable";
-import { setCaretToEnd, getCaretCoordinates, objectId } from "../../utils";
-import SelectMenu from "./SelectMenu";
-import { Draggable } from "react-beautiful-dnd";
-import { ViewGridIcon, ViewListIcon } from "@heroicons/react/outline";
+import React from "react"
+import ContentEditable from "react-contenteditable"
+import {setCaretToEnd, getCaretCoordinates, objectId} from "../../utils"
+import SelectMenu from "./SelectMenu"
+import {Draggable} from "react-beautiful-dnd"
+import {ViewGridIcon, ViewListIcon} from "@heroicons/react/outline"
 
 class EditableBlock extends React.Component {
   constructor(props) {
-    super(props);
-    this.onChangeHandler = this.onChangeHandler.bind(this);
-    this.contentEditable = React.createRef();
+    super(props)
+    this.onChangeHandler = this.onChangeHandler.bind(this)
+    this.contentEditable = React.createRef()
     this.state = {
       description: "",
       tag: "p",
@@ -22,7 +22,8 @@ class EditableBlock extends React.Component {
       },
       htmlBackup: "",
       hasPlaceholder: false,
-    };
+      tweetInputOpen: false,
+    }
   }
 
   componentDidMount() {
@@ -30,7 +31,7 @@ class EditableBlock extends React.Component {
       block: this.contentEditable.current,
       position: this.props.position,
       content: this.props.description || this.props.imageUrl,
-    });
+    })
     // if (!hasPlaceholder) {
     //   this.setState({
     //     ...this.state,
@@ -42,22 +43,22 @@ class EditableBlock extends React.Component {
 
   componentWillUnmount() {
     // In case, the user deleted the block, we need to cleanup all listeners
-    document.removeEventListener("click", this.closeActionMenu, false);
+    document.removeEventListener("click", this.closeActionMenu, false)
   }
 
   closeActionMenu = () => {
     this.setState({
       ...this.state,
-      actionMenuPosition: { x: null, y: null },
+      actionMenuPosition: {x: null, y: null},
       actionMenuOpen: false,
-    });
-    document.removeEventListener("click", this.closeActionMenu, false);
-  };
+    })
+    document.removeEventListener("click", this.closeActionMenu, false)
+  }
 
   // Show a placeholder for blank pages
-  addPlaceholder = ({ block, position, content }) => {
-    const isFirstBlockWithoutHtml = position === 1 && !content;
-    const isFirstBlockWithoutSibling = !block.parentElement.nextElementSibling;
+  addPlaceholder = ({block, position, content}) => {
+    const isFirstBlockWithoutHtml = position === 1 && !content
+    const isFirstBlockWithoutSibling = !block.parentElement.nextElementSibling
     if (isFirstBlockWithoutHtml) {
       this.setState({
         ...this.state,
@@ -65,18 +66,18 @@ class EditableBlock extends React.Component {
         tag: "h1",
         placeholder: true,
         isTyping: false,
-      });
-      return true;
+      })
+      return true
     } else {
-      return false;
+      return false
     }
-  };
+  }
 
-  onKeyUpHandler = (e) => {
+  onKeyUpHandler = e => {
     if (e.key === "/") {
-      this.openSelectMenuHandler(e);
+      this.openSelectMenuHandler(e)
     }
-  };
+  }
 
   handleFocus = () => {
     // If a placeholder is set, we remove it when the block gets focused
@@ -86,113 +87,123 @@ class EditableBlock extends React.Component {
         description: "",
         placeholder: false,
         isTyping: true,
-      });
+      })
     } else {
-      this.setState({ ...this.state, isTyping: true });
+      this.setState({...this.state, isTyping: true})
     }
-  };
+  }
 
-  handleBlur = (e) => {
+  handleBlur = e => {
     // Show placeholder if block is still the only one and empty
     const hasPlaceholder = this.addPlaceholder({
       block: this.contentEditable.current,
       position: this.props.position,
       content: this.props.description || this.props.imageUrl,
-    });
+    })
     if (!hasPlaceholder) {
-      this.setState({ ...this.state, isTyping: false });
+      this.setState({...this.state, isTyping: false})
     }
-  };
+  }
 
-  openSelectMenuHandler = (e) => {
-    const { x, y } = getCaretCoordinates(e);
+  openSelectMenuHandler = e => {
+    const {x, y} = getCaretCoordinates(e)
     this.setState({
       selectMenuIsOpen: true,
-      selectMenuPosition: { x: Math.round(x), y: Math.round(y)},
-    });
-    document.addEventListener("click", this.closeSelectMenuHandler);
-  };
+      selectMenuPosition: {x: Math.round(x), y: Math.round(y)},
+    })
+    document.addEventListener("click", this.closeSelectMenuHandler) // need to change this
+  }
 
   closeSelectMenuHandler = () => {
     this.setState({
       selectMenuIsOpen: false,
-      selectMenuPosition: { x: 100, y: null },
-    });
-    document.removeEventListener("click", this.closeSelectMenuHandler);
-  };
+      tweetInputOpen: false,
+      selectMenuPosition: {x: 100, y: null},
+    })
+    document.removeEventListener("click", this.closeSelectMenuHandler)
+  }
 
-  tagSelectionHandler = (tag) => {
+  tagSelectionHandler = tag => {
+    console.log(tag)
+    if (tag === "tweet") {
+      this.setState({tweetInputOpen: true})
+      return
+    }
     this.props.updateBlock({
       id: this.props.id,
       description: this.state.htmlBackup,
       tag: tag,
       imageUrl: this.props.imageUrl,
-    });
+    })
     // this.setState({ tag: tag, description: this.state.htmlBackup }, () => {
     // setCaretToEnd(this.contentEditable.current);
     // this.contentEditable.current.focus();
     // console.log(this.props.id, this.state.description);
-    this.closeSelectMenuHandler();
+    this.closeSelectMenuHandler()
     // });
-  };
+  }
 
   isListEnter = () => {
     return (
       ["ol", "ul"].includes(this.props.tag) &&
       this.state.previousKey === "Enter"
-    );
-  };
+    )
+  }
 
-  stripeHTML = (html) => {
-    let tmp = document.createElement("DIV");
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
-  };
+  stripeHTML = html => {
+    let tmp = document.createElement("DIV")
+    tmp.innerHTML = html
+    return tmp.textContent || tmp.innerText || ""
+  }
 
-  onKeyDownHandler = (e) => {
+  onKeyDownHandler = e => {
     if (e.key === "ArrowUp") {
       this.props.moveToBlock({
         id: this.props.id,
         ref: this.contentEditable.current,
         direction: "up",
-      });
+      })
     }
     if (e.key === "ArrowDown") {
       this.props.moveToBlock({
         id: this.props.id,
         ref: this.contentEditable.current,
         direction: "down",
-      });
+      })
     }
     if (e.key === "/") {
-      this.setState({ htmlBackup: this.props.description });
+      this.setState({htmlBackup: this.props.description})
     }
     if (e.key === "Enter") {
+      if (["code"].includes(this.props.tag)) {
+        document.execCommand("insertLineBreak")
+        e.preventDefault()
+      }
       if (
         this.state.previousKey !== "Shift" &&
         (!["code", "ol", "ul"].includes(this.props.tag) || this.isListEnter())
       ) {
-        e.preventDefault();
-        const selection = window.getSelection();
+        e.preventDefault()
+        const selection = window.getSelection()
 
-        let rangeBefore = document.createRange();
-        let rangeAfter = document.createRange();
-        let fullRange = document.createRange();
-        const r = selection.getRangeAt(0);
+        let rangeBefore = document.createRange()
+        let rangeAfter = document.createRange()
+        let fullRange = document.createRange()
+        const r = selection.getRangeAt(0)
 
-        rangeBefore.setStart(r.startContainer, 0);
-        rangeBefore.setEnd(r.startContainer, r.startOffset);
+        rangeBefore.setStart(r.startContainer, 0)
+        rangeBefore.setEnd(r.startContainer, r.startOffset)
 
-        rangeAfter.setStart(r.endContainer, r.endOffset);
-        rangeAfter.setEnd(r.endContainer, r.endContainer.length);
+        rangeAfter.setStart(r.endContainer, r.endOffset)
+        rangeAfter.setEnd(r.endContainer, r.endContainer.length)
 
-        fullRange.setStart(r.startContainer, 0);
-        fullRange.setEnd(r.endContainer, r.endContainer.length);
+        fullRange.setStart(r.startContainer, 0)
+        fullRange.setEnd(r.endContainer, r.endContainer.length)
 
-        const endIndex = r.endOffset;
-        const fullLength = fullRange.toString().length;
+        const endIndex = r.endOffset
+        const fullLength = fullRange.toString().length
 
-        let addAtPosition = "";
+        let addAtPosition = ""
         let newBlock = [
           {
             id: objectId(),
@@ -200,21 +211,21 @@ class EditableBlock extends React.Component {
             description: "",
             imageUrl: "",
           },
-        ];
+        ]
         if (this.isListEnter()) {
-          addAtPosition = "end";
+          addAtPosition = "end"
         } else {
           switch (endIndex) {
             case 0:
-              addAtPosition = "start";
-              break;
+              addAtPosition = "start"
+              break
             case fullLength:
-              addAtPosition = "end";
-              break;
+              addAtPosition = "end"
+              break
             default:
-              addAtPosition = "middle";
-              newBlock[0].description = rangeAfter.toString();
-              break;
+              addAtPosition = "middle"
+              newBlock[0].description = rangeAfter.toString()
+              break
           }
         }
         this.props.addBlock(
@@ -227,71 +238,71 @@ class EditableBlock extends React.Component {
             newBlock: newBlock,
             rangeBeforeText: rangeBefore.toString(),
           },
-          addAtPosition
-        );
+          addAtPosition,
+        )
       }
     }
     if (e.key === "Backspace") {
-      const selection = window.getSelection();
-      let rangeBefore = document.createRange();
-      let rangeAfter = document.createRange();
-      let fullRange = document.createRange();
-      const r = selection.getRangeAt(0);
+      const selection = window.getSelection()
+      let rangeBefore = document.createRange()
+      let rangeAfter = document.createRange()
+      let fullRange = document.createRange()
+      const r = selection.getRangeAt(0)
 
-      rangeBefore.setStart(r.startContainer, 0);
-      rangeBefore.setEnd(r.startContainer, r.startOffset);
+      rangeBefore.setStart(r.startContainer, 0)
+      rangeBefore.setEnd(r.startContainer, r.startOffset)
 
-      rangeAfter.setStart(r.endContainer, r.endOffset);
-      rangeAfter.setEnd(r.endContainer, r.endContainer.length);
+      rangeAfter.setStart(r.endContainer, r.endOffset)
+      rangeAfter.setEnd(r.endContainer, r.endContainer.length)
 
-      fullRange.setStart(r.startContainer, 0);
-      fullRange.setEnd(r.endContainer, r.endContainer.length);
+      fullRange.setStart(r.startContainer, 0)
+      fullRange.setEnd(r.endContainer, r.endContainer.length)
 
-      const endIndex = r.endOffset;
-      const fullLength = fullRange.toString().length;
-      let deleteAtPosition = "";
+      const endIndex = r.endOffset
+      const fullLength = fullRange.toString().length
+      let deleteAtPosition = ""
 
       switch (endIndex) {
         case 0:
-          deleteAtPosition = "start";
-          break;
+          deleteAtPosition = "start"
+          break
         case fullLength:
-          deleteAtPosition = "end";
-          break;
+          deleteAtPosition = "end"
+          break
         default:
-          deleteAtPosition = "middle";
-          break;
+          deleteAtPosition = "middle"
+          break
       }
-      if (["code", "ul", "ol"].some((i) => this.props.tag.includes(i))) {
-        console.log(this.stripeHTML(this.props.description), deleteAtPosition);
+      if (["code", "ul", "ol"].some(i => this.props.tag.includes(i))) {
+        console.log(this.stripeHTML(this.props.description), deleteAtPosition)
       }
       if (
-        ["code", "ul", "ol"].some((i) => this.props.tag.includes(i)) &&
+        ["code", "ul", "ol"].some(i => this.props.tag.includes(i)) &&
         !this.stripeHTML(this.props.description)
       ) {
         this.props.deleteBlock({
           id: this.props.id,
           ref: this.contentEditable.current,
-        });
+        })
       }
       if (
-        !["code", "ul", "ol"].some((i) => this.props.tag.includes(i)) &&
+        !["code", "ul", "ol"].some(i => this.props.tag.includes(i)) &&
         (deleteAtPosition === "start" || !this.props.description)
       ) {
         this.props.deleteBlock({
           id: this.props.id,
           ref: this.contentEditable.current,
           deleteAtPosition: deleteAtPosition,
-        });
+        })
       }
     }
-    this.setState({ previousKey: e.key });
-  };
+    this.setState({previousKey: e.key})
+  }
 
   componentDidUpdate(prevProps, prevState) {
-    const hasNoPlaceholder = !this.state.placeholder;
-    const htmlChanged = this.props.description !== this.state.description;
-    const tagChanged = this.props.tag !== this.state.tag;
+    const hasNoPlaceholder = !this.state.placeholder
+    const htmlChanged = this.props.description !== this.state.description
+    const tagChanged = this.props.tag !== this.state.tag
     // if ((htmlChanged || tagChanged) && hasNoPlaceholder) {
     //   this.props.updateBlock({
     //     id: this.props.id,
@@ -303,13 +314,18 @@ class EditableBlock extends React.Component {
   }
 
   onChangeHandler(e) {
+    console.log(e)
     // this.setState({ description: e.target.value });
+    if (this.props.tag === "code") {
+      e.target.value = e.target.value.replaceAll("</div>", "<br/>")
+      e.target.value = e.target.value.replaceAll("<div>", "")
+    }
     this.props.updateBlock({
       id: this.props.id,
       description: e.target.value,
       tag: this.props.tag,
       imageUrl: this.props.imageUrl,
-    });
+    })
   }
 
   getClassName = () => {
@@ -322,17 +338,19 @@ class EditableBlock extends React.Component {
       code: "bg-gray-100 dark:bg-gray-700",
       ol: "list-decimal",
       ul: "list-disc",
-    };
-    return size[this.props.tag];
-  };
+    }
+    return size[this.props.tag]
+  }
   render() {
+    console.log(this.props.description)
     return (
-      <>
+      <div className="">
         <SelectMenu
           position={this.state.selectMenuPosition}
           onSelect={this.tagSelectionHandler}
           close={this.closeSelectMenuHandler}
           selectMenuIsOpen={this.state.selectMenuIsOpen}
+          tweetInputOpen={this.state.tweetInputOpen}
         />
         <Draggable
           draggableId={this.props.id.toString()}
@@ -368,9 +386,9 @@ class EditableBlock extends React.Component {
             </div>
           )}
         </Draggable>
-      </>
-    );
+      </div>
+    )
   }
 }
 
-export default EditableBlock;
+export default EditableBlock
