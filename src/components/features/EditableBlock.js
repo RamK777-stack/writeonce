@@ -2,8 +2,10 @@ import React from "react"
 import ContentEditable from "react-contenteditable"
 import {setCaretToEnd, getCaretCoordinates, objectId} from "../../utils"
 import SelectMenu from "./SelectMenu"
+import TweetInput from "./TweetInput"
 import {Draggable} from "react-beautiful-dnd"
-import {ViewGridIcon, ViewListIcon} from "@heroicons/react/outline"
+import {ViewGridIcon, ViewListIcon, XIcon} from "@heroicons/react/outline"
+import CustomTwitterComponent from "../features/post/CustomTwitterComponent"
 
 class EditableBlock extends React.Component {
   constructor(props) {
@@ -115,18 +117,21 @@ class EditableBlock extends React.Component {
   }
 
   closeSelectMenuHandler = () => {
+    const {tweetInputOpen, selectMenuPosition} = this.state
     this.setState({
       selectMenuIsOpen: false,
-      tweetInputOpen: false,
-      selectMenuPosition: {x: 100, y: null},
+      selectMenuPosition: tweetInputOpen
+        ? selectMenuPosition
+        : {x: 100, y: null},
     })
     document.removeEventListener("click", this.closeSelectMenuHandler)
   }
 
   tagSelectionHandler = tag => {
-    console.log(tag)
     if (tag === "tweet") {
-      this.setState({tweetInputOpen: true})
+      this.setState({tweetInputOpen: true}, () => {
+        this.closeSelectMenuHandler()
+      })
       return
     }
     this.props.updateBlock({
@@ -341,17 +346,30 @@ class EditableBlock extends React.Component {
     }
     return size[this.props.tag]
   }
+
+  onDeleteURL = () => {
+    this.props.deleteBlock({
+      id: this.props.id,
+      ref: this.contentEditable.current,
+    })
+  }
+
   render() {
-    console.log(this.props.description)
     return (
       <div className="">
-        <SelectMenu
+        {/* <SelectMenu
           position={this.state.selectMenuPosition}
           onSelect={this.tagSelectionHandler}
           close={this.closeSelectMenuHandler}
           selectMenuIsOpen={this.state.selectMenuIsOpen}
           tweetInputOpen={this.state.tweetInputOpen}
         />
+        <TweetInput
+          position={this.state.selectMenuPosition}
+          onSelect={this.tagSelectionHandler}
+          close={this.closeSelectMenuHandler}
+          tweetInputOpen={this.state.tweetInputOpen}
+        /> */}
         <Draggable
           draggableId={this.props.id.toString()}
           index={this.props.index}
@@ -365,24 +383,39 @@ class EditableBlock extends React.Component {
             >
               <span
                 role="button"
-                tabIndex="0"
-                {...provided.dragHandleProps}
                 className="flex items-center mr-5 invisible group-hover:visible"
               >
-                <ViewListIcon className="h-5 w-5" aria-hidden="true" />
+                {this.props.url?.startsWith("https://twitter.com") && (
+                  <XIcon
+                    className="h-5 w-5 mr-3"
+                    aria-hidden="true"
+                    onClick={() => {
+                      this.onDeleteURL()
+                    }}
+                  />
+                )}
+                <div tabIndex="0" {...provided.dragHandleProps}>
+                  <ViewListIcon className="h-5 w-5" aria-hidden="true" />
+                </div>
               </span>
-              <ContentEditable
-                className={`Block ${this.getClassName()} flex-1 focus:bg-gray-20 focus:outline-none`}
-                innerRef={this.contentEditable}
-                html={this.props.description}
-                tagName={this.props.tag}
-                onChange={this.onChangeHandler}
-                onKeyDown={this.onKeyDownHandler}
-                onKeyUp={this.onKeyUpHandler}
-                onFocus={this.handleFocus}
-                onBlur={this.handleBlur}
-                data-position={this.props.position}
-              />
+              {this.props.url?.startsWith("https://twitter.com") ? (
+                <div className="flex w-full justify-center">
+                  <CustomTwitterComponent url={this.props.url} />
+                </div>
+              ) : (
+                <ContentEditable
+                  className={`Block ${this.getClassName()} flex-1 focus:bg-gray-20 focus:outline-none`}
+                  innerRef={this.contentEditable}
+                  html={this.props.description}
+                  tagName={this.props.tag}
+                  onChange={this.onChangeHandler}
+                  onKeyDown={this.onKeyDownHandler}
+                  onKeyUp={e => this.props.onKeyUpHandler(e, this.props.id)}
+                  onFocus={this.handleFocus}
+                  onBlur={this.handleBlur}
+                  data-position={this.props.position}
+                />
+              )}
             </div>
           )}
         </Draggable>

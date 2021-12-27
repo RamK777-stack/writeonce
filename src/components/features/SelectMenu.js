@@ -121,48 +121,30 @@ const SelectMenu = props => {
           !props.selectMenuIsOpen && "hidden"
         }`}
       >
-        {props.tweetInputOpen ? (
-          <div className="p-5 border-b border-dashed border-gray-200 border-opacity-0 p-2 border-light-blue-500 dark:border-gray-100">
-            <label htmlFor="first-name" className="block text-gray-700">
-              Add tweet link
-            </label>
-            <input
-              type="text"
-              name="first-name"
-              id="first-name"
-              autoComplete="given-name"
-              placeholder="https://twitter.com/..."
-              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            />
-          </div>
-        ) : (
-          [
-            <div
-              className={`border-b border-dashed border-gray-200 border-opacity-0 p-2 border-light-blue-500 dark:border-gray-100`}
-              key="ChooseBlockType"
-            >
-              Choose Block Type
-            </div>,
-            <div>
-              {items.map((item, key) => {
-                const isSelected = items.indexOf(item) === selectedItem
-                return (
-                  <div
-                    className={`${
-                      isSelected && "Selected"
-                    } border-b-1 p-2 border-light-blue-500 dark:border-gray-100 transition duration-200 hover:bg-blue-100 dark:hover:bg-gray-500`}
-                    key={key}
-                    role="button"
-                    tabIndex="0"
-                    onClick={() => handleClickOption(item, key)}
-                  >
-                    {item.label}
-                  </div>
-                )
-              })}
-            </div>,
-          ]
-        )}
+        <div
+          className={`border-b border-dashed border-gray-200 border-opacity-0 p-2 border-light-blue-500 dark:border-gray-100`}
+          key="ChooseBlockType"
+        >
+          Choose Block Type
+        </div>
+        <div>
+          {items.map((item, key) => {
+            const isSelected = items.indexOf(item) === selectedItem
+            return (
+              <div
+                className={`${
+                  isSelected && "Selected"
+                } border-b-1 p-2 border-light-blue-500 dark:border-gray-100 transition duration-200 hover:bg-blue-100 dark:hover:bg-gray-500`}
+                key={key}
+                role="button"
+                tabIndex="0"
+                onClick={() => handleClickOption(item, key)}
+              >
+                {item.label}
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

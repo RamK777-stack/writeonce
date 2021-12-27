@@ -12,17 +12,19 @@ import {NodeHtmlMarkdown, NodeHtmlMarkdownOptions} from "node-html-markdown"
 import {useLocation, useNavigate} from "react-router-dom"
 import {URL_PATH} from "../../../utils/urlPath"
 import sanitizeHtml from "sanitize-html"
-
+import {getCaretCoordinates} from "../../../utils"
+import SelectMenu from "../SelectMenu"
+import TweetInput from "../TweetInput"
 var htmlparser = require("htmlparser2")
 
 const initialBlock = [
   {id: uid(), description: "Title here", tag: "h1"},
-  {
-    id: uid(),
-    description: "Enter content",
-    // description: "<blockquote class='twitter-tweet'> <a href='https://twitter.com/x/status/807811447862468608'></a> </blockquote>",
-    tag: "p",
-  },
+  // {
+  //   id: uid(),
+  //   description: "Enter content",
+  //   // description: "<blockquote class='twitter-tweet'> <a href='https://twitter.com/x/status/807811447862468608'></a> </blockquote>",
+  //   tag: "p",
+  // },
 ]
 
 const Post = props => {
@@ -36,6 +38,74 @@ const Post = props => {
   const dispatch = useDispatch()
   const posts = useSelector(state => state.post.posts)
   const prevBlocks = usePrevious(blocks)
+  const [selectMenuIsOpen, setSelectMenuIsOpen] = useState(false)
+  const [selectMenuPosition, setSelectMenuPosition] = useState({x: 100, y: 0})
+  const [tweetInputOpen, setTweetInputOpen] = useState(false)
+  const [htmlBackup, setHtmlBackUp] = useState()
+  const [currentBlock, setCurrentBlock] = useState()
+  const [url, setURL] = useState()
+
+  useEffect(() => {
+    document.addEventListener("click", onClickEventHandler) // need to change this
+    return () => {
+      document.removeEventListener("click", onClickEventHandler)
+    }
+  }, [selectMenuIsOpen, blocks])
+
+  const openSelectMenuHandler = e => {
+    const {x, y} = getCaretCoordinates(e)
+    setSelectMenuIsOpen(true)
+    setSelectMenuPosition({x: Math.round(x), y: Math.round(y)})
+    // document.addEventListener("click", onClickEventHandler) // need to change this
+  }
+
+  const onClickEventHandler = e => {
+    console.log(document.getElementById("content-editable"))
+    console.log(e.target)
+    console.log(document.getElementById("content-editable").contains(e.target))
+    if (document.getElementById("content-editable").contains(e.target)) {
+      // Clicked in box
+      console.log("inside box")
+      if (blocks[blocks.length - 1]?.description) {
+        const blockElement = [{id: uid(), description: "", tag: "p"}]
+        const updatedBlocks = [...blocks]
+        updatedBlocks.splice(blocks.length + 1, 0, ...blockElement)
+        console.log(updatedBlocks, "2222222")
+        setBlocks(updatedBlocks)
+        setCurrentBlockId(blockElement[0].id)
+        setCurrentBlock(blockElement[0])
+      }
+    }
+    if (selectMenuIsOpen) {
+      closeSelectMenuHandler()
+      // document.removeEventListener("click", closeSelectMenuHandler)
+    }
+  }
+
+  const closeSelectMenuHandler = e => {
+    setSelectMenuIsOpen(false)
+  }
+
+  const closeTweetInputHandler = () => {
+    setTweetInputOpen(false)
+    setURL(null);
+  }
+
+  const tagSelectionHandler = tag => {
+    if (tag === "tweet") {
+      setTweetInputOpen(true)
+      closeSelectMenuHandler()
+      return
+    }
+    const {id, description, imageUrl} = currentBlock
+    updateBlockHandler({
+      id: id,
+      description: description,
+      tag: tag,
+      imageUrl: imageUrl,
+    })
+    closeSelectMenuHandler()
+  }
 
   useEffect(() => {
     if (location?.state?.id) {
@@ -246,9 +316,55 @@ const Post = props => {
     }
   }
 
+  const onKeyUpHandler = (e, id) => {
+    if (e.key === "/") {
+      const currentBlock = blocks.find(item => item.id === id)
+      openSelectMenuHandler(e)
+      setCurrentBlock(currentBlock)
+      setCurrentBlockId(id)
+    }
+  }
+
+  const embedLink = url => {
+    let newBlocks = JSON.parse(JSON.stringify(blocks))
+    let index = blocks.findIndex(item => item.id === currentBlockId)
+    console.log(index, newBlocks, currentBlockId)
+    console.log(blocks)
+    newBlocks[index].description = `<a href=${url}></a>`
+    newBlocks[index].tag = `div`
+    newBlocks[index].url = url
+    console.log(newBlocks)
+    setBlocks(newBlocks)
+    console.log(blocks)
+    setTweetInputOpen(false)
+    setURL(null)
+    //add this url into block array with tag type a
+  }
+
+  // const closeHandler = e => {
+  //   console.log(document.getElementById("tweetInput"))
+  //   console.log(e.target)
+  //   console.log(document.getElementById("tweetInput").contains(e.target))
+  //   if (document.getElementById("tweetInput").contains(e.target)) {
+  //     // Clicked in box
+  //     console.log("inside box", props.tweetInputOpen)
+  //   } else {
+  //     // Clicked outside the box
+  //     props.close()
+  //     console.log("outside box", props.tweetInputOpen)
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   document.addEventListener("click", closeHandler)
+  //   return () => {
+  //     document.removeEventListener("click", closeHandler)
+  //   }
+  // })
+  console.log(tweetInputOpen, "q1q", url)
   return (
     <div className="Page flex justify-center mt-18 flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">
-      <div className="w-full lg:w-3/4 px-20 ml-20">
+      <div className="w-full lg:w-3/4 px-20 ml-20" id="content-editable">
         <label for="cover">
           <div className="ml-12 flex mb-5">
             {!coverImage && (
@@ -289,6 +405,9 @@ const Post = props => {
                       updateBlock={updateBlockHandler}
                       moveToBlock={moveToBlock}
                       isDragDisabled={i === 0}
+                      onKeyUpHandler={onKeyUpHandler}
+                      setHtmlBackUp={setHtmlBackUp}
+                      url={block?.url}
                     />
                   )
                 })}
@@ -297,6 +416,24 @@ const Post = props => {
             )}
           </Droppable>
         </DragDropContext>
+        <SelectMenu
+          position={selectMenuPosition}
+          onSelect={tagSelectionHandler}
+          close={closeSelectMenuHandler}
+          selectMenuIsOpen={selectMenuIsOpen}
+          tweetInputOpen={tweetInputOpen}
+        />
+        <TweetInput
+          position={selectMenuPosition}
+          onSelect={tagSelectionHandler}
+          close={closeTweetInputHandler}
+          tweetInputOpen={tweetInputOpen}
+          embedLink={embedLink}
+          url={url}
+          onChangeURL={url => {
+            setURL(url)
+          }}
+        />
       </div>
       <div className="w-full lg:w-1/4 text-left pl-5">
         <Publish savePost={handleSavePost} />
