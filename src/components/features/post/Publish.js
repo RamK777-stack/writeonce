@@ -1,9 +1,54 @@
-import React from "react";
-import { XIcon } from "@heroicons/react/outline";
-import { useDispatch } from "react-redux";
+import React, {useState, useEffect} from "react"
+import {XIcon} from "@heroicons/react/outline"
+import {useDispatch, useSelector} from "react-redux"
+import CreatableSelect from "react-select/creatable"
+import {getHashtag} from "../post/postSlice"
+import makeAnimated from "react-select/animated"
 
-export default function Publish({ savePost }) {
-  const dispatch = useDispatch();
+const animatedComponents = makeAnimated()
+
+export default function Publish({savePost}) {
+  const dispatch = useDispatch()
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [selectedTags, setSelectedTags] = useState()
+
+  useEffect(() => {
+    dispatch(getHashtag())
+  }, [])
+
+  const hashtags = useSelector(state => state.post.hashtags)
+
+  const handleCreate = inputValue => {
+    console.log(inputValue, "New value")
+    setIsLoading(true)
+    setTimeout(() => {
+      // const {options} = this.state
+      // const newOption = createOption(inputValue)
+      // console.log(newOption)
+      setIsLoading(false)
+      // this.setState({
+      //   isLoading: false,
+      //   options: [...options, newOption],
+      //   value: newOption,
+      // })
+    }, 1000)
+  }
+
+  const handleChange = value => {
+    console.log(value, "handleChange")
+    setSelectedTags(value)
+  }
+
+  const handleInputChange = value => {
+    console.log(value, "handleInputChange")
+  }
+
+  const handleSavePost = isDraft => {
+    const hashTags = selectedTags.map(i => i.id)
+    savePost(isDraft, hashTags)
+  }
+
   return (
     <div className="dark:text-white">
       <p>Publish to</p>
@@ -89,26 +134,34 @@ export default function Publish({ savePost }) {
             Hash tags
           </legend>
           <div className="mt-1 space-y-4">
-            <div class="pt-2 relative mx-auto text-gray-600">
+            <div class="pt-2 pr-2 mx-auto text-gray-600">
               <div className="">
-                <input
-                  class="dark:text-gray-100 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-900 bg-white h-10 px-5 rounded-lg text-sm focus:outline-none"
-                  type="search"
-                  name="search"
-                  placeholder="Search"
+                <CreatableSelect
+                  className="dark:text-gray-100 dark:bg-gray-900 text-sm focus:outline-none"
+                  // value={selectedOption}
+                  onChange={handleChange}
+                  options={hashtags || []}
+                  isMulti={true}
+                  isLoading={isLoading}
+                  onCreateOption={handleCreate}
+                  onInputChange={handleInputChange}
+                  components={animatedComponents}
+                  isSearchable
+                  isClearable
+                  getOptionValue={option => option.id}
                 />
               </div>
             </div>
           </div>
           <div class="my-3 flex flex-row gap-2 flex-wrap">
-            <button class="inline-flex flex-none p-2 items-center px-2 text-xs dark:bg-blue-900 dark:text-white bg-blue-200 w-auto text-blue-600 font-bold rounded-full">
+            {/* <button class="inline-flex flex-none p-2 items-center px-2 text-xs dark:bg-blue-900 dark:text-white bg-blue-200 w-auto text-blue-600 font-bold rounded-full">
               <span className="ml-2">Nodejs</span>
               <XIcon
                 className="h-4 w-4 z-40 dark:text-blue-300 text-blue-500 ml-2"
                 aria-hidden="true"
               />
-            </button>
-            <button class="inline-flex flex-none p-2 items-center px-2 text-xs dark:bg-blue-900 dark:text-white bg-blue-200 w-auto text-blue-600 font-bold rounded-full">
+            </button> */}
+            {/* <button class="inline-flex flex-none p-2 items-center px-2 text-xs dark:bg-blue-900 dark:text-white bg-blue-200 w-auto text-blue-600 font-bold rounded-full">
               <span className="ml-2">Reactjs</span>
               <XIcon
                 className="h-4 w-4 z-40 dark:text-blue-300 text-blue-500 ml-2"
@@ -128,22 +181,22 @@ export default function Publish({ savePost }) {
                 className="h-4 w-4 z-40 dark:text-blue-300 text-blue-500 ml-2"
                 aria-hidden="true"
               />
-            </button>
+            </button> */}
           </div>
         </fieldset>
         <button
           class="mt-5 dark:bg-blue-900  bg-blue-500 text-white font-bold py-2 px-6 rounded"
-          onClick={() => savePost(false)}
+          onClick={() => handleSavePost(false)}
         >
           Publish
         </button>
         <button
           class="mt-5 dark:bg-gray-700 bg-gray-500 text-white font-bold py-2 px-6 rounded ml-2"
-          onClick={() => savePost(true)}
+          onClick={() => handleSavePost(true)}
         >
           Save as Draft
         </button>
       </div>
     </div>
-  );
+  )
 }

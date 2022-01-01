@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit"
 import {
   fetchPosts,
   savePostAPI,
@@ -11,8 +11,9 @@ import {
   createBookMarkAPI,
   deleteBookMarkAPI,
   postDetailAPI,
-} from "./postAPI";
-import { isLoggedIn, openModal } from "../auth/AuthSlice";
+  getHashtagAPI,
+} from "./postAPI"
+import {isLoggedIn, openModal} from "../auth/AuthSlice"
 
 const initialState = {
   posts: [],
@@ -21,7 +22,8 @@ const initialState = {
   drafts: [],
   bookmarks: [],
   postDetail: {},
-};
+  hashtags: [],
+}
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
@@ -31,112 +33,118 @@ const initialState = {
 export const getPosts = createAsyncThunk(
   "post/getPosts",
   async (dispatch, getState) => {
-    const response = await fetchPosts();
+    const response = await fetchPosts()
     // The value we return becomes the `fulfilled` action payload
-    return response;
-  }
-);
+    return response
+  },
+)
 
 export const getDrafts = createAsyncThunk(
   "post/getDrafts",
   async (dispatch, getState) => {
-    const response = await fetchDrafts();
+    const response = await fetchDrafts()
     // The value we return becomes the `fulfilled` action payload
-    return response;
-  }
-);
+    return response
+  },
+)
 
 export const getDraftDetails = createAsyncThunk(
   "post/getDraftDetail",
-  async (id) => {
-    const response = await fetchDraftById(id);
-    return response;
-  }
-);
+  async id => {
+    const response = await fetchDraftById(id)
+    return response
+  },
+)
 
 export const savePost = createAsyncThunk(
   "post/savePost",
-  async (inputParams, { getState }) => {
-    const userDetails = getState().auth?.userDetails;
-    const { draftId, blocks, description, markdown } = inputParams;
+  async (inputParams, {getState}) => {
+    const userDetails = getState().auth?.userDetails
+    const {draftId, blocks, description, markdown, hashtags} = inputParams
     const params = {
       title: blocks[0].description,
       description: description,
       markdown: markdown,
       draftId: draftId,
       author: userDetails?.id,
-    };
-    const response = await savePostAPI(params);
-    return response;
-  }
-);
+      hashtags,
+    }
+    const response = await savePostAPI(params)
+    return response
+  },
+)
 
 export const getPostDetail = createAsyncThunk(
   "post/getPostDetail",
   async (params, thunkAPI) => {
     console.log(params)
-    const response = await postDetailAPI(params);
-    return response;
-  }
-);
+    const response = await postDetailAPI(params)
+    return response
+  },
+)
 
 export const deleteDraft = createAsyncThunk(
   "post/deleteDraft",
   async (params, thunkAPI) => {
     if (!isLoggedIn()) {
-      thunkAPI.dispatch(openModal());
-      throw new Error("user not logged in");
+      thunkAPI.dispatch(openModal())
+      throw new Error("user not logged in")
     }
-    const response = await deleteAPI(params);
-    return response;
-  }
-);
+    const response = await deleteAPI(params)
+    return response
+  },
+)
 
 export const saveAsDraft = createAsyncThunk(
   "post/saveDrafts",
-  async (inputParams) => {
-    const { draftId, blocks } = inputParams;
+  async inputParams => {
+    const {draftId, blocks} = inputParams
     const params = {
       title: blocks[0].description,
       draft_blocks: blocks,
-    };
-    if (draftId) {
-      params["draftId"] = draftId;
-      const response = await updateDraftAPI(params);
-      return response;
     }
-    const response = await saveDraftAPI(params);
-    return response;
-  }
-);
+    if (draftId) {
+      params["draftId"] = draftId
+      const response = await updateDraftAPI(params)
+      return response
+    }
+    const response = await saveDraftAPI(params)
+    return response
+  },
+)
 
 export const getBookMark = createAsyncThunk(
   "post/getBookMark",
   async (params, thunkAPI) => {
-    thunkAPI.dispatch(startLoader());
-    const response = await getBookMarkAPI();
-    return response;
-  }
-);
+    thunkAPI.dispatch(startLoader())
+    const response = await getBookMarkAPI()
+    return response
+  },
+)
 
 export const createBookMark = createAsyncThunk(
   "post/createBookMark",
-  async (postId) => {
+  async postId => {
     const params = {
       post: postId,
-    };
-    const response = await createBookMarkAPI(params);
-    return response;
-  }
-);
+    }
+    const response = await createBookMarkAPI(params)
+    return response
+  },
+)
 
 export const deleteBookMark = createAsyncThunk(
   "post/deleteBookMark",
-  async (bookMarkId) => {
-    const response = await deleteBookMarkAPI(bookMarkId);
-    return response;
-  }
-);
+  async bookMarkId => {
+    const response = await deleteBookMarkAPI(bookMarkId)
+    return response
+  },
+)
+
+export const getHashtag = createAsyncThunk("post/getHashtag", async params => {
+  const response = await getHashtagAPI()
+  return response
+})
 
 export const postSlice = createSlice({
   name: "post",
@@ -157,96 +165,102 @@ export const postSlice = createSlice({
     // incrementByAmount: (state, action) => {
     //   state.value += action.payload;
     // },
-    startLoader: (state) => {
-      state.isLoading = true;
+    startLoader: state => {
+      state.isLoading = true
     },
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
   // including actions generated by createAsyncThunk or in other slices.
   extraReducers: {
     [getPosts.pending]: (state, action) => {
-      state.isLoading = true;
+      state.isLoading = true
     },
     [getPosts.fulfilled]: (state, action) => {
-      state.posts = action.payload;
-      state.isLoading = false;
+      state.posts = action.payload
+      state.isLoading = false
     },
     [getBookMark.fulfilled]: (state, action) => {
-      console.log(action.payload, "1111");
-      state.bookmarks = action.payload;
-      state.isLoading = false;
+      console.log(action.payload, "1111")
+      state.bookmarks = action.payload
+      state.isLoading = false
     },
     [getPosts.rejected]: (state, action) => {
-      state.isLoading = false;
+      state.isLoading = false
     },
     [getDrafts.pending]: (state, action) => {
-      state.isLoading = true;
+      state.isLoading = true
     },
     [getDrafts.fulfilled]: (state, action) => {
-      state.drafts = action.payload;
-      state.isLoading = false;
+      state.drafts = action.payload
+      state.isLoading = false
     },
     [getDrafts.rejected]: (state, action) => {
-      state.isLoading = false;
+      state.isLoading = false
     },
     [savePost.pending]: (state, action) => {
-      state.isSaving = true;
+      state.isSaving = true
     },
     [savePost.fulfilled]: (state, action) => {
-      state.isSaving = false;
-      state.posts.push(action.payload);
+      state.isSaving = false
+      state.posts.push(action.payload)
     },
     [savePost.rejected]: (state, action) => {
-      state.isSaving = false;
+      state.isSaving = false
     },
     [getPostDetail.fulfilled]: (state, action) => {
-      state.isSaving = false;
+      state.isSaving = false
       console.log(action.payload)
-      state.postDetail = action.payload;
+      state.postDetail = action.payload
     },
     [deleteDraft.rejected]: (state, action) => {
-      state.isLoading = false;
+      state.isLoading = false
     },
     [deleteDraft.fulfilled]: (state, action) => {
       const index = state.drafts.findIndex(
-        (item) => item.id === action.payload.id
-      );
-      state.drafts.splice(index, 1);
-      state.isLoading = false;
+        item => item.id === action.payload.id,
+      )
+      state.drafts.splice(index, 1)
+      state.isLoading = false
     },
     [createBookMark.fulfilled]: (state, action) => {
       const index = state.posts.findIndex(
-        (item) => item.id === action.payload.post?.id
-      );
+        item => item.id === action.payload.post?.id,
+      )
       if (state.posts[index]) {
-        state.posts[index].isBookMarked = true;
-        state.posts[index].bookMarkId = action.payload?.id;
+        state.posts[index].isBookMarked = true
+        state.posts[index].bookMarkId = action.payload?.id
       }
-      state.isLoading = false;
+      state.isLoading = false
     },
     [deleteBookMark.fulfilled]: (state, action) => {
       //change bookmark state in post list
       const index = state.posts.findIndex(
-        (item) => item.id === action.payload.post?.id
-      );
+        item => item.id === action.payload.post?.id,
+      )
       if (state.posts[index]) {
-        state.posts[index].isBookMarked = false;
+        state.posts[index].isBookMarked = false
       }
       // splice bookmark from list
       const bookmarkIndex = state.bookmarks.findIndex(
-        (item) => item.id === action.payload.id
-      );
-      state.bookmarks.splice(bookmarkIndex, 1);
-      state.isLoading = false;
+        item => item.id === action.payload.id,
+      )
+      state.bookmarks.splice(bookmarkIndex, 1)
+      state.isLoading = false
+    },
+    [getHashtag.fulfilled]: (state, action) => {
+      state.hashtags = action.payload
+    },
+    [getHashtag.rejected]: (state, action) => {
+      state.hashtags = []
     },
   },
-});
+})
 
-export const { startLoader } = postSlice.actions;
+export const {startLoader} = postSlice.actions
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-export const selectPosts = (state) => state.post.posts;
+export const selectPosts = state => state.post.posts
 
-export default postSlice.reducer;
+export default postSlice.reducer

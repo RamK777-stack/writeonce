@@ -309,7 +309,7 @@ const Post = props => {
     return {description, markdown}
   }
 
-  const handleSavePost = async isDraft => {
+  const handleSavePost = async (isDraft, hashtags) => {
     if (isDraft) {
       await dispatch(saveAsDraft({draftId, blocks, isDraft}))
       navigate(URL_PATH.DRAFT)
@@ -317,6 +317,7 @@ const Post = props => {
       const concatedBlocks = concatAllBlocks() || {}
       concatedBlocks["blocks"] = blocks
       concatedBlocks["draftId"] = draftId
+      concatedBlocks["hashtags"] = hashtags
       await dispatch(savePost(concatedBlocks, isDraft))
       navigate(URL_PATH.HOME)
     }
