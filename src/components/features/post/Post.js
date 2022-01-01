@@ -60,10 +60,7 @@ const Post = props => {
   }
 
   const onClickEventHandler = e => {
-    console.log(document.getElementById("content-editable"))
-    console.log(e.target)
-    console.log(document.getElementById("content-editable").contains(e.target))
-    if (document.getElementById("content-editable").contains(e.target)) {
+    if (document.getElementById("content-editable")?.contains(e.target)) {
       // Clicked in box
       console.log("inside box")
       if (blocks[blocks.length - 1]?.description) {
@@ -84,11 +81,18 @@ const Post = props => {
 
   const closeSelectMenuHandler = e => {
     setSelectMenuIsOpen(false)
+    console.log(currentBlock)
+    // const nextBlock = document.querySelector(
+    //   `[data-position="${currentBlock.id}"]`,
+    // )
+    // alert(nextBlock)
+    // console.log(nextBlock)
+    // nextBlock.focus()
   }
 
   const closeTweetInputHandler = () => {
     setTweetInputOpen(false)
-    setURL(null);
+    setURL(null)
   }
 
   const tagSelectionHandler = tag => {
@@ -182,33 +186,35 @@ const Post = props => {
   }
 
   const addBlockHandler = (currentBlock, addAtPosition) => {
-    setCurrentBlockId(currentBlock.id)
-    const index = blocks.map(b => b.id).indexOf(currentBlock.id)
-    const updatedBlocks = [...blocks]
+    if (!selectMenuIsOpen) {
+      setCurrentBlockId(currentBlock.id)
+      const index = blocks.map(b => b.id).indexOf(currentBlock.id)
+      const updatedBlocks = [...blocks]
 
-    if (addAtPosition === "start" && currentBlock.description) {
-      if (index - 1 === -1) {
-        updatedBlocks.unshift(...currentBlock.newBlock)
+      if (addAtPosition === "start" && currentBlock.description) {
+        if (index - 1 === -1) {
+          updatedBlocks.unshift(...currentBlock.newBlock)
+        } else {
+          updatedBlocks.splice(index, 0, ...currentBlock.newBlock)
+        }
+      } else if (addAtPosition === "middle") {
+        updatedBlocks[index] = {
+          ...updatedBlocks[index],
+          description: currentBlock.rangeBeforeText,
+        }
+        updatedBlocks.splice(index + 1, 0, ...currentBlock.newBlock)
       } else {
-        updatedBlocks.splice(index, 0, ...currentBlock.newBlock)
+        // const newBlock = [
+        //   {
+        //     id: objectId(),
+        //     tag: "p",
+        //     descripti      //     imageUrl: "",
+        //   },
+        // ];
+        updatedBlocks.splice(index + 1, 0, ...currentBlock.newBlock)
       }
-    } else if (addAtPosition === "middle") {
-      updatedBlocks[index] = {
-        ...updatedBlocks[index],
-        description: currentBlock.rangeBeforeText,
-      }
-      updatedBlocks.splice(index + 1, 0, ...currentBlock.newBlock)
-    } else {
-      // const newBlock = [
-      //   {
-      //     id: objectId(),
-      //     tag: "p",
-      //     descripti      //     imageUrl: "",
-      //   },
-      // ];
-      updatedBlocks.splice(index + 1, 0, ...currentBlock.newBlock)
+      setBlocks(updatedBlocks)
     }
-    setBlocks(updatedBlocks)
   }
 
   const stripeHTML = html => {
@@ -261,7 +267,7 @@ const Post = props => {
     const nextBlock = document.querySelector(
       `[data-position="${nextBlockPosition}"]`,
     )
-    if (nextBlock) {
+    if (nextBlock && !selectMenuIsOpen) {
       nextBlock.focus()
     }
   }

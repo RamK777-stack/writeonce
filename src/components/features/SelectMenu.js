@@ -1,6 +1,33 @@
 import React, {useEffect, useState, useRef} from "react"
 import {matchSorter} from "match-sorter"
 
+const useKeyPress = targetKey => {
+  const [keyPressed, setKeyPressed] = useState(false)
+
+  const downHandler = ({key}) => {
+    if (key === targetKey) {
+      setKeyPressed(true)
+    }
+  }
+
+  const upHandler = ({key}) => {
+    if (key === targetKey) {
+      setKeyPressed(false)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("keydown", downHandler)
+    window.addEventListener("keyup", upHandler)
+    return () => {
+      window.removeEventListener("keydown", downHandler)
+      window.removeEventListener("keyup", upHandler)
+    }
+  })
+
+  return keyPressed
+}
+
 const SelectMenu = props => {
   const MENU_HEIGHT = 150
   const allowedTags = [
@@ -53,6 +80,35 @@ const SelectMenu = props => {
   const [command, setCommand] = useState("")
   const [items, setItems] = useState(allowedTags)
   const [selectedItem, setSelectedItem] = useState(0)
+
+  const downPress = useKeyPress("ArrowDown")
+  const upPress = useKeyPress("ArrowUp")
+  const enterPress = useKeyPress("Enter")
+  const [cursor, setCursor] = useState(0)
+  const [selected, setSelected] = useState(undefined)
+
+  useEffect(() => {
+    if (items.length && downPress) {
+      setCursor(prevState =>
+        prevState < items.length - 1 ? prevState + 1 : prevState,
+      )
+      console.log(cursor, "downpress")
+    }
+  }, [downPress])
+  useEffect(() => {
+    if (items.length && upPress) {
+      setCursor(prevState => (prevState > 0 ? prevState - 1 : prevState))
+    }
+    console.log(cursor, "uppress")
+  }, [upPress])
+  useEffect(() => {
+    if (items.length && enterPress) {
+      setSelected(items[cursor])
+      if (props.selectMenuIsOpen) {
+        handleClickOption(items[cursor], cursor)
+      }
+    }
+  }, [cursor, enterPress])
 
   const keyDownHandler = e => {
     switch (e.key) {
@@ -127,24 +183,25 @@ const SelectMenu = props => {
         >
           Choose Block Type
         </div>
-        <div>
+        <ul className="list-none" id="SelectMenu">
           {items.map((item, key) => {
             const isSelected = items.indexOf(item) === selectedItem
             return (
-              <div
+              <li
                 className={`${
-                  isSelected && "Selected"
+                  cursor === key && "bg-blue-100 dark:bg-gray-500"
                 } border-b-1 p-2 border-light-blue-500 dark:border-gray-100 transition duration-200 hover:bg-blue-100 dark:hover:bg-gray-500`}
                 key={key}
                 role="button"
                 tabIndex="0"
                 onClick={() => handleClickOption(item, key)}
+                id={item.id}
               >
                 {item.label}
-              </div>
+              </li>
             )
           })}
-        </div>
+        </ul>
       </div>
     </div>
   )

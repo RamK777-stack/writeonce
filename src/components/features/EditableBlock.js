@@ -399,9 +399,9 @@ class EditableBlock extends React.Component {
                 </div>
               </span>
               {this.props.url?.startsWith("https://twitter.com") ? (
-                <div className="flex w-full justify-center">
+                // <div className="flex w-full justify-center">
                   <CustomTwitterComponent url={this.props.url} />
-                </div>
+                // </div>
               ) : (
                 <ContentEditable
                   className={`Block ${this.getClassName()} flex-1 focus:bg-gray-20 focus:outline-none`}
