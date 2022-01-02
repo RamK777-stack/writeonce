@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react"
 import {XIcon} from "@heroicons/react/outline"
 import {useDispatch, useSelector} from "react-redux"
 import CreatableSelect from "react-select/creatable"
-import {getHashtag} from "../post/postSlice"
+import {getHashtag, saveHashtag} from "../post/postSlice"
 import makeAnimated from "react-select/animated"
 
 const animatedComponents = makeAnimated()
@@ -19,20 +19,22 @@ export default function Publish({savePost}) {
 
   const hashtags = useSelector(state => state.post.hashtags)
 
-  const handleCreate = inputValue => {
+  const handleCreate = async (inputValue) => {
     console.log(inputValue, "New value")
     setIsLoading(true)
-    setTimeout(() => {
+    await dispatch(saveHashtag(inputValue))
+    setIsLoading(false)
+    // setTimeout(() => {
       // const {options} = this.state
       // const newOption = createOption(inputValue)
       // console.log(newOption)
-      setIsLoading(false)
+      // setIsLoading(false)
       // this.setState({
       //   isLoading: false,
       //   options: [...options, newOption],
       //   value: newOption,
       // })
-    }, 1000)
+    // }, 1000)  }
   }
 
   const handleChange = value => {

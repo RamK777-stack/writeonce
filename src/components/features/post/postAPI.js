@@ -1,7 +1,7 @@
 import { axiosInstance } from "../../../utils/axiosInstance";
 
-export const fetchPosts = async () => {
-  return axiosInstance.get("posts").then((res) => res.data);
+export const fetchPosts = async (params) => {
+  return axiosInstance.get("posts", { params }).then((res) => res.data);
 };
 
 export const fetchDrafts = async () => {
@@ -50,4 +50,8 @@ export const postDetailAPI = async (params) => {
 
 export const getHashtagAPI = async () => {
   return axiosInstance.get("hashtags").then((res) => res.data);
+};
+
+export const saveHashtagAPI = async (params) => {
+  return axiosInstance.post("hashtags", params).then((res) => res.data);
 };
