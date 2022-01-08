@@ -7,6 +7,7 @@ import {Draggable} from "react-beautiful-dnd"
 import {ViewGridIcon, ViewListIcon, XIcon} from "@heroicons/react/outline"
 import CustomTwitterComponent from "../features/post/CustomTwitterComponent"
 import EmbedCodepen from "./post/EmbedCodepen"
+import EmbedYoutube from "./post/EmbedYoutube"
 
 class EditableBlock extends React.Component {
   constructor(props) {
@@ -403,11 +404,15 @@ class EditableBlock extends React.Component {
                 <div className="flex w-full justify-center">
                   <CustomTwitterComponent url={this.props.url} />
                 </div>
-              ): this.props.url?.startsWith("https://codepen.io") ? (
+              ) : this.props.url?.startsWith("https://codepen.io") ? (
                 <div className="flex w-full justify-center">
                   <EmbedCodepen url={this.props.url} />
                 </div>
-              ): (
+              ) : this.props.url?.startsWith("https://www.youtube.com") ? (
+                <div className="flex w-full justify-center">
+                  <EmbedYoutube url={this.props.url} />
+                </div>
+              ) : (
                 <ContentEditable
                   className={`Block ${this.getClassName()} flex-1 focus:bg-gray-20 focus:outline-none`}
                   innerRef={this.contentEditable}

@@ -10,6 +10,7 @@ import {dracula} from "react-syntax-highlighter/dist/cjs/styles/prism"
 import rehypeHighlight from "rehype-highlight"
 import CustomTwitterComponent from "./CustomTwitterComponent"
 import EmbedCodepen from "./EmbedCodepen"
+import EmbedYoutube from "./EmbedYoutube"
 
 export const syntaxHighlightComponents = {
   code({node, inline, className, children, ...props}) {
@@ -55,6 +56,8 @@ export const syntaxHighlightComponents = {
       return <CustomTwitterComponent url={props.href} />
     } else if (props.href.startsWith("https://codepen.io")) {
       return <EmbedCodepen url={props.href} />
+    } else if (props.href.startsWith("https://www.youtube.com")) {
+      return <EmbedYoutube url={props.href} />
     } else {
       return <a href={props.href}>{props.children}</a>
     }

@@ -40,10 +40,7 @@ const EmbedCodepen = props => {
     return () => (_isMounted.current = false)
   }, [])
 
-  // https://codepen.io/Sanja_kaz/pen/ZEXRpLO
-  // const url = props.url
-  console.log(props)
-  let url = "https://codepen.io/Sanja_kaz/pen/ZEXRpLO"
+  let url = props.url
   url = url.replace("https://codepen.io/", "")
   url = url.replace("/pen/", " ")
   const [user, hash] = url.split(" ")
