@@ -47,7 +47,7 @@ export default function Publish({savePost}) {
   }
 
   const handleSavePost = isDraft => {
-    const hashTags = selectedTags.map(i => i.id)
+    const hashTags = selectedTags && selectedTags.map(i => i.id)
     savePost(isDraft, hashTags)
   }
 

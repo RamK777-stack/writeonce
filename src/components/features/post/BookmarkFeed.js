@@ -19,7 +19,7 @@ function PostFeed() {
   const location = useLocation()
   const limit = 2
   const [page, setPage] = useState(0)
-  const posts = useSelector(state => state.post.posts)
+  const posts = useSelector(state => state.post.bookmarks)
   const isLoading = useSelector(state => state.post.isLoading)
   const loader = useRef(null)
 
@@ -29,7 +29,7 @@ function PostFeed() {
       _start: page,
       _sort: "created_at:desc",
     }
-    dispatch(getPosts(params))
+    dispatch(getBookMark(params))
   }, [page])
 
   const handleObserver = async entities => {
@@ -65,7 +65,6 @@ function PostFeed() {
 
   const detail = {}
 
-
   return (
     <>
       <div className="ml-40 mb-20 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
@@ -76,7 +75,7 @@ function PostFeed() {
               <PostListItem
                 detail={detail}
                 redirectToPostDetail={redirectToPostDetail}
-                isBookMarked={detail.isBookMarked}
+                isBookMarked={true}
               />
             )
           })

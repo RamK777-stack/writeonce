@@ -92,3 +92,7 @@ code {
   -webkit-user-select: text;
   user-select: text;
 }
+
+.cp_embed_wrapper{
+  width: 100% !important;
+}

@@ -1,32 +1,47 @@
-import { BookmarkIcon, ChatIcon, ThumbUpIcon } from "@heroicons/react/outline";
-import { BookmarkIcon as BookmarkAltIcon } from "@heroicons/react/solid";
-import React from "react";
-import pic1 from "../../../assets/images/pic-1.jpg";
-import sanitizeHtml from "sanitize-html";
-import moment from "moment";
-import { createBookMark, deleteBookMark } from "./postSlice";
-import { useDispatch } from "react-redux";
+import {BookmarkIcon, ChatIcon, ThumbUpIcon} from "@heroicons/react/outline"
+import {BookmarkIcon as BookmarkAltIcon} from "@heroicons/react/solid"
+import React from "react"
+import pic1 from "../../../assets/images/pic-1.jpg"
+import sanitizeHtml from "sanitize-html"
+import moment from "moment"
+import {createBookMark, deleteBookMark} from "./postSlice"
+import {useDispatch} from "react-redux"
 // import Skeleton from 'react-skeleton-loader';
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+import Skeleton from "react-loading-skeleton"
+import "react-loading-skeleton/dist/skeleton.css"
 
-const PostListItem = ({ detail, isBookMarked, redirectToPostDetail }) => {
-  const dispatch = useDispatch();
-  console.log(isBookMarked);
-  const handleClickBookMark = async () => {
-    console.log(isBookMarked);
+const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
+  const dispatch = useDispatch()
+  console.log(isBookMarked)
+  const handleClickBookMark = async event => {
+    event.stopPropagation()
+    console.log(isBookMarked)
     if (isBookMarked) {
-      await dispatch(deleteBookMark(detail?.bookMarkId));
+      await dispatch(deleteBookMark(detail?.bookMarkId))
     } else {
-      await dispatch(createBookMark(detail?.id));
+      await dispatch(createBookMark(detail?.id))
     }
-  };
+  }
+
+  const renderTags = tags => {
+    return (
+      <div className="flex flex-row space-x-2">
+        {tags && tags.map(item => {
+          return (
+            <span className="bg-blue-50 px-3 py-1 rounded-full text-sm">
+              # {item.label}
+            </span>
+          )
+        })}
+      </div>
+    )
+  }
 
   return (
     <div
       className="w-3/4 cursor-pointer"
       onClick={() => {
-        redirectToPostDetail(detail.slug);
+        redirectToPostDetail(detail.slug)
       }}
     >
       <div className="flex items-center">
@@ -40,11 +55,11 @@ const PostListItem = ({ detail, isBookMarked, redirectToPostDetail }) => {
         )}
         <div className="flex flex-col ml-5 flex-1">
           {detail?.author?.user_profile ? (
-            <p className="font-bold">{`${detail?.author?.user_profile?.firstName} ${detail?.author?.user_profile?.lastName}`}</p>
+            <p className="text-lg font-bold">{`${detail?.author?.user_profile?.firstName} ${detail?.author?.user_profile?.lastName}`}</p>
           ) : (
             <Skeleton />
           )}
-          <p>
+          <p className="text-sm">
             {detail?.created_at ? (
               moment(detail?.created_at).format("MMMM DD, yyyy")
             ) : (
@@ -57,12 +72,12 @@ const PostListItem = ({ detail, isBookMarked, redirectToPostDetail }) => {
             {isBookMarked ? (
               <BookmarkAltIcon
                 className="h-6 w-6 text-right cursor-pointer"
-                onClick={() => handleClickBookMark()}
+                onClick={e => handleClickBookMark(e)}
               />
             ) : (
               <BookmarkIcon
                 className="h-6 w-6 text-right cursor-pointer"
-                onClick={() => handleClickBookMark()}
+                onClick={e => handleClickBookMark(e)}
               />
             )}
           </div>
@@ -72,16 +87,21 @@ const PostListItem = ({ detail, isBookMarked, redirectToPostDetail }) => {
         <h4 className="text-xl text-gray-600 dark:text-white font-bold">
           {detail.title || <Skeleton />}
         </h4>
-        <h4 className="text-l mt-3 font-semibold">
+        {/* <h4 className="text-l mt-3 font-semibold">
           {detail.synopsis || <Skeleton />}
-        </h4>
+        </h4> */}
+        <div className="mt-1">{renderTags(detail.hashtags)}</div>
         {detail.id ? (
-          <div className="flex mt-6">
+          <div className="flex mt-1">
             <div className="flex flex-row space-x-2">
-              <ThumbUpIcon className="h-6 w-6 cursor-pointer" />{" "}
-              <span>{detail.likes || 0} likes</span>
-              <ChatIcon className="h-6 w-6 mr-2 cursor-pointer" />{" "}
-              <span>{detail.comments || 0} comments</span>
+              <div className="flex hover:bg-blue-50 rounded px-2 py-1">
+                <ThumbUpIcon className="h-6 w-6 mr-1 cursor-pointer" />
+                <span>{detail.likes || 0} likes</span>
+              </div>
+              <div className="flex hover:bg-blue-50 rounded px-2 py-1">
+                <ChatIcon className="h-6 w-6 mr-1 cursor-pointer" />
+                <span>{detail.comments || 0} comments</span>
+              </div>
             </div>
             <div className="flex-1 justify-end">
               <p className="text-right">{detail?.reading_time} read</p>
@@ -92,7 +112,7 @@ const PostListItem = ({ detail, isBookMarked, redirectToPostDetail }) => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PostListItem;
+export default PostListItem

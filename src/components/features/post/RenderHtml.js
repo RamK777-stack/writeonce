@@ -9,6 +9,7 @@ import {dracula} from "react-syntax-highlighter/dist/cjs/styles/prism"
 // import { onClickCopy } from "../../utils/Utility"
 import rehypeHighlight from "rehype-highlight"
 import CustomTwitterComponent from "./CustomTwitterComponent"
+import EmbedCodepen from "./EmbedCodepen"
 
 export const syntaxHighlightComponents = {
   code({node, inline, className, children, ...props}) {
@@ -50,11 +51,13 @@ export const syntaxHighlightComponents = {
   // },
   a(props) {
     console.log(props, props.href.startsWith("https://twitter.com"))
-    return props.href.startsWith("https://twitter.com") ? (
-      <CustomTwitterComponent url={props.href} /> // Render Twitter links with custom component
-    ) : (
-      <a href={props.href}>{props.children}</a> // All other links
-    )
+    if (props.href.startsWith("https://twitter.com")) {
+      return <CustomTwitterComponent url={props.href} />
+    } else if (props.href.startsWith("https://codepen.io")) {
+      return <EmbedCodepen url={props.href} />
+    } else {
+      return <a href={props.href}>{props.children}</a>
+    }
   },
   // blockquote({}){}
 }

@@ -12,6 +12,7 @@ import AuthCallback from "./components/features/auth/AuthCallback";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useDispatch } from "react-redux";
 import { getUserDetail } from "./components/features/auth/AuthSlice";
+import BookmarkFeed from "./components/features/post/BookmarkFeed";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path={URL_PATH.HOME} element={<PostFeed />} />
-          <Route path={URL_PATH.BOOKMARKS} element={<PostFeed />} />
+          <Route path={URL_PATH.BOOKMARKS} element={<BookmarkFeed />} />
           <Route path={URL_PATH.POST_DETAIL} element={<PostDetail />} />
           <Route
             path={URL_PATH.POST}

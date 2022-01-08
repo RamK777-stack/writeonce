@@ -116,8 +116,9 @@ export const saveAsDraft = createAsyncThunk(
 export const getBookMark = createAsyncThunk(
   "post/getBookMark",
   async (params, thunkAPI) => {
+    console.log(params, '121')
     thunkAPI.dispatch(startLoader())
-    const response = await getBookMarkAPI()
+    const response = await getBookMarkAPI(params)
     return response
   },
 )
@@ -222,7 +223,6 @@ export const postSlice = createSlice({
     },
     [savePost.fulfilled]: (state, action) => {
       state.isSaving = false
-      state.posts.push(action.payload)
     },
     [savePost.rejected]: (state, action) => {
       state.isSaving = false

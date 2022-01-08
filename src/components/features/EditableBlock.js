@@ -6,6 +6,7 @@ import TweetInput from "./TweetInput"
 import {Draggable} from "react-beautiful-dnd"
 import {ViewGridIcon, ViewListIcon, XIcon} from "@heroicons/react/outline"
 import CustomTwitterComponent from "../features/post/CustomTwitterComponent"
+import EmbedCodepen from "./post/EmbedCodepen"
 
 class EditableBlock extends React.Component {
   constructor(props) {
@@ -399,10 +400,14 @@ class EditableBlock extends React.Component {
                 </div>
               </span>
               {this.props.url?.startsWith("https://twitter.com") ? (
-                // <div className="flex w-full justify-center">
+                <div className="flex w-full justify-center">
                   <CustomTwitterComponent url={this.props.url} />
-                // </div>
-              ) : (
+                </div>
+              ): this.props.url?.startsWith("https://codepen.io") ? (
+                <div className="flex w-full justify-center">
+                  <EmbedCodepen url={this.props.url} />
+                </div>
+              ): (
                 <ContentEditable
                   className={`Block ${this.getClassName()} flex-1 focus:bg-gray-20 focus:outline-none`}
                   innerRef={this.contentEditable}
