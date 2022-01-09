@@ -28,7 +28,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
       <div className="flex flex-row space-x-2">
         {tags && tags.map(item => {
           return (
-            <span className="bg-blue-50 px-3 py-1 rounded-full text-sm">
+            <span className="bg-blue-50 px-2 py-1 rounded-full text-xs">
               # {item.label}
             </span>
           )
@@ -96,11 +96,11 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
             <div className="flex flex-row space-x-2">
               <div className="flex hover:bg-blue-50 rounded px-2 py-1">
                 <ThumbUpIcon className="h-6 w-6 mr-1 cursor-pointer" />
-                <span>{detail.likes || 0} likes</span>
+                <span>{!detail.likes || detail.likes == 0 ? 'Be the first': `${detail.likes} Reactions`}</span>
               </div>
               <div className="flex hover:bg-blue-50 rounded px-2 py-1">
                 <ChatIcon className="h-6 w-6 mr-1 cursor-pointer" />
-                <span>{detail.comments || 0} comments</span>
+                <span>{!detail.comments || detail.comments == 0 ? 'Add comment': `${detail.comments} comments`}</span>
               </div>
             </div>
             <div className="flex-1 justify-end">

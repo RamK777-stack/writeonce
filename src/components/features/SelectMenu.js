@@ -74,7 +74,7 @@ const SelectMenu = props => {
     {
       id: "tweet",
       tag: "tweet",
-      label: "Embed tweet",
+      label: "Embed tweet, youtube, codepen etc..",
     },
   ]
   const [command, setCommand] = useState("")

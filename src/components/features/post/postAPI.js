@@ -16,6 +16,10 @@ export const savePostAPI = async params => {
   return axiosInstance.post("posts", params).then(res => res.data)
 }
 
+export const addReactionToPostAPI = async params => {
+  return axiosInstance.post("posts/add-reaction", params).then(res => res.data)
+}
+
 export const saveDraftAPI = async params => {
   return axiosInstance.post("drafts", params).then(res => res.data)
 }
