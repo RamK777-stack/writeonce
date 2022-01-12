@@ -18,7 +18,9 @@ import {AiOutlineHeart, AiFillHeart} from "react-icons/ai"
 import {RiTwitterLine} from "react-icons/ri"
 import {GiUnicorn} from "react-icons/gi"
 import {BookmarkIcon} from "@heroicons/react/outline"
-import {addReactionToPost} from "./postSlice"
+import {BookmarkIcon as BookmarkAltIcon} from "@heroicons/react/solid"
+import {addReactionToPost, createBookMark, deleteBookMark} from "./postSlice"
+
 
 function PostDetail() {
   const dispatch = useDispatch()
@@ -35,6 +37,23 @@ function PostDetail() {
     await dispatch(addReactionToPost({post, reaction}))
     const slug = location.state.slug
     dispatch(getPostDetail(slug))
+  }
+
+  const shareIntoTwitter = () => {
+    const url = `https://twitter.com/share?url=${detail.slug}&text=${detail.title}`
+    window.open(url, "_blank", "noopener,noreferrer")
+  }
+
+  const handleClickBookMark = async event => {
+    event.stopPropagation()
+    console.log(detail.isBookMarked)
+    if (detail.isBookMarked) {
+      await dispatch(deleteBookMark(detail?.bookMarkId))
+      dispatch(getPostDetail(slug))
+    } else {
+      await dispatch(createBookMark(detail?.id))
+      dispatch(getPostDetail(slug))
+    }
   }
 
   console.log(detail)
@@ -146,8 +165,15 @@ function PostDetail() {
           <div className="text-center text-gray-700">
             {detail?.countReactions?.find(i => i.reactionId === 3)?.count || 0}
           </div>
-          <RiTwitterLine className="w-6 h-6 mt-10" />
-          <BookmarkIcon className="w-6 h-6 mt-5" />
+          <RiTwitterLine
+            className="w-6 h-6 mt-10"
+            onClick={() => shareIntoTwitter()}
+          />
+          {detail.isBookMarked ? (
+            <BookmarkAltIcon className="w-6 h-6 mt-5" onClick={e => handleClickBookMark(e)}/>
+          ) : (
+            <BookmarkIcon className="w-6 h-6 mt-5" onClick={e => handleClickBookMark(e)}/>
+          )}
         </div>
       </div>
     </div>

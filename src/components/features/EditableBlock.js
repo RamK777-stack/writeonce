@@ -359,19 +359,6 @@ class EditableBlock extends React.Component {
   render() {
     return (
       <div className="">
-        {/* <SelectMenu
-          position={this.state.selectMenuPosition}
-          onSelect={this.tagSelectionHandler}
-          close={this.closeSelectMenuHandler}
-          selectMenuIsOpen={this.state.selectMenuIsOpen}
-          tweetInputOpen={this.state.tweetInputOpen}
-        />
-        <TweetInput
-          position={this.state.selectMenuPosition}
-          onSelect={this.tagSelectionHandler}
-          close={this.closeSelectMenuHandler}
-          tweetInputOpen={this.state.tweetInputOpen}
-        /> */}
         <Draggable
           draggableId={this.props.id.toString()}
           index={this.props.index}

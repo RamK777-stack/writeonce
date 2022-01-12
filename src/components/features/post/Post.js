@@ -15,6 +15,7 @@ import sanitizeHtml from "sanitize-html"
 import {getCaretCoordinates} from "../../../utils"
 import SelectMenu from "../SelectMenu"
 import TweetInput from "../TweetInput"
+import ImagePicker from "../ImagePicker"
 var htmlparser = require("htmlparser2")
 
 const initialBlock = [
@@ -41,7 +42,8 @@ const Post = props => {
   const [selectMenuIsOpen, setSelectMenuIsOpen] = useState(false)
   const [selectMenuPosition, setSelectMenuPosition] = useState({x: 100, y: 0})
   const [tweetInputOpen, setTweetInputOpen] = useState(false)
-  const [htmlBackup, setHtmlBackUp] = useState()
+  const [imagePickerOpen, setImagePickerOpen] = useState(false)
+  const [, setHtmlBackUp] = useState()
   const [currentBlock, setCurrentBlock] = useState()
   const [url, setURL] = useState()
 
@@ -95,9 +97,19 @@ const Post = props => {
     setURL(null)
   }
 
+  const closeImagePickerHandler = () => {
+    setImagePickerOpen(false)
+  }
+
   const tagSelectionHandler = tag => {
     if (tag === "tweet") {
       setTweetInputOpen(true)
+      closeSelectMenuHandler()
+      return
+    }
+    if (tag === "image") {
+      setImagePickerOpen(true)
+      setTweetInputOpen(false)
       closeSelectMenuHandler()
       return
     }
@@ -440,6 +452,16 @@ const Post = props => {
           onChangeURL={url => {
             setURL(url)
           }}
+          id="tweetInput"
+          size="md"
+        />
+        <ImagePicker
+          position={selectMenuPosition}
+          onSelect={tagSelectionHandler}
+          close={closeImagePickerHandler}
+          imagePickerOpen={imagePickerOpen}
+          id="imagePicker"
+          size="lg"
         />
       </div>
       <div className="w-full lg:w-1/4 text-left pl-5">

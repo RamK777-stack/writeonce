@@ -68,6 +68,9 @@ module.exports = {
           },
         }
       },
+      width: {
+        128: "32rem",
+      },
     },
     fontFamily: {
       sans: ["Roboto", "Helvetica", "Arial", "sans-serif"],

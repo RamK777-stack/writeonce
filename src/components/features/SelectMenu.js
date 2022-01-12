@@ -76,6 +76,11 @@ const SelectMenu = props => {
       tag: "tweet",
       label: "Embed tweet, youtube, codepen etc..",
     },
+    {
+      id: "image",
+      tag: "image",
+      label: "Attach image",
+    },
   ]
   const [command, setCommand] = useState("")
   const [items, setItems] = useState(allowedTags)
