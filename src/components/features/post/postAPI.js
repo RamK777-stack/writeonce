@@ -57,3 +57,13 @@ export const getHashtagAPI = async () => {
 export const saveHashtagAPI = async params => {
   return axiosInstance.post("hashtags", params).then(res => res.data)
 }
+
+export const getUnsplashImagesAPI = async params => {
+  return axiosInstance
+    .post("posts/searchunsplashimages", params)
+    .then(res => res.data)
+}
+
+export const uploadImageAPI = async params => {
+  return axiosInstance.post("posts/uploadImages", params).then(res => res.data)
+}

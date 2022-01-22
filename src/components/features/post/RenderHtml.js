@@ -46,6 +46,9 @@ export const syntaxHighlightComponents = {
       </code>
     )
   },
+  img(props) {
+    return <img className="rounded" src={props.src} alt={props.alt}></img>
+  },
   // blockquote(props){
   //   console.log(props)
   //   return <blockquote>{props.children}</blockquote>

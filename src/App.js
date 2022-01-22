@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import "./assets/css/style.css";
+import "./assets/css/tailwind.css";
+import "./assets/css/custom.css";
 import Post from "./components/features/post/Post";
 import PostFeed from "./components/features/post/PostFeed";
 import PostDetail from "./components/features/post/PostDetail";

@@ -374,7 +374,7 @@ class EditableBlock extends React.Component {
                 role="button"
                 className="flex items-center mr-5 invisible group-hover:visible"
               >
-                {this.props.url?.startsWith("https://twitter.com") && (
+                {this.props.url && (
                   <XIcon
                     className="h-5 w-5 mr-3"
                     aria-hidden="true"
@@ -398,6 +398,10 @@ class EditableBlock extends React.Component {
               ) : this.props.url?.startsWith("https://www.youtube.com") ? (
                 <div className="flex w-full justify-center">
                   <EmbedYoutube url={this.props.url} />
+                </div>
+              ) : this.props.resource_type === "image" ? (
+                <div className="flex w-full justify-center">
+                  <img src={this.props.url} className="object-cover rounded p-5"/>
                 </div>
               ) : (
                 <ContentEditable

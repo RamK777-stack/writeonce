@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import "./assets/css/style.css";
+import "./assets/css/tailwind.css";
+import "./assets/css/custom.css";
 import reportWebVitals from "./components/reportWebVitals";
 import { store } from "./store";
 import Signup from "./components/features/auth/Signup";

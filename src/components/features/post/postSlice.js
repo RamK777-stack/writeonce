@@ -14,6 +14,8 @@ import {
   getHashtagAPI,
   saveHashtagAPI,
   addReactionToPostAPI,
+  getUnsplashImagesAPI,
+  uploadImageAPI,
 } from "./postAPI"
 import {isLoggedIn, openModal} from "../auth/AuthSlice"
 
@@ -25,6 +27,8 @@ const initialState = {
   bookmarks: [],
   postDetail: {},
   hashtags: [],
+  unsplashImages: [],
+  isImageUploading: false
 }
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -59,7 +63,7 @@ export const savePost = createAsyncThunk(
   "post/savePost",
   async (inputParams, {getState}) => {
     const userDetails = getState().auth?.userDetails
-    const {draftId, blocks, description, markdown, hashtags} = inputParams
+    const {draftId, blocks, description, markdown, hashtags, coverImage} = inputParams
     const params = {
       title: blocks[0].description,
       description: description,
@@ -67,6 +71,7 @@ export const savePost = createAsyncThunk(
       draftId: draftId,
       author: userDetails?.id,
       hashtags,
+      coverImage
     }
     const response = await savePostAPI(params)
     return response
@@ -171,6 +176,23 @@ export const saveHashtag = createAsyncThunk(
   },
 )
 
+export const getUnsplashImages = createAsyncThunk(
+  "post/getUnsplashImages",
+  async (params, {getState}) => {
+    const response = await getUnsplashImagesAPI(params)
+    return response?.results || []
+  },
+)
+
+export const uploadImage = createAsyncThunk(
+  "post/uploadImages",
+  async (params, thunkAPI) => {
+    thunkAPI.dispatch(toggleImageUploadingStatus())
+    const response = await uploadImageAPI(params)
+    return response
+  },
+)
+
 export const postSlice = createSlice({
   name: "post",
   initialState,
@@ -192,6 +214,10 @@ export const postSlice = createSlice({
     // },
     startLoader: state => {
       state.isLoading = true
+    },
+
+    toggleImageUploadingStatus: state => {
+      state.isImageUploading = !state.isImageUploading
     },
 
     clearPost: state => {
@@ -286,10 +312,17 @@ export const postSlice = createSlice({
     [saveHashtag.fulfilled]: (state, action) => {
       state.hashtags.push(action.payload)
     },
+    [getUnsplashImages.fulfilled]: (state, action) => {
+      state.unsplashImages = action.payload
+    },
+    [uploadImage.fulfilled]: (state, action) => {
+      state.isImageUploading = false
+    },
   },
 })
 
-export const {startLoader, clearPost} = postSlice.actions
+export const {startLoader, clearPost, toggleImageUploadingStatus} =
+  postSlice.actions
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

@@ -1,8 +1,7 @@
 const colors = require("tailwindcss/colors")
 
 module.exports = {
-  mode: "jit",
-  content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
+  purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   darkMode: "class", // or 'media' or 'class'
   theme: {
     fontSmoothing: ["hover", "focus"],
@@ -99,6 +98,16 @@ module.exports = {
       "5xl": "3rem",
       "6xl": "4rem",
       "7xl": "5rem",
+    },
+  },
+  variants: {
+    textColor: ["responsive", "hover", "focus", "group-hover", "dark"],
+    extend: {
+      visibility: ["group-hover"],
+      borderColor: ["active"],
+      display: ["dark"],
+      borderOpacity: ["active"],
+      borderWidth: ["hover", "focus", "dark"],
     },
   },
 

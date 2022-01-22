@@ -7,7 +7,7 @@ import {DragDropContext, Droppable} from "react-beautiful-dnd"
 import {usePrevious} from "../../hooks/usePrevious"
 import {PhotographIcon} from "@heroicons/react/outline"
 import {useSelector, useDispatch} from "react-redux"
-import {getPosts, savePost, saveAsDraft} from "./postSlice"
+import {getPosts, savePost, saveAsDraft, uploadImage} from "./postSlice"
 import {NodeHtmlMarkdown, NodeHtmlMarkdownOptions} from "node-html-markdown"
 import {useLocation, useNavigate} from "react-router-dom"
 import {URL_PATH} from "../../../utils/urlPath"
@@ -16,6 +16,8 @@ import {getCaretCoordinates} from "../../../utils"
 import SelectMenu from "../SelectMenu"
 import TweetInput from "../TweetInput"
 import ImagePicker from "../ImagePicker"
+import {isString} from "lodash"
+import {AiOutlineUndo, AiOutlineClose} from "react-icons/ai"
 var htmlparser = require("htmlparser2")
 
 const initialBlock = [
@@ -33,19 +35,22 @@ const Post = props => {
   const navigate = useNavigate()
   const [blocks, setBlocks] = useState(initialBlock)
   const [currentBlockId, setCurrentBlockId] = useState(null)
-  const [coverImage, setCoverImage] = useState(null)
+  // const [coverImage, setCoverImage] = useState("https://res.cloudinary.com/diqjnoirx/image/upload/v1642577761/download_uio4z6.jpg")
+  const [coverImage, setCoverImage] = useState()
   const [mark, setMark] = useState("")
   const [draftId, setDraftId] = useState()
   const dispatch = useDispatch()
   const posts = useSelector(state => state.post.posts)
   const prevBlocks = usePrevious(blocks)
   const [selectMenuIsOpen, setSelectMenuIsOpen] = useState(false)
-  const [selectMenuPosition, setSelectMenuPosition] = useState({x: 100, y: 0})
+  const [selectMenuPosition, setSelectMenuPosition] = useState({x: 350, y: 150})
   const [tweetInputOpen, setTweetInputOpen] = useState(false)
   const [imagePickerOpen, setImagePickerOpen] = useState(false)
   const [, setHtmlBackUp] = useState()
   const [currentBlock, setCurrentBlock] = useState()
   const [url, setURL] = useState()
+  const isImageUploading = useSelector(state => state.post.isImageUploading)
+  const [isCoverImage, setIsCoverImage] = useState()
 
   useEffect(() => {
     document.addEventListener("click", onClickEventHandler) // need to change this
@@ -56,20 +61,18 @@ const Post = props => {
 
   const openSelectMenuHandler = e => {
     const {x, y} = getCaretCoordinates(e)
-    setSelectMenuIsOpen(true)
     setSelectMenuPosition({x: Math.round(x), y: Math.round(y)})
+    setSelectMenuIsOpen(true)
     // document.addEventListener("click", onClickEventHandler) // need to change this
   }
 
   const onClickEventHandler = e => {
     if (document.getElementById("content-editable")?.contains(e.target)) {
       // Clicked in box
-      console.log("inside box")
       if (blocks[blocks.length - 1]?.description) {
         const blockElement = [{id: uid(), description: "", tag: "p"}]
         const updatedBlocks = [...blocks]
         updatedBlocks.splice(blocks.length + 1, 0, ...blockElement)
-        console.log(updatedBlocks, "2222222")
         setBlocks(updatedBlocks)
         setCurrentBlockId(blockElement[0].id)
         setCurrentBlock(blockElement[0])
@@ -83,7 +86,6 @@ const Post = props => {
 
   const closeSelectMenuHandler = e => {
     setSelectMenuIsOpen(false)
-    console.log(currentBlock)
     // const nextBlock = document.querySelector(
     //   `[data-position="${currentBlock.id}"]`,
     // )
@@ -98,6 +100,7 @@ const Post = props => {
   }
 
   const closeImagePickerHandler = () => {
+    setIsCoverImage(false)
     setImagePickerOpen(false)
   }
 
@@ -170,7 +173,6 @@ const Post = props => {
     const oldBlock = blocks[index]
     const updatedBlocks = [...blocks]
     const {tag, description} = currentBlock
-    console.log(tag, description, ";;;")
     updatedBlocks[index] = {
       ...updatedBlocks[index],
       tag: currentBlock.tag,
@@ -300,13 +302,17 @@ const Post = props => {
     let markdown = ""
     const nhm = new NodeHtmlMarkdown()
     blocks.forEach((item, i) => {
-      item.description = sanitizeHtml(item.description)
+      console.log(item)
       if (i) {
         if (item.tag === "code") {
-          console.log(item.description)
           description += sanitizeHtml(
             `<pre><${item.tag}>${item.description}</${item.tag}></pre>`,
           )
+        } else if (item.resource_type === "image") {
+          description += sanitizeHtml(item.description, {
+            allowedTags: ["img"],
+            allowedAttributes: {img: ["src", "alt"]},
+          })
         } else {
           description += sanitizeHtml(
             `<${item.tag}>${item.description}</${item.tag}>`,
@@ -326,10 +332,12 @@ const Post = props => {
       await dispatch(saveAsDraft({draftId, blocks, isDraft}))
       navigate(URL_PATH.DRAFT)
     } else {
+      console.log(blocks)
       const concatedBlocks = concatAllBlocks() || {}
       concatedBlocks["blocks"] = blocks
       concatedBlocks["draftId"] = draftId
       concatedBlocks["hashtags"] = hashtags
+      concatedBlocks["coverImage"] = coverImage
       await dispatch(savePost(concatedBlocks, isDraft))
       navigate(URL_PATH.HOME)
     }
@@ -344,14 +352,18 @@ const Post = props => {
     }
   }
 
-  const embedLink = url => {
+  const embedLink = (url, resource_type) => {
     let newBlocks = JSON.parse(JSON.stringify(blocks))
     let index = blocks.findIndex(item => item.id === currentBlockId)
     console.log(index, newBlocks, currentBlockId)
     console.log(blocks)
-    newBlocks[index].description = `<a href=${url}></a>`
+    newBlocks[index].description =
+      resource_type === "image"
+        ? `<img src=${url} alt="embedded link" /> </img>`
+        : `<a href=${url}> </a>`
     newBlocks[index].tag = `div`
     newBlocks[index].url = url
+    newBlocks[index].resource_type = resource_type
     console.log(newBlocks)
     setBlocks(newBlocks)
     console.log(blocks)
@@ -381,26 +393,122 @@ const Post = props => {
   //   }
   // })
   console.log(tweetInputOpen, "q1q", url)
+
+  const isRemoteUrl = url => {
+    return (
+      isString(url) &&
+      /^ftp:|^https?:|^gs:|^s3:|^data:([\w-.]+\/[\w-.]+(\+[\w-.]+)?)?(;[\w-.]+=[\w-.]+)*;base64,([a-zA-Z0-9\/+\n=]+)$/.test(
+        url,
+      )
+    )
+  }
+
+  const onSelectImage = async e => {
+    setIsCoverImage(false)
+    setImagePickerOpen(false)
+    if (isRemoteUrl(e)) {
+      let formdata = new FormData()
+      formdata.append("url", e)
+      const result = await dispatch(uploadImage(formdata))
+      if (isCoverImage) {
+        setCoverImage(result?.payload?.secure_url)
+      } else {
+        embedLink(result?.payload?.secure_url, result?.payload?.resource_type)
+      }
+      console.log(result, "22222222222222222222")
+      return
+    }
+    console.log(e.target.files, "111111111111111")
+    let formdata = new FormData()
+    formdata.append("files", e.target.files[0])
+    const result = await dispatch(uploadImage(formdata))
+    if (isCoverImage) {
+      setCoverImage(result?.payload?.secure_url)
+    } else {
+      embedLink(result?.payload?.secure_url, result?.payload?.resource_type)
+    }
+    console.log(result, "3333333333333333333")
+  }
+
+  const removeImage = (e, {isCoverImage}) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (isCoverImage) {
+      setCoverImage(null)
+    }
+  }
+
+  const openCoverImagePicker = () => {
+    setIsCoverImage(true)
+    setSelectMenuPosition({x: 350, y: 150})
+    setImagePickerOpen(true)
+  }
+
   return (
     <div className="Page flex justify-center mt-18 flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">
       <div className="w-full lg:w-3/4 px-20 ml-20" id="content-editable">
         <label for="cover">
-          <div className="ml-12 flex mb-5">
+          <div
+            className="ml-12 flex mb-5"
+            onClick={() => {
+              openCoverImagePicker()
+            }}
+          >
             {!coverImage && (
               <>
-                <PhotographIcon className="h-5 w-5 mr-2" /> Add cover image
+                <PhotographIcon className="h-5 w-5 mr-2" />
+                <div className="flex">
+                  <div>Add cover image</div>
+                  {isImageUploading && (
+                    <div className="ml-5 flex">
+                      Uploading
+                      <svg
+                        class="ml-3 mt-1 animate-spin h-4 w-4 rounded-full bg-transparent border-t-2 border-r-2 border-opacity-50 border-indigo-800"
+                        viewBox="0 0 24 24"
+                      ></svg>
+                    </div>
+                  )}
+                </div>
               </>
             )}
             {coverImage && (
-              <img src={coverImage} className="h-60 w-full object-cover" />
+              <div className="relative group">
+                <img
+                  src={coverImage}
+                  className="block object-cover w-full h-full rounded"
+                />
+                <div className="hidden group-hover:block flex absolute top-3 right-5">
+                  <button className="rounded bg-slate-50 p-2" type="button">
+                    <AiOutlineUndo className="h-4 w-4" />
+                  </button>
+                  <button
+                    className="ml-3 rounded bg-slate-50 p-2"
+                    type="button"
+                    onClick={e => {
+                      removeImage(e, {isCoverImage: true})
+                    }}
+                  >
+                    <AiOutlineClose className="h-4 w-4" />
+                  </button>
+                </div>
+                {isImageUploading && (
+                  <div className="absolute top-3 right-28 flex bg-slate-50 p-2 space-x-2 text-gray-600 rounded">
+                    <span className="text-sm">Uploading</span>
+                    <svg
+                      class="ml-3 mt-1 animate-spin h-4 w-4 rounded-full bg-transparent border-t-2 border-r-2 border-opacity-50 border-indigo-800"
+                      viewBox="0 0 24 24"
+                    ></svg>
+                  </div>
+                )}
+              </div>
             )}
-            <input
+            {/* <input
               type="file"
               id="cover"
               accept="image/*"
               className="hidden"
               onChange={chooseCoverImage}
-            />
+            /> */}
           </div>
         </label>
         <DragDropContext onDragEnd={onDragEndHandler}>
@@ -427,6 +535,7 @@ const Post = props => {
                       onKeyUpHandler={onKeyUpHandler}
                       setHtmlBackUp={setHtmlBackUp}
                       url={block?.url}
+                      resource_type={block?.resource_type}
                     />
                   )
                 })}
@@ -462,6 +571,7 @@ const Post = props => {
           imagePickerOpen={imagePickerOpen}
           id="imagePicker"
           size="lg"
+          onSelectImage={onSelectImage}
         />
       </div>
       <div className="w-full lg:w-1/4 text-left pl-5">

@@ -21,7 +21,6 @@ import {BookmarkIcon} from "@heroicons/react/outline"
 import {BookmarkIcon as BookmarkAltIcon} from "@heroicons/react/solid"
 import {addReactionToPost, createBookMark, deleteBookMark} from "./postSlice"
 
-
 function PostDetail() {
   const dispatch = useDispatch()
   const location = useLocation()
@@ -61,12 +60,14 @@ function PostDetail() {
     <div className="flex justify-center">
       <div className="mb-10 w-1/2">
         <div className="h-full">
-          <div className="cover">
-            <img
-              src={cover}
-              className="w-full rounded lg:h-96 h-48 object-cover false"
-            />
-          </div>
+          {detail?.coverImage && (
+            <div className="coverImage">
+              <img
+                src={detail?.coverImage}
+                className="w-full rounded lg:h-96 h-48 object-cover false"
+              />
+            </div>
+          )}
           <div className="flex items-center mt-5">
             <img
               src={pic1}
@@ -120,7 +121,7 @@ function PostDetail() {
               }}
             />
           )}
-          <div className="text-center text-gray-700">
+          <div className="text-center text-gray-700 dark:text-white">
             {detail?.countReactions?.find(i => i.reactionId === 1)?.count || 0}
           </div>
           {detail?.userReactions?.find(i => i.reactionId === 2) ? (
@@ -140,7 +141,7 @@ function PostDetail() {
               }}
             />
           )}
-          <div className="text-center text-gray-700">
+          <div className="text-center text-gray-700 dark:text-white">
             {detail?.countReactions?.find(i => i.reactionId === 2)?.count || 0}
           </div>
           {detail?.userReactions?.find(i => i.reactionId === 3) ? (
@@ -162,7 +163,7 @@ function PostDetail() {
             />
           )}
 
-          <div className="text-center text-gray-700">
+          <div className="text-center text-gray-700 dark:text-white">
             {detail?.countReactions?.find(i => i.reactionId === 3)?.count || 0}
           </div>
           <RiTwitterLine
@@ -170,9 +171,15 @@ function PostDetail() {
             onClick={() => shareIntoTwitter()}
           />
           {detail.isBookMarked ? (
-            <BookmarkAltIcon className="w-6 h-6 mt-5" onClick={e => handleClickBookMark(e)}/>
+            <BookmarkAltIcon
+              className="w-6 h-6 mt-5"
+              onClick={e => handleClickBookMark(e)}
+            />
           ) : (
-            <BookmarkIcon className="w-6 h-6 mt-5" onClick={e => handleClickBookMark(e)}/>
+            <BookmarkIcon
+              className="w-6 h-6 mt-5"
+              onClick={e => handleClickBookMark(e)}
+            />
           )}
         </div>
       </div>

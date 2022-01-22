@@ -28,7 +28,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
       <div className="flex flex-row space-x-2">
         {tags && tags.map(item => {
           return (
-            <span className="bg-blue-50 px-2 py-1 rounded-full text-xs">
+            <span className="bg-blue-50 dark:bg-blue-900 px-2 py-1 rounded-full text-xs">
               # {item.label}
             </span>
           )
@@ -53,7 +53,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
         ) : (
           <div className="object-cover rounded-full contain h-16 w-16 bg-gray-100" />
         )}
-        <div className="flex flex-col ml-5 flex-1">
+        <div className="flex flex-col ml-5 flex-1 dark:text-slate-200">
           {detail?.author?.user_profile ? (
             <p className="text-lg font-bold">{`${detail?.author?.user_profile?.firstName} ${detail?.author?.user_profile?.lastName}`}</p>
           ) : (
@@ -84,7 +84,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
         )}
       </div>
       <div className="mt-5 ml-1">
-        <h4 className="text-xl text-gray-600 dark:text-white font-bold">
+        <h4 className="text-xl text-gray-600 dark:text-slate-200 font-bold">
           {detail.title || <Skeleton />}
         </h4>
         {/* <h4 className="text-l mt-3 font-semibold">
@@ -92,7 +92,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
         </h4> */}
         <div className="mt-1">{renderTags(detail.hashtags)}</div>
         {detail.id ? (
-          <div className="flex mt-1">
+          <div className="flex mt-1 dark:text-slate-300">
             <div className="flex flex-row space-x-2">
               <div className="flex hover:bg-blue-50 rounded px-2 py-1">
                 <ThumbUpIcon className="h-6 w-6 mr-1 cursor-pointer" />
