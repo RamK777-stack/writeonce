@@ -28,7 +28,7 @@ const initialState = {
   postDetail: {},
   hashtags: [],
   unsplashImages: [],
-  isImageUploading: false
+  isImageUploading: false,
 }
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -45,6 +45,7 @@ export const getPosts = createAsyncThunk("post/getPosts", async params => {
 export const getDrafts = createAsyncThunk(
   "post/getDrafts",
   async (params, getState) => {
+    console.log(params)
     const response = await fetchDrafts(params)
     // The value we return becomes the `fulfilled` action payload
     return response
@@ -63,7 +64,8 @@ export const savePost = createAsyncThunk(
   "post/savePost",
   async (inputParams, {getState}) => {
     const userDetails = getState().auth?.userDetails
-    const {draftId, blocks, description, markdown, hashtags, coverImage} = inputParams
+    const {draftId, blocks, description, markdown, hashtags, coverImage} =
+      inputParams
     const params = {
       title: blocks[0].description,
       description: description,
@@ -71,7 +73,7 @@ export const savePost = createAsyncThunk(
       draftId: draftId,
       author: userDetails?.id,
       hashtags,
-      coverImage
+      coverImage,
     }
     const response = await savePostAPI(params)
     return response
@@ -233,13 +235,26 @@ export const postSlice = createSlice({
       state.isLoading = true
     },
     [getPosts.fulfilled]: (state, action) => {
-      state.posts = state.posts.concat(action.payload)
+      console.log(action)
+      if (action?.meta?.arg?.isAppend) {
+        state.posts = state.posts.concat(action.payload)
+      } else {
+        state.posts = action.payload
+      }
       state.bookmarks = []
       state.isLoading = false
     },
     [getBookMark.fulfilled]: (state, action) => {
-      state.bookmarks = state.bookmarks.concat(action.payload)
+      if (action?.meta?.arg?.isAppend) {
+        state.bookmarks = state.bookmarks.concat(action.payload)
+      } else {
+        state.bookmarks = action.payload
+      }
       state.posts = []
+      state.isLoading = false
+    },
+    [getBookMark.rejected]: (state, action) => {
+      state.bookmarks = []
       state.isLoading = false
     },
     [getPosts.rejected]: (state, action) => {
@@ -249,7 +264,11 @@ export const postSlice = createSlice({
       state.isLoading = true
     },
     [getDrafts.fulfilled]: (state, action) => {
-      state.drafts = action.payload
+      if (action?.meta?.arg?.isAppend) {
+        state.drafts = state.drafts.concat(action.payload)
+      } else {
+        state.drafts = action.payload
+      }
       state.isLoading = false
     },
     [getDrafts.rejected]: (state, action) => {

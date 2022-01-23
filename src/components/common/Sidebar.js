@@ -97,7 +97,7 @@ const Sidebar = () => {
             className="w-8 h-8"
             data-tip="Login"
             onClick={() => {
-              dispatch(openModal());
+              navigate(URL_PATH.SIGN_IN);
             }}
           />
         )}

@@ -88,7 +88,7 @@ function PostDetail() {
             </div>
           </div>
           <div className="mt-10 prose w-full max-w-none">
-            <p className="font-bold text-xl text-gray-600">
+            <p className="font-bold text-xl text-gray-600 dark:text-slate-200">
               {detail.title || <Skeleton />}
             </p>
             <div

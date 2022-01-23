@@ -5,12 +5,14 @@ import gfm from "remark-gfm"
 import slug from "remark-slug"
 import headings from "remark-autolink-headings"
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter"
-import {dracula} from "react-syntax-highlighter/dist/cjs/styles/prism"
+import {nord} from "react-syntax-highlighter/dist/cjs/styles/prism"
 // import { onClickCopy } from "../../utils/Utility"
 import rehypeHighlight from "rehype-highlight"
 import CustomTwitterComponent from "./CustomTwitterComponent"
 import EmbedCodepen from "./EmbedCodepen"
 import EmbedYoutube from "./EmbedYoutube"
+import {FiCopy} from "react-icons/fi"
+import copy from 'copy-to-clipboard';
 
 export const syntaxHighlightComponents = {
   code({node, inline, className, children, ...props}) {
@@ -23,7 +25,7 @@ export const syntaxHighlightComponents = {
     return !inline && match ? (
       <div className="relative group">
         <SyntaxHighlighter
-          style={dracula}
+          style={nord}
           useInlineStyles={true}
           customStyle={{margin: 0}}
           language={match[1]}
@@ -34,10 +36,10 @@ export const syntaxHighlightComponents = {
         />
         <button
           title="Click to copy"
-          onClick={() => alert(String(children).replace(/\n$/, ""))}
+          onClick={() => copy(String(children).replace(/\n$/, ""))}
           className="absolute opacity-0 focus:text-green-500 group-hover:opacity-100 top-1 right-3"
         >
-          <i className="fal fa-clipboard" />
+          <FiCopy className="h-5 w-5" />
         </button>
       </div>
     ) : (
@@ -78,6 +80,7 @@ const RenderHtml = ({markdown}) => {
       // }}
       rehypePlugins={[rehypeRaw]}
       components={syntaxHighlightComponents}
+      className="dark:text-slate-300"
       children={markdown}
       // renderers={{
       //   link: props => {

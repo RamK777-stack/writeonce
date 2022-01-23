@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from "react"
+import React, {useEffect, useState, useRef, useCallback} from "react"
 import {AppWrapper} from "../../common/AppWrapper"
 import PostListItem from "./PostListItem"
 import Search from "./Search"
@@ -10,18 +10,20 @@ import {URL_PATH} from "../../../utils/urlPath"
 import NoItemsFound from "./NoItemsFound"
 import {useNavigate, generatePath} from "react-router-dom"
 import ClipLoader from "react-spinners/ClipLoader"
+import { debounce } from 'lodash'
 
 const ls = new SecureLS()
 
-function PostFeed() {
+function BookmarkFeed() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
-  const limit = 2
+  const limit = 10
   const [page, setPage] = useState(0)
   const posts = useSelector(state => state.post.bookmarks)
   const isLoading = useSelector(state => state.post.isLoading)
   const loader = useRef(null)
+  const [search, setSearch] = useState()
 
   useEffect(() => {
     const params = {
@@ -34,7 +36,7 @@ function PostFeed() {
 
   const handleObserver = async entities => {
     const target = entities[0]
-    if (target.isIntersecting) {
+    if (target.isIntersecting && page.length > 10) {
       setPage(page => page + limit)
     }
   }
@@ -65,10 +67,28 @@ function PostFeed() {
 
   const detail = {}
 
+  const getDraftsDebounce = search => {
+    const params = {
+      _limit: limit,
+      _start: 0,
+      _sort: "created_at:desc",
+      search: search,
+      isAppend: false
+    }
+    dispatch(getBookMark(params))
+  }
+
+  const debounceFn = useCallback(debounce(getDraftsDebounce, 1000), [])
+
+  const onChangeSearchtext = value => {
+    setSearch(value)
+    debounceFn(value)
+  }
+
   return (
     <>
       <div className="ml-40 mb-20 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
-        <Search />
+        <Search onChange={onChangeSearchtext}/>
         {posts.length ? (
           posts.map(detail => {
             return (
@@ -95,4 +115,4 @@ function PostFeed() {
   )
 }
 
-export default AppWrapper(PostFeed)
+export default AppWrapper(BookmarkFeed)

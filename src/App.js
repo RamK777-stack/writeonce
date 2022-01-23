@@ -14,6 +14,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { useDispatch } from "react-redux";
 import { getUserDetail } from "./components/features/auth/AuthSlice";
 import BookmarkFeed from "./components/features/post/BookmarkFeed";
+import DraftFeed from "./components/features/post/DraftFeed";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -32,7 +33,7 @@ const App = () => {
             path={URL_PATH.POST}
             element={<ProtectedRoute Component={Post} />}
           />
-          <Route path={URL_PATH.DRAFT} element={<Draft />} />
+          <Route path={URL_PATH.DRAFT} element={<DraftFeed />} />
           <Route path={URL_PATH.AUTH_CALLBACK} element={<AuthCallback />} />
           <Route path={URL_PATH.SIGN_IN} element={<SignupContainer />} />
         </Routes>

@@ -302,11 +302,16 @@ const Post = props => {
     let markdown = ""
     const nhm = new NodeHtmlMarkdown()
     blocks.forEach((item, i) => {
-      console.log(item)
       if (i) {
         if (item.tag === "code") {
           description += sanitizeHtml(
-            `<pre><${item.tag}>${item.description}</${item.tag}></pre>`,
+            `<pre><code class="language-jsx"><${item.tag}>${item.description}</${item.tag}></code></pre>`,
+            {
+              allowedClasses: {
+                code: ["language-*", "lang-*"],
+                "*": ["fancy", "simple"],
+              },
+            },
           )
         } else if (item.resource_type === "image") {
           description += sanitizeHtml(item.description, {
@@ -320,9 +325,7 @@ const Post = props => {
         }
       }
     })
-    console.log(description, ";;;")
     markdown = nhm.translate(description)
-    console.log(markdown, ";;;")
 
     return {description, markdown}
   }
@@ -332,7 +335,6 @@ const Post = props => {
       await dispatch(saveAsDraft({draftId, blocks, isDraft}))
       navigate(URL_PATH.DRAFT)
     } else {
-      console.log(blocks)
       const concatedBlocks = concatAllBlocks() || {}
       concatedBlocks["blocks"] = blocks
       concatedBlocks["draftId"] = draftId
@@ -355,8 +357,6 @@ const Post = props => {
   const embedLink = (url, resource_type) => {
     let newBlocks = JSON.parse(JSON.stringify(blocks))
     let index = blocks.findIndex(item => item.id === currentBlockId)
-    console.log(index, newBlocks, currentBlockId)
-    console.log(blocks)
     newBlocks[index].description =
       resource_type === "image"
         ? `<img src=${url} alt="embedded link" /> </img>`
@@ -364,9 +364,7 @@ const Post = props => {
     newBlocks[index].tag = `div`
     newBlocks[index].url = url
     newBlocks[index].resource_type = resource_type
-    console.log(newBlocks)
     setBlocks(newBlocks)
-    console.log(blocks)
     setTweetInputOpen(false)
     setURL(null)
     //add this url into block array with tag type a
@@ -392,7 +390,6 @@ const Post = props => {
   //     document.removeEventListener("click", closeHandler)
   //   }
   // })
-  console.log(tweetInputOpen, "q1q", url)
 
   const isRemoteUrl = url => {
     return (
@@ -415,10 +412,8 @@ const Post = props => {
       } else {
         embedLink(result?.payload?.secure_url, result?.payload?.resource_type)
       }
-      console.log(result, "22222222222222222222")
       return
     }
-    console.log(e.target.files, "111111111111111")
     let formdata = new FormData()
     formdata.append("files", e.target.files[0])
     const result = await dispatch(uploadImage(formdata))
@@ -427,7 +422,6 @@ const Post = props => {
     } else {
       embedLink(result?.payload?.secure_url, result?.payload?.resource_type)
     }
-    console.log(result, "3333333333333333333")
   }
 
   const removeImage = (e, {isCoverImage}) => {

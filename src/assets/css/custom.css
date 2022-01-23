@@ -1,29 +1,43 @@
-
 .SelectMenuWrapper {
-    position: absolute;
-    width: 200px;
-    height: 9rem;
-    z-index: 11;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-  
-  .SelectMenu {
-    background: #fff;
-    -webkit-box-shadow: 0 0 0 1px rgb(15 15 15 / 5%),
-      0 3px 6px rgb(15 15 15 / 10%), 0 9px 24px rgb(15 15 15 / 20%);
-    box-shadow: 0 0 0 1px rgb(15 15 15 / 5%), 0 3px 6px rgb(15 15 15 / 10%),
-      0 9px 24px rgb(15 15 15 / 20%);
-    border-radius: 0.5rem;
-  }
-  
-  .Block{
-    padding: 0.25rem;
-    -webkit-user-select: text;
-    user-select: text;
-  }
-  
-  .cp_embed_wrapper{
-    width: 100% !important;
-  }
+  position: absolute;
+  width: 200px;
+  height: 9rem;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.SelectMenu {
+  background: #fff;
+  -webkit-box-shadow: 0 0 0 1px rgb(15 15 15 / 5%),
+    0 3px 6px rgb(15 15 15 / 10%), 0 9px 24px rgb(15 15 15 / 20%);
+  box-shadow: 0 0 0 1px rgb(15 15 15 / 5%), 0 3px 6px rgb(15 15 15 / 10%),
+    0 9px 24px rgb(15 15 15 / 20%);
+  border-radius: 0.5rem;
+}
+
+.Block {
+  padding: 0.25rem;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.cp_embed_wrapper {
+  width: 100% !important;
+}
+
+.dark strong {
+  --tw-text-opacity: 1;
+  color: rgb(203 213 225 / var(--tw-text-opacity));
+}
+
+.dark blockquote {
+  background-color: rgb(75,85,99);
+  color: white;
+}
+/* 
+.dark pre {
+  background-color: rgb(75,85,99);
+  color: white;
+} */
