@@ -68,10 +68,10 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "concurrently \"npm run start:css\" \"react-scripts start\"",
+    "start": "concurrently \"yarn run start:css\" \"react-scripts start\"",
     "start:css": "tailwindcss -o src/assets/css/tailwind.css --watch",
-    "build": "npm run build:css && react-scripts build",
-    "build:css": "set NODE_ENV=production tailwindcss -o src/assets/css/tailwind.css -m",
+    "build": "yarn run build:css && react-scripts build",
+    "build:css": "tailwindcss -o src/assets/css/tailwind.css -m",
     "test": "craco test",
     "eject": "react-scripts eject",
     "prettier": "prettier \"src/**/*.{js,jsx}\"",
