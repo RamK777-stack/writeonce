@@ -12,10 +12,8 @@ import "react-loading-skeleton/dist/skeleton.css"
 
 const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
   const dispatch = useDispatch()
-  console.log(isBookMarked)
   const handleClickBookMark = async event => {
     event.stopPropagation()
-    console.log(isBookMarked)
     if (isBookMarked) {
       await dispatch(deleteBookMark(detail?.bookMarkId))
     } else {
@@ -26,13 +24,14 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
   const renderTags = tags => {
     return (
       <div className="flex flex-row space-x-2">
-        {tags && tags.map(item => {
-          return (
-            <span className="bg-blue-50 dark:bg-blue-900 px-2 py-1 rounded-full text-xs">
-              # {item.label}
-            </span>
-          )
-        })}
+        {tags &&
+          tags.map(item => {
+            return (
+              <span className="bg-blue-50 dark:bg-blue-900 px-2 py-1 rounded-full text-xs">
+                # {item.label}
+              </span>
+            )
+          })}
       </div>
     )
   }
@@ -94,13 +93,21 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
         {detail.id ? (
           <div className="flex mt-1 dark:text-slate-300">
             <div className="flex flex-row space-x-2">
-              <div className="flex hover:bg-blue-50 rounded px-2 py-1">
+              <div className="flex dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-2 py-1">
                 <ThumbUpIcon className="h-6 w-6 mr-1 cursor-pointer" />
-                <span>{!detail.likes || detail.likes == 0 ? 'Be the first': `${detail.likes} Reactions`}</span>
+                <span>
+                  {!detail.likes || detail.likes == 0
+                    ? "Be the first"
+                    : `${detail.likes} Reactions`}
+                </span>
               </div>
-              <div className="flex hover:bg-blue-50 rounded px-2 py-1">
+              <div className="flex dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-2 py-1">
                 <ChatIcon className="h-6 w-6 mr-1 cursor-pointer" />
-                <span>{!detail.comments || detail.comments == 0 ? 'Add comment': `${detail.comments} comments`}</span>
+                <span>
+                  {!detail.comments || detail.comments == 0
+                    ? "Add comment"
+                    : `${detail.comments} comments`}
+                </span>
               </div>
             </div>
             <div className="flex-1 justify-end">
@@ -111,6 +118,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
           <Skeleton />
         )}
       </div>
+      <hr className="mt-5 dark:border-slate-300" />
     </div>
   )
 }

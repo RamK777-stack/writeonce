@@ -45,7 +45,6 @@ export const getPosts = createAsyncThunk("post/getPosts", async params => {
 export const getDrafts = createAsyncThunk(
   "post/getDrafts",
   async (params, getState) => {
-    console.log(params)
     const response = await fetchDrafts(params)
     // The value we return becomes the `fulfilled` action payload
     return response
@@ -134,7 +133,6 @@ export const saveAsDraft = createAsyncThunk(
 export const getBookMark = createAsyncThunk(
   "post/getBookMark",
   async (params, thunkAPI) => {
-    console.log(params, "121")
     thunkAPI.dispatch(startLoader())
     const response = await getBookMarkAPI(params)
     return response
@@ -235,7 +233,6 @@ export const postSlice = createSlice({
       state.isLoading = true
     },
     [getPosts.fulfilled]: (state, action) => {
-      console.log(action)
       if (action?.meta?.arg?.isAppend) {
         state.posts = state.posts.concat(action.payload)
       } else {

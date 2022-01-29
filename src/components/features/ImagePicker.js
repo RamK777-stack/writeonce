@@ -21,7 +21,6 @@ const ImagePicker = props => {
     }
   }
 
-  console.log(images)
   return (
     <ModalWrapper {...props} modalWrapperOpen={props.imagePickerOpen}>
       <Tab.Group>

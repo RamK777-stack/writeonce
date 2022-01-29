@@ -44,7 +44,6 @@ const EmbedCodepen = props => {
   url = url.replace("https://codepen.io/", "")
   url = url.replace("/pen/", " ")
   const [user, hash] = url.split(" ")
-  console.log(user, hash)
   const penLink = `https://codepen.io/${user}/pen/${hash}/`
   const userProfileLink = `https://codepen.io/${user}`
   return (

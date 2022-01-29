@@ -4,7 +4,6 @@ import Codepen from "react-codepen-embed"
 const EmbedYoutube = props => {
   // https://codepen.io/Sanja_kaz/pen/ZEXRpLO
   // const url = props.url
-  console.log(props)
   let embedId = new URL(props.url).searchParams.get("v")
   return (
     // <Codepen hash={hash} user={user} />

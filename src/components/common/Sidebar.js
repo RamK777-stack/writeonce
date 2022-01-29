@@ -1,6 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import {Fragment, useEffect} from "react"
+import {Disclosure, Menu, Transition} from "@headlessui/react"
 import {
   BellIcon,
   MenuIcon,
@@ -12,41 +12,47 @@ import {
   DocumentTextIcon,
   LoginIcon,
   LogoutIcon,
-} from "@heroicons/react/outline";
-import Logo from "../../assets/images/feather.svg";
-import Home from "../../assets/images/Home.svg";
-import Post from "../../assets/images/Post.svg";
-import Tag from "../../assets/images/Tag.svg";
-import ReactTooltip from "react-tooltip";
-import { Link } from "react-router-dom";
-import { URL_PATH } from "../../utils/urlPath";
-import { openModal, closeModal, logOut } from "../features/auth/AuthSlice";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import SecureLS from "secure-ls";
-const ls = new SecureLS();
+} from "@heroicons/react/outline"
+import Logo from "../../assets/images/feather.svg"
+import ReactTooltip from "react-tooltip"
+import {Link} from "react-router-dom"
+import {URL_PATH} from "../../utils/urlPath"
+import {openModal, closeModal, logOut} from "../features/auth/AuthSlice"
+import {useDispatch} from "react-redux"
+import {useNavigate, useLocation} from "react-router-dom"
+import SecureLS from "secure-ls"
+import { pageViewAnalytics } from '../../utils/index'
+
+const ls = new SecureLS()
 
 const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
-];
+  {name: "Dashboard", href: "#", current: true},
+  {name: "Team", href: "#", current: false},
+  {name: "Projects", href: "#", current: false},
+  {name: "Calendar", href: "#", current: false},
+]
 
 const classNames = (...classes) => {
-  return classes.filter(Boolean).join(" ");
-};
+  return classes.filter(Boolean).join(" ")
+}
 
 const Sidebar = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  let location = useLocation();
 
-  const session = ls.get("userSession");
+  const session = ls.get("userSession")
 
   const handleLogOut = () => {
-    logOut();
-    navigate(URL_PATH.HOME);
-  };
+    logOut()
+    navigate(URL_PATH.HOME)
+  }
+
+  useEffect(() => {
+    console.log(location.pathname, location.search)
+    pageViewAnalytics(location.pathname + location.search)
+    // ReactGA.pageview(location.pathname + location.search)
+  }, [location])
 
   return (
     <div
@@ -89,7 +95,7 @@ const Sidebar = () => {
             className="w-8 h-8"
             data-tip="Logout"
             onClick={() => {
-              handleLogOut();
+              handleLogOut()
             }}
           />
         ) : (
@@ -97,13 +103,13 @@ const Sidebar = () => {
             className="w-8 h-8"
             data-tip="Login"
             onClick={() => {
-              navigate(URL_PATH.SIGN_IN);
+              navigate(URL_PATH.SIGN_IN)
             }}
           />
         )}
       </div>
       <ReactTooltip place="right" effect="float" type="dark" />
     </div>
-  );
-};
-export default Sidebar;
+  )
+}
+export default Sidebar

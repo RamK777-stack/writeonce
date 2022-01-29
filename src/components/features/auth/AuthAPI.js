@@ -7,7 +7,6 @@ export const sendLoginLink = (params) => {
 };
 
 export const validateToken = (params) => {
-  console.log(params);
   return axiosInstance
     .get("auth/login-link", { params })
     .then((res) => res.data);

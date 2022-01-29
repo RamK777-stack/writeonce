@@ -281,7 +281,6 @@ class EditableBlock extends React.Component {
           break
       }
       if (["code", "ul", "ol"].some(i => this.props.tag.includes(i))) {
-        console.log(this.stripeHTML(this.props.description), deleteAtPosition)
       }
       if (
         ["code", "ul", "ol"].some(i => this.props.tag.includes(i)) &&
@@ -321,7 +320,6 @@ class EditableBlock extends React.Component {
   }
 
   onChangeHandler(e) {
-    console.log(e)
     // this.setState({ description: e.target.value });
     if (this.props.tag === "code") {
       e.target.value = e.target.value.replaceAll("</div>", "<br/>")

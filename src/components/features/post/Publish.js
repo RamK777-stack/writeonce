@@ -20,7 +20,6 @@ export default function Publish({savePost}) {
   const hashtags = useSelector(state => state.post.hashtags)
 
   const handleCreate = async (inputValue) => {
-    console.log(inputValue, "New value")
     setIsLoading(true)
     await dispatch(saveHashtag(inputValue))
     setIsLoading(false)
@@ -38,12 +37,10 @@ export default function Publish({savePost}) {
   }
 
   const handleChange = value => {
-    console.log(value, "handleChange")
     setSelectedTags(value)
   }
 
   const handleInputChange = value => {
-    console.log(value, "handleInputChange")
   }
 
   const handleSavePost = isDraft => {

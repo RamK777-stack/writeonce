@@ -13,7 +13,6 @@ const initialState = {
 export const loginUsingLink = createAsyncThunk(
   "auth/login/link",
   async (email) => {
-    console.log(process.env.REACT_APP_REDIRECT_URI);
     try {
       const response = await sendLoginLink({
         email: email,
@@ -29,7 +28,6 @@ export const loginUsingLink = createAsyncThunk(
 
 export const login = createAsyncThunk("auth/login", async (token) => {
   try {
-    console.log(token);
     const response = await validateToken({ loginToken: token });
     ls.set("userSession", response);
     return response;

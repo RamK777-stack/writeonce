@@ -13,19 +13,16 @@ function AuthCallback() {
   const query = useQuery();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log(query.get("loginToken"));
   const token = query.get("loginToken");
 
   useEffect(async () => {
     if (token) {
       try {
         await dispatch(login(token)).unwrap();
-        console.log(";;;;;;;;;;;;");
         navigate(URL_PATH.POST);
       } catch (e) {
         dispatch(openModal());
         setIsValidToken(false);
-        console.log(e);
       }
     } else {
       alert("Invalid token");
@@ -34,7 +31,6 @@ function AuthCallback() {
     }
   }, []);
 
-  console.log(isValidToken, "111111111111");
   return (
     <>
       <div className="flex justify-center mt-20">

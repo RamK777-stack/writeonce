@@ -25,7 +25,6 @@ function PostDetail() {
   const dispatch = useDispatch()
   const location = useLocation()
   const slug = location.state.slug
-  console.log(slug)
   const detail = useSelector(state => state.post.postDetail)
 
   useEffect(() => {
@@ -45,7 +44,6 @@ function PostDetail() {
 
   const handleClickBookMark = async event => {
     event.stopPropagation()
-    console.log(detail.isBookMarked)
     if (detail.isBookMarked) {
       await dispatch(deleteBookMark(detail?.bookMarkId))
       dispatch(getPostDetail(slug))
@@ -55,7 +53,6 @@ function PostDetail() {
     }
   }
 
-  console.log(detail)
   return (
     <div className="flex justify-center">
       <div className="mb-10 w-1/2">
@@ -106,7 +103,7 @@ function PostDetail() {
         <div className="fixed cursor-pointer">
           {detail?.userReactions?.find(i => i.reactionId === 1) ? (
             <FaThumbsUp
-              className="w-6 h-6 mt-5"
+              className="w-5 h-5 mt-5"
               id="1"
               onClick={() => {
                 addReaction(detail.id, 1)
@@ -144,24 +141,24 @@ function PostDetail() {
           <div className="text-center text-gray-700 dark:text-white">
             {detail?.countReactions?.find(i => i.reactionId === 2)?.count || 0}
           </div>
-          {detail?.userReactions?.find(i => i.reactionId === 3) ? (
-            <GiUnicorn
-              className="w-6 h-6 mt-5"
-              id="3"
-              onClick={() => {
-                addReaction(detail.id, 3)
-              }}
-            />
-          ) : (
-            <img
-              src={unicorn}
-              className="w-6 h-6 mt-5"
-              id="3"
-              onClick={() => {
-                addReaction(detail.id, 3)
-              }}
-            />
-          )}
+          {/* {detail?.userReactions?.find(i => i.reactionId === 3) ? ( */}
+          <GiUnicorn
+            className="w-6 h-6 mt-5"
+            id="3"
+            onClick={() => {
+              addReaction(detail.id, 3)
+            }}
+          />
+          {/* // ) : (
+          //   <img
+          //     src={unicorn}
+          //     className="w-6 h-6 mt-5"
+          //     id="3"
+          //     onClick={() => {
+          //       addReaction(detail.id, 3)
+          //     }}
+          //   />
+          // )} */}
 
           <div className="text-center text-gray-700 dark:text-white">
             {detail?.countReactions?.find(i => i.reactionId === 3)?.count || 0}

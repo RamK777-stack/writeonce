@@ -6,15 +6,12 @@ import { URL_PATH } from "../../../utils/urlPath";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function DraftItem({ block, deleteDraft }) {
-  console.log(block);
-
   let navigate = useNavigate();
 
   const handleClick = ({ id, draft_blocks }) => {
     navigate(URL_PATH.POST, { state: { id, draft_blocks } });
   };
 
-  console.log(deleteDraft, ";;;");
   return (
     <div className="w-3/4">
       <div className="flex content-start">

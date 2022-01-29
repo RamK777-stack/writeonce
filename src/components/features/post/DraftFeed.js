@@ -89,7 +89,6 @@ function DraftFeed() {
   }
 
   const onDeleteDraft = (params) => {
-    console.log(params, "11");
     dispatch(deleteDraft(params));
   };
 

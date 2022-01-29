@@ -21,7 +21,6 @@ function Draft() {
   }, []);
 
   const onDeleteDraft = (params) => {
-    console.log(params, "11");
     dispatch(deleteDraft(params));
   };
 
@@ -29,7 +28,6 @@ function Draft() {
     navigate(URL_PATH.POST);
   };
 
-  console.log(drafts);
   return (
     <div className="ml-40 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
       <Search />

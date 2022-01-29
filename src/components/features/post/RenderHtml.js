@@ -17,11 +17,7 @@ import copy from 'copy-to-clipboard';
 export const syntaxHighlightComponents = {
   code({node, inline, className, children, ...props}) {
     const match = /language-(\w+)/.exec(className || "")
-    console.log("children", children)
-    console.log("className", className)
-    console.log("inline", inline)
-    console.log("match", match)
-    console.log(!inline && match, "matching///")
+    
     return !inline && match ? (
       <div className="relative group">
         <SyntaxHighlighter
@@ -56,7 +52,6 @@ export const syntaxHighlightComponents = {
   //   return <blockquote>{props.children}</blockquote>
   // },
   a(props) {
-    console.log(props, props.href.startsWith("https://twitter.com"))
     if (props.href.startsWith("https://twitter.com")) {
       return <CustomTwitterComponent url={props.href} />
     } else if (props.href.startsWith("https://codepen.io")) {

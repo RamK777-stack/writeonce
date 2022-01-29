@@ -106,7 +106,6 @@ function BookmarkFeed() {
             onClickHandler={redirectToPost}
           />
         )}
-        <hr />
         <div ref={loader} className="text-center">
           {<ClipLoader loading={isLoading} size={20} />}
         </div>

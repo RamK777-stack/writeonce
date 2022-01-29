@@ -157,7 +157,6 @@ class EditableBlock extends React.Component {
     if (e.key === "Enter") {
       if (this.state.previousKey !== "Shift" && this.props.tag !== "code") {
         e.preventDefault();
-        console.log(window.getSelection());
         var selection = window.getSelection();
         // var preCaretRange = range.cloneRange();
         // const endIndex = range.endOffset;
@@ -184,11 +183,6 @@ class EditableBlock extends React.Component {
 
         fullRange.setStart(r.startContainer, 0);
         fullRange.setEnd(r.endContainer, r.endContainer.length);
-
-        console.log(fullRange.toString(), r.endOffset, ";;;;");
-
-        console.log(rangeBefore.toString());
-        console.log(rangeAfter.toString());
 
         const endIndex = r.endOffset;
         const fullLength = fullRange.toString().length;
@@ -252,7 +246,6 @@ class EditableBlock extends React.Component {
 
   onChangeHandler(e) {
     // this.setState({ description: e.target.value });
-    console.log(e.currentTarget.outerHTML);
     this.props.updateBlock({
       id: this.props.id,
       description: e.target.value,

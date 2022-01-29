@@ -44,7 +44,6 @@ class Post extends Component {
 
   // Finish!
   handleEditorChange = ({ html, text }) => {
-    console.log("handleEditorChange", html, text);
   };
 
   render() {

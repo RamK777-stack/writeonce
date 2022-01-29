@@ -97,14 +97,12 @@ const SelectMenu = props => {
       setCursor(prevState =>
         prevState < items.length - 1 ? prevState + 1 : prevState,
       )
-      console.log(cursor, "downpress")
     }
   }, [downPress])
   useEffect(() => {
     if (items.length && upPress) {
       setCursor(prevState => (prevState > 0 ? prevState - 1 : prevState))
     }
-    console.log(cursor, "uppress")
   }, [upPress])
   useEffect(() => {
     if (items.length && enterPress) {
@@ -171,7 +169,6 @@ const SelectMenu = props => {
     setSelectedItem(key)
     props.onSelect(item.tag)
   }
-  console.log(props.tweetInputOpen, props.selectMenuIsOpen)
   return (
     <div
       className={`absolute h-auto w-80 flex flex-col justify-end`}
