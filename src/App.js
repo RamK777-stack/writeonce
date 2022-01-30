@@ -4,9 +4,8 @@ import "./assets/css/custom.css"
 import Post from "./components/features/post/Post"
 import PostFeed from "./components/features/post/PostFeed"
 import PostDetail from "./components/features/post/PostDetail"
-import {BrowserRouter, Route, Routes, Router, useLocation} from "react-router-dom"
+import {BrowserRouter, Route, Routes} from "react-router-dom"
 import {URL_PATH} from "./utils/urlPath"
-import Draft from "./components/features/post/Draft"
 import SignupContainer from "./components/features/auth/SignupContainer"
 import Signup from "./components/features/auth/Signup"
 import AuthCallback from "./components/features/auth/AuthCallback"
@@ -22,7 +21,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getUserDetail())
-  }, [])
+  }, [dispatch])
 
   return (
     <React.StrictMode>

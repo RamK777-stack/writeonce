@@ -1,5 +1,4 @@
-import React, {useState, useRef, useEffect} from "react"
-import Codepen from "react-codepen-embed"
+import React, {useState, useRef, useEffect, useCallback} from "react"
 
 const EmbedCodepen = props => {
   const SCRIPT_URL = "https://static.codepen.io/assets/embed/ei.js" // new embed
@@ -10,11 +9,11 @@ const EmbedCodepen = props => {
     loaded: "__loaded__",
   }
 
-  const [loadState, setLoadState] = useState(LOAD_STATE.booting)
-  const [error, setError] = useState()
+  const [, setLoadState] = useState(LOAD_STATE.booting)
+  const [, setError] = useState()
   const _isMounted = useRef(false)
 
-  const loadScript = () => {
+  const loadScript = useCallback(() => {
     // load the codepen embed script
     const script = document.createElement("script")
     script.src = SCRIPT_URL
@@ -32,13 +31,13 @@ const EmbedCodepen = props => {
 
     setLoadState(LOAD_STATE.loading)
     document.body.appendChild(script)
-  }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (_isMounted.current === false) _isMounted.current = true
     loadScript()
     return () => (_isMounted.current = false)
-  }, [])
+  }, [loadScript])
 
   let url = props.url
   url = url.replace("https://codepen.io/", "")
@@ -50,16 +49,16 @@ const EmbedCodepen = props => {
     // <Codepen hash={hash} user={user} />
     <p
       data-height={props.height || 400}
-      data-theme-id={props.themeId || 'dark'}
+      data-theme-id={props.themeId || "dark"}
       data-slug-hash={hash}
-      data-default-tab={props.defaultTab || 'css,result'}
+      data-default-tab={props.defaultTab || "css,result"}
       data-user={user}
       data-pen-title={props.title}
       data-preview={props.preview || true}
       data-editable={props.editable || false}
       className="codepen"
       data-embed-version={props.version || 2}
-      style={{width: '100%'}}
+      style={{width: "100%"}}
     >
       See the Pen <a href={penLink}>{props.title}</a>
       by {user} (<a href={userProfileLink}>@{user}</a>) on

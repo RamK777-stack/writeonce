@@ -5,8 +5,6 @@ import Search from "./Search";
 import { getDrafts } from "./postSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteDraft } from "./postSlice";
-import noDraftImage from "../../../assets/images/noblog.png";
-import noDraftImageDark from "../../../assets/images/noblogdark4.png";
 import { useNavigate } from "react-router-dom";
 import { URL_PATH } from "../../../utils/urlPath";
 import NoItemsFound from "./NoItemsFound";
@@ -18,7 +16,7 @@ function Draft() {
 
   useEffect(() => {
     dispatch(getDrafts());
-  }, []);
+  }, [dispatch]);
 
   const onDeleteDraft = (params) => {
     dispatch(deleteDraft(params));

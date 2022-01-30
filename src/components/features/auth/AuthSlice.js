@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { sendLoginLink, validateToken, getUserDetailsAPI } from "./AuthAPI";
-import store from "store";
 import SecureLS from "secure-ls";
 const ls = new SecureLS();
 

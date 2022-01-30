@@ -1,6 +1,5 @@
 import React, {useEffect} from "react"
 import {AppWrapper} from "../../common/AppWrapper"
-import cover from "../../../assets/images/cover1.jpg"
 import pic1 from "../../../assets/images/pic-1.jpg"
 import {getPostDetail} from "./postSlice"
 import {useDispatch, useSelector} from "react-redux"
@@ -8,11 +7,7 @@ import {useLocation} from "react-router-dom"
 import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
 import RenderHtml from "./RenderHtml"
-import like from "../../../assets/images/thumbs.png"
-import heart from "../../../assets/images/heart.png"
-import unicorn from "../../../assets/images/unicorn.png"
-import unicornFill from "../../../assets/images/unicornFill.png"
-import {FiShare2, FiThumbsUp} from "react-icons/fi"
+import {FiThumbsUp} from "react-icons/fi"
 import {FaThumbsUp} from "react-icons/fa"
 import {AiOutlineHeart, AiFillHeart} from "react-icons/ai"
 import {RiTwitterLine} from "react-icons/ri"
@@ -29,7 +24,7 @@ function PostDetail() {
 
   useEffect(() => {
     dispatch(getPostDetail(slug))
-  }, [slug])
+  }, [dispatch, slug])
 
   const addReaction = async (post, reaction) => {
     await dispatch(addReactionToPost({post, reaction}))
@@ -62,6 +57,7 @@ function PostDetail() {
               <img
                 src={detail?.coverImage}
                 className="w-full rounded lg:h-96 h-48 object-cover false"
+                alt="cover"
               />
             </div>
           )}
@@ -69,6 +65,7 @@ function PostDetail() {
             <img
               src={pic1}
               className="object-cover rounded-full contain h-16 w-16"
+              alt="cover"
             />
             {/* <div className="object-cover rounded-full contain h-16 w-16 bg-gray-100" /> */}
             <div className="flex flex-col ml-5 flex-1">

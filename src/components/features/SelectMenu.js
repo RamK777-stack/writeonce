@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from "react"
+import React, {useEffect, useState, useRef, useCallback, useMemo} from "react"
 import {matchSorter} from "match-sorter"
 
 const useKeyPress = targetKey => {
@@ -29,8 +29,7 @@ const useKeyPress = targetKey => {
 }
 
 const SelectMenu = props => {
-  const MENU_HEIGHT = 150
-  const allowedTags = [
+  const allowedTags = useMemo(() => [
     {
       id: "page-title",
       tag: "h1",
@@ -81,16 +80,17 @@ const SelectMenu = props => {
       tag: "image",
       label: "Attach image",
     },
-  ]
-  const [command, setCommand] = useState("")
+  ], []); 
+
+  const [command] = useState("")
   const [items, setItems] = useState(allowedTags)
-  const [selectedItem, setSelectedItem] = useState(0)
+  const [, setSelectedItem] = useState(0)
 
   const downPress = useKeyPress("ArrowDown")
   const upPress = useKeyPress("ArrowUp")
   const enterPress = useKeyPress("Enter")
   const [cursor, setCursor] = useState(0)
-  const [selected, setSelected] = useState(undefined)
+  const [, setSelected] = useState(undefined)
 
   useEffect(() => {
     if (items.length && downPress) {
@@ -98,12 +98,21 @@ const SelectMenu = props => {
         prevState < items.length - 1 ? prevState + 1 : prevState,
       )
     }
-  }, [downPress])
+  }, [items, downPress])
   useEffect(() => {
     if (items.length && upPress) {
       setCursor(prevState => (prevState > 0 ? prevState - 1 : prevState))
     }
-  }, [upPress])
+  }, [items, upPress])
+
+  const handleClickOption = useCallback(
+    (item, key) => {
+      setSelectedItem(key)
+      props.onSelect(item.tag)
+    },
+    [props],
+  )
+
   useEffect(() => {
     if (items.length && enterPress) {
       setSelected(items[cursor])
@@ -111,36 +120,36 @@ const SelectMenu = props => {
         handleClickOption(items[cursor], cursor)
       }
     }
-  }, [cursor, enterPress])
+  }, [items, cursor, enterPress, props, handleClickOption])
 
-  const keyDownHandler = e => {
-    switch (e.key) {
-      case "Enter":
-        e.preventDefault()
-        props.onSelect(items[selectedItem].tag)
-        break
-      case "Backspace":
-        if (!command) props.close()
-        setCommand(command.substring(0, command.length - 1))
-        break
-      case "ArrowUp":
-        e.preventDefault()
-        const prevSelected =
-          selectedItem === 0 ? items.length - 1 : selectedItem - 1
-        setSelectedItem(prevSelected)
-        break
-      case "ArrowDown":
-      case "Tab":
-        e.preventDefault()
-        const nextSelected =
-          selectedItem === items.length - 1 ? 0 : selectedItem + 1
-        setSelectedItem(nextSelected)
-        break
-      default:
-        setCommand(command + e.key)
-        break
-    }
-  }
+  // const keyDownHandler = e => {
+  //   switch (e.key) {
+  //     case "Enter":
+  //       e.preventDefault()
+  //       props.onSelect(items[selectedItem].tag)
+  //       break
+  //     case "Backspace":
+  //       if (!command) props.close()
+  //       setCommand(command.substring(0, command.length - 1))
+  //       break
+  //     case "ArrowUp":
+  //       e.preventDefault()
+  //       const prevSelected =
+  //         selectedItem === 0 ? items.length - 1 : selectedItem - 1
+  //       setSelectedItem(prevSelected)
+  //       break
+  //     case "ArrowDown":
+  //     case "Tab":
+  //       e.preventDefault()
+  //       const nextSelected =
+  //         selectedItem === items.length - 1 ? 0 : selectedItem + 1
+  //       setSelectedItem(nextSelected)
+  //       break
+  //     default:
+  //       setCommand(command + e.key)
+  //       break
+  //   }
+  // }
 
   const usePrevious = value => {
     const ref = useRef()
@@ -152,23 +161,17 @@ const SelectMenu = props => {
 
   const prevState = usePrevious({command})
 
-  const mounted = useRef()
-
   useEffect(() => {
     if (props.selectMenuIsOpen && prevState.command !== command) {
       const items = matchSorter(allowedTags, command, {keys: ["tag"]})
       setItems(items)
     }
-  }, [props.selectMenuIsOpen, command])
+  }, [props.selectMenuIsOpen, allowedTags, prevState, command])
 
   const x = props.position.x + 25
   const y = props.position.y + 25
   const positionAttributes = {top: y, left: x}
 
-  const handleClickOption = (item, key) => {
-    setSelectedItem(key)
-    props.onSelect(item.tag)
-  }
   return (
     <div
       className={`absolute h-auto w-80 flex flex-col justify-end`}
@@ -187,7 +190,6 @@ const SelectMenu = props => {
         </div>
         <ul className="list-none" id="SelectMenu">
           {items.map((item, key) => {
-            const isSelected = items.indexOf(item) === selectedItem
             return (
               <li
                 className={`${

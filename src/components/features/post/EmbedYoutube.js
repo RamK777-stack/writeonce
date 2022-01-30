@@ -1,5 +1,4 @@
-import React, {useState, useRef, useEffect} from "react"
-import Codepen from "react-codepen-embed"
+import React from "react"
 
 const EmbedYoutube = props => {
   // https://codepen.io/Sanja_kaz/pen/ZEXRpLO

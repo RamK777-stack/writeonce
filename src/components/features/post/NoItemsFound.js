@@ -5,10 +5,11 @@ import noDraftImageDark from "../../../assets/images/noblogdark4.png";
 export default function NoItemsFound({ content, onClickHandler, buttonText }) {
   return (
     <div className="text-center w-3/4 text-gray-500 -mt-5">
-      <img className="h-80 w-80 m-auto dark:hidden" src={noDraftImage} />
+      <img className="h-80 w-80 m-auto dark:hidden" src={noDraftImage} alt="no draft" />
       <img
         className="h-80 w-80 m-auto hidden dark:block"
         src={noDraftImageDark}
+        alt="no draft" 
       />
       <h1 className="text-2xl">{content}</h1>
       <button

@@ -1,13 +1,11 @@
-import React, {useEffect, useState, useRef} from "react"
+import React, {useCallback, useEffect} from "react"
 
 const ModalWrapper = props => {
-
   const x = props.position.x + 25
   const y = props.position.y + 25
   const positionAttributes = {top: y, left: x}
 
-  const closeHandler = e => {
-    
+  const closeHandler = useCallback(e => {
     if (
       document.getElementById(`ModalWrapper-${props.id}`).contains(e.target)
     ) {
@@ -16,8 +14,8 @@ const ModalWrapper = props => {
       // Clicked outside the box
       props.close()
     }
-  }
-
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+ 
   useEffect(() => {
     if (props.modalWrapperOpen) {
       document.addEventListener("click", closeHandler)
@@ -25,7 +23,7 @@ const ModalWrapper = props => {
         document.removeEventListener("click", closeHandler)
       }
     }
-  }, [props.modalWrapperOpen])
+  }, [props.modalWrapperOpen, closeHandler])
 
   const getSize = size => {
     switch (size) {

@@ -2,28 +2,23 @@ import React, {useEffect, useState, useRef, useCallback} from "react"
 import {AppWrapper} from "../../common/AppWrapper"
 import PostListItem from "./PostListItem"
 import Search from "./Search"
-import SecureLS from "secure-ls"
-import {getPosts, getBookMark, clearPost} from "./postSlice"
+import {getBookMark, clearPost} from "./postSlice"
 import {useDispatch, useSelector} from "react-redux"
-import {useLocation} from "react-router-dom"
 import {URL_PATH} from "../../../utils/urlPath"
 import NoItemsFound from "./NoItemsFound"
-import {useNavigate, generatePath} from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 import ClipLoader from "react-spinners/ClipLoader"
-import { debounce } from 'lodash'
-
-const ls = new SecureLS()
+import {debounce} from "lodash"
 
 function BookmarkFeed() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const location = useLocation()
   const limit = 10
   const [page, setPage] = useState(0)
   const posts = useSelector(state => state.post.bookmarks)
   const isLoading = useSelector(state => state.post.isLoading)
   const loader = useRef(null)
-  const [search, setSearch] = useState()
+  const [, setSearch] = useState("")
 
   useEffect(() => {
     const params = {
@@ -32,20 +27,19 @@ function BookmarkFeed() {
       _sort: "created_at:desc",
     }
     dispatch(getBookMark(params))
-  }, [page])
-
-  const handleObserver = async entities => {
-    const target = entities[0]
-    if (target.isIntersecting && page.length > 10) {
-      setPage(page => page + limit)
-    }
-  }
+  }, [page, dispatch])
 
   useEffect(() => {
     const options = {
       root: null,
       rootMargin: "0px",
       threshold: 1.0,
+    }
+    const handleObserver = async entities => {
+      const target = entities[0]
+      if (target.isIntersecting && page.length > 10) {
+        setPage(page => page + limit)
+      }
     }
     //Intersection observer to watch visibility change of element
     const observer = new window.IntersectionObserver(handleObserver, options)
@@ -55,7 +49,7 @@ function BookmarkFeed() {
     return () => {
       dispatch(clearPost())
     }
-  }, [])
+  }, [dispatch, page])
 
   const redirectToPost = () => {
     navigate(URL_PATH.HOME)
@@ -65,20 +59,18 @@ function BookmarkFeed() {
     navigate(`${URL_PATH.POST}/${slug}`, {state: {slug}})
   }
 
-  const detail = {}
-
   const getDraftsDebounce = search => {
     const params = {
       _limit: limit,
       _start: 0,
       _sort: "created_at:desc",
       search: search,
-      isAppend: false
+      isAppend: false,
     }
     dispatch(getBookMark(params))
   }
 
-  const debounceFn = useCallback(debounce(getDraftsDebounce, 1000), [])
+  const debounceFn = useCallback(debounce(getDraftsDebounce, 1000), []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const onChangeSearchtext = value => {
     setSearch(value)
@@ -88,7 +80,7 @@ function BookmarkFeed() {
   return (
     <>
       <div className="ml-40 mb-20 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
-        <Search onChange={onChangeSearchtext}/>
+        <Search onChange={onChangeSearchtext} />
         {posts.length ? (
           posts.map(detail => {
             return (

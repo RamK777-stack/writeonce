@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useCallback} from "react"
 import {AppWrapper} from "../../common/AppWrapper"
 import {uid, objectId, setCaretToEnd} from "../../../utils/index"
 import EditableBlock from "../EditableBlock"
@@ -7,8 +7,8 @@ import {DragDropContext, Droppable} from "react-beautiful-dnd"
 import {usePrevious} from "../../hooks/usePrevious"
 import {PhotographIcon} from "@heroicons/react/outline"
 import {useSelector, useDispatch} from "react-redux"
-import {getPosts, savePost, saveAsDraft, uploadImage} from "./postSlice"
-import {NodeHtmlMarkdown, NodeHtmlMarkdownOptions} from "node-html-markdown"
+import {savePost, saveAsDraft, uploadImage} from "./postSlice"
+import {NodeHtmlMarkdown} from "node-html-markdown"
 import {useLocation, useNavigate} from "react-router-dom"
 import {URL_PATH} from "../../../utils/urlPath"
 import sanitizeHtml from "sanitize-html"
@@ -18,7 +18,6 @@ import TweetInput from "../TweetInput"
 import ImagePicker from "../ImagePicker"
 import {isString} from "lodash"
 import {AiOutlineUndo, AiOutlineClose} from "react-icons/ai"
-var htmlparser = require("htmlparser2")
 
 const initialBlock = [
   {id: uid(), description: "Title here", tag: "h1"},
@@ -37,10 +36,8 @@ const Post = props => {
   const [currentBlockId, setCurrentBlockId] = useState(null)
   // const [coverImage, setCoverImage] = useState("https://res.cloudinary.com/diqjnoirx/image/upload/v1642577761/download_uio4z6.jpg")
   const [coverImage, setCoverImage] = useState()
-  const [mark, setMark] = useState("")
   const [draftId, setDraftId] = useState()
   const dispatch = useDispatch()
-  const posts = useSelector(state => state.post.posts)
   const prevBlocks = usePrevious(blocks)
   const [selectMenuIsOpen, setSelectMenuIsOpen] = useState(false)
   const [selectMenuPosition, setSelectMenuPosition] = useState({x: 350, y: 150})
@@ -52,36 +49,39 @@ const Post = props => {
   const isImageUploading = useSelector(state => state.post.isImageUploading)
   const [isCoverImage, setIsCoverImage] = useState()
 
+  const onClickEventHandler = useCallback(
+    e => {
+      if (document.getElementById("content-editable")?.contains(e.target)) {
+        // Clicked in box
+        if (blocks[blocks.length - 1]?.description) {
+          const blockElement = [{id: uid(), description: "", tag: "p"}]
+          const updatedBlocks = [...blocks]
+          updatedBlocks.splice(blocks.length + 1, 0, ...blockElement)
+          setBlocks(updatedBlocks)
+          setCurrentBlockId(blockElement[0].id)
+          setCurrentBlock(blockElement[0])
+        }
+      }
+      if (selectMenuIsOpen) {
+        closeSelectMenuHandler()
+        // document.removeEventListener("click", closeSelectMenuHandler)
+      }
+    },
+    [blocks, selectMenuIsOpen],
+  )
+
   useEffect(() => {
     document.addEventListener("click", onClickEventHandler) // need to change this
     return () => {
       document.removeEventListener("click", onClickEventHandler)
     }
-  }, [selectMenuIsOpen, blocks])
+  }, [selectMenuIsOpen, blocks, onClickEventHandler])
 
   const openSelectMenuHandler = e => {
     const {x, y} = getCaretCoordinates(e)
     setSelectMenuPosition({x: Math.round(x), y: Math.round(y)})
     setSelectMenuIsOpen(true)
     // document.addEventListener("click", onClickEventHandler) // need to change this
-  }
-
-  const onClickEventHandler = e => {
-    if (document.getElementById("content-editable")?.contains(e.target)) {
-      // Clicked in box
-      if (blocks[blocks.length - 1]?.description) {
-        const blockElement = [{id: uid(), description: "", tag: "p"}]
-        const updatedBlocks = [...blocks]
-        updatedBlocks.splice(blocks.length + 1, 0, ...blockElement)
-        setBlocks(updatedBlocks)
-        setCurrentBlockId(blockElement[0].id)
-        setCurrentBlock(blockElement[0])
-      }
-    }
-    if (selectMenuIsOpen) {
-      closeSelectMenuHandler()
-      // document.removeEventListener("click", closeSelectMenuHandler)
-    }
   }
 
   const closeSelectMenuHandler = e => {
@@ -170,7 +170,6 @@ const Post = props => {
 
   const updateBlockHandler = currentBlock => {
     const index = blocks.map(b => b.id).indexOf(currentBlock.id)
-    const oldBlock = blocks[index]
     const updatedBlocks = [...blocks]
     const {tag, description} = currentBlock
     updatedBlocks[index] = {
@@ -231,11 +230,11 @@ const Post = props => {
     }
   }
 
-  const stripeHTML = html => {
-    let tmp = document.createElement("DIV")
-    tmp.innerHTML = html
-    return tmp.textContent || tmp.innerText || ""
-  }
+  // const stripeHTML = html => {
+  //   let tmp = document.createElement("DIV")
+  //   tmp.innerHTML = html
+  //   return tmp.textContent || tmp.innerText || ""
+  // }
 
   const deleteBlockHandler = currentBlock => {
     if (blocks.length > 1) {
@@ -286,16 +285,16 @@ const Post = props => {
     }
   }
 
-  const chooseCoverImage = e => {
-    const file = e.target.files[0]
-    if (file) {
-      const reader = new FileReader()
-      const url = reader.readAsDataURL(file)
-      reader.onloadend = () => {
-        setCoverImage(reader.result)
-      }
-    }
-  }
+  // const chooseCoverImage = e => {
+  //   const file = e.target.files[0]
+  //   if (file) {
+  //     const reader = new FileReader()
+  //     const url = reader.readAsDataURL(file)
+  //     reader.onloadend = () => {
+  //       setCoverImage(reader.result)
+  //     }
+  //   }
+  // }
 
   const concatAllBlocks = () => {
     let description = ""
@@ -394,7 +393,7 @@ const Post = props => {
   const isRemoteUrl = url => {
     return (
       isString(url) &&
-      /^ftp:|^https?:|^gs:|^s3:|^data:([\w-.]+\/[\w-.]+(\+[\w-.]+)?)?(;[\w-.]+=[\w-.]+)*;base64,([a-zA-Z0-9\/+\n=]+)$/.test(
+      /^ftp:|^https?:|^gs:|^s3:|^data:([\w-.]+\/[\w-.]+(\+[\w-.]+)?)?(;[\w-.]+=[\w-.]+)*;base64,([a-zA-Z0-9/+\n=]+)$/.test(
         url,
       )
     )
@@ -469,6 +468,7 @@ const Post = props => {
               <div className="relative group">
                 <img
                   src={coverImage}
+                  alt="cover"
                   className="block object-cover w-full h-full rounded"
                 />
                 <div className="hidden group-hover:block flex absolute top-3 right-5">

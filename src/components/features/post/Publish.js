@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react"
-import {XIcon} from "@heroicons/react/outline"
+// import {XIcon} from "@heroicons/react/outline"
 import {useDispatch, useSelector} from "react-redux"
 import CreatableSelect from "react-select/creatable"
 import {getHashtag, saveHashtag} from "../post/postSlice"
@@ -15,7 +15,7 @@ export default function Publish({savePost}) {
 
   useEffect(() => {
     dispatch(getHashtag())
-  }, [])
+  }, [dispatch])
 
   const hashtags = useSelector(state => state.post.hashtags)
 
@@ -50,9 +50,9 @@ export default function Publish({savePost}) {
 
   return (
     <div className="dark:text-white">
-      <p>Publish to</p>
+      {/* <p>Publish to</p> */}
       <div className="flex-none">
-        <fieldset>
+        {/* <fieldset>
           <div className="mt-4 space-y-4">
             <div className="flex items-start">
               <div className="flex items-center h-5">
@@ -127,7 +127,7 @@ export default function Publish({savePost}) {
               </div>
             </div>
           </div>
-        </fieldset>
+        </fieldset> */}
         <fieldset className="mt-5">
           <legend className="text-base font-medium text-gray-900 dark:text-white">
             Hash tags

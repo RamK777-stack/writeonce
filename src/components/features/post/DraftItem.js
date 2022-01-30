@@ -3,7 +3,7 @@ import React from "react";
 import pic6 from "../../../assets/images/pic-6.jpg";
 import moment from "moment";
 import { URL_PATH } from "../../../utils/urlPath";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function DraftItem({ block, deleteDraft }) {
   let navigate = useNavigate();
@@ -15,7 +15,7 @@ export default function DraftItem({ block, deleteDraft }) {
   return (
     <div className="w-3/4">
       <div className="flex content-start">
-        <img src={pic6} className="object-cover rounded-lg contain h-24 w-28" />
+        <img src={pic6} className="object-cover rounded-lg contain h-24 w-28" alt="cover"/>
         <div className="flex flex-col ml-5 flex-1">
           <h4
             className="text-xl text-gray-900 dark:text-white"

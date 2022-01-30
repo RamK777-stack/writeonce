@@ -2,7 +2,6 @@ import {BookmarkIcon, ChatIcon, ThumbUpIcon} from "@heroicons/react/outline"
 import {BookmarkIcon as BookmarkAltIcon} from "@heroicons/react/solid"
 import React from "react"
 import pic1 from "../../../assets/images/pic-1.jpg"
-import sanitizeHtml from "sanitize-html"
 import moment from "moment"
 import {createBookMark, deleteBookMark} from "./postSlice"
 import {useDispatch} from "react-redux"
@@ -47,6 +46,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
         {detail.img ? (
           <img
             src={pic1}
+            alt="cover"
             className="object-cover rounded-full contain h-16 w-16"
           />
         ) : (
@@ -96,7 +96,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
               <div className="flex dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-2 py-1">
                 <ThumbUpIcon className="h-6 w-6 mr-1 cursor-pointer" />
                 <span>
-                  {!detail.likes || detail.likes == 0
+                  {!detail.likes || parseInt(detail.likes) === 0
                     ? "Be the first"
                     : `${detail.likes} Reactions`}
                 </span>
@@ -104,7 +104,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
               <div className="flex dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-2 py-1">
                 <ChatIcon className="h-6 w-6 mr-1 cursor-pointer" />
                 <span>
-                  {!detail.comments || detail.comments == 0
+                  {!detail.comments || parseInt(detail.comments) === 0
                     ? "Add comment"
                     : `${detail.comments} comments`}
                 </span>

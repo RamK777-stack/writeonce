@@ -1,6 +1,6 @@
-import React, {useEffect, useState, useRef} from "react"
+import React, {useEffect, useState} from "react"
 import ModalWrapper from "./ModalWrapper"
-import {Tab, Transition} from "@headlessui/react"
+import {Tab} from "@headlessui/react"
 import {CloudUploadIcon} from "@heroicons/react/outline"
 import {useSelector, useDispatch} from "react-redux"
 import {getUnsplashImages} from "./post/postSlice"
@@ -11,15 +11,15 @@ const ImagePicker = props => {
 
   useEffect(() => {
     dispatch(getUnsplashImages({query}))
-  }, [query])
+  }, [dispatch, query])
 
   const images = useSelector(state => state.post.unsplashImages)
 
-  const onSubmit = () => {
-    if (props.url) {
-      props.embedLink(props.url)
-    }
-  }
+  // const onSubmit = () => {
+  //   if (props.url) {
+  //     props.embedLink(props.url)
+  //   }
+  // }
 
   return (
     <ModalWrapper {...props} modalWrapperOpen={props.imagePickerOpen}>
@@ -89,6 +89,7 @@ const ImagePicker = props => {
                     <img
                       className="rounded h-28 w-full object-cover"
                       src={item.urls?.thumb}
+                      alt="thumb"
                     />
                   </div>
                 ))}

@@ -2,28 +2,23 @@ import React, {useEffect, useState, useRef, useCallback} from "react"
 import {AppWrapper} from "../../common/AppWrapper"
 import PostListItem from "./PostListItem"
 import Search from "./Search"
-import SecureLS from "secure-ls"
-import {getPosts, getBookMark, clearPost} from "./postSlice"
+import {getPosts, clearPost} from "./postSlice"
 import {useDispatch, useSelector} from "react-redux"
-import {useLocation} from "react-router-dom"
 import {URL_PATH} from "../../../utils/urlPath"
 import NoItemsFound from "./NoItemsFound"
-import {useNavigate, generatePath} from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 import ClipLoader from "react-spinners/ClipLoader"
 import {debounce} from "lodash"
-
-const ls = new SecureLS()
 
 function PostFeed() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const location = useLocation()
-  const limit = 10
+  const limit = 5
   const [page, setPage] = useState(0)
   const posts = useSelector(state => state.post.posts)
   const isLoading = useSelector(state => state.post.isLoading)
   const loader = useRef(null)
-  const [search, setSearch] = useState()
+  const [, setSearch] = useState('')
 
   useEffect(() => {
     const params = {
@@ -33,11 +28,11 @@ function PostFeed() {
       isAppend: true
     }
     dispatch(getPosts(params))
-  }, [page])
+  }, [dispatch, page])
 
   const handleObserver = async entities => {
     const target = entities[0]
-    if (target.isIntersecting && page.length > 10) {
+    if (target.isIntersecting) {
       setPage(page => page + limit)
     }
   }
@@ -56,7 +51,7 @@ function PostFeed() {
     return () => {
       dispatch(clearPost())
     }
-  }, [])
+  }, [dispatch])
 
   const redirectToPost = () => {
     navigate(URL_PATH.HOME)
@@ -65,8 +60,6 @@ function PostFeed() {
   const redirectToPostDetail = slug => {
     navigate(`${URL_PATH.POST}/${slug}`, {state: {slug}})
   }
-
-  const detail = {}
 
   const getPostsDebounce = search => {
     const params = {
@@ -79,7 +72,7 @@ function PostFeed() {
     dispatch(getPosts(params))
   }
 
-  const debounceFn = useCallback(debounce(getPostsDebounce, 1000), [])
+  const debounceFn = useCallback(debounce(getPostsDebounce, 1000), []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const onChangeSearchtext = value => {
     setSearch(value)

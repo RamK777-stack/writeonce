@@ -1,12 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
-import {Fragment, useEffect} from "react"
-import {Disclosure, Menu, Transition} from "@headlessui/react"
+import {useEffect} from "react"
 import {
-  BellIcon,
-  MenuIcon,
-  XIcon,
-  AnnotationIcon,
-  ClipboardIcon,
   HomeIcon,
   BookmarkIcon,
   DocumentTextIcon,
@@ -17,27 +11,14 @@ import Logo from "../../assets/images/feather.svg"
 import ReactTooltip from "react-tooltip"
 import {Link} from "react-router-dom"
 import {URL_PATH} from "../../utils/urlPath"
-import {openModal, closeModal, logOut} from "../features/auth/AuthSlice"
-import {useDispatch} from "react-redux"
+import {logOut} from "../features/auth/AuthSlice"
 import {useNavigate, useLocation} from "react-router-dom"
 import SecureLS from "secure-ls"
 import { pageViewAnalytics } from '../../utils/index'
 
 const ls = new SecureLS()
 
-const navigation = [
-  {name: "Dashboard", href: "#", current: true},
-  {name: "Team", href: "#", current: false},
-  {name: "Projects", href: "#", current: false},
-  {name: "Calendar", href: "#", current: false},
-]
-
-const classNames = (...classes) => {
-  return classes.filter(Boolean).join(" ")
-}
-
 const Sidebar = () => {
-  const dispatch = useDispatch()
   const navigate = useNavigate()
   let location = useLocation();
 
@@ -64,7 +45,7 @@ const Sidebar = () => {
         to={URL_PATH.HOME}
         className="items-center spacing-x-2 py-2.5 px-4 mt-5 transition duration-200 ease-in-out"
       >
-        <img src={Logo}></img>
+        <img src={Logo} alt="logo"></img>
       </Link>
       <nav className="mt-4">
         <Link

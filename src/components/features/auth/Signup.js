@@ -1,14 +1,12 @@
-import React, { useEffect, useState, useRef, Fragment } from "react";
+import React, {useState, useRef, Fragment } from "react";
 import typeWritter from "../../../assets/images/writter.jpg";
-import feather from "../../../assets/Icons/feather.svg";
 import google from "../../../assets/Icons/Google.jpg";
 import linkedin from "../../../assets/Icons/in.svg";
 import facebook from "../../../assets/Icons/path4.svg";
 import github from "../../../assets/Icons/path33.svg";
-import { XIcon, ExclamationIcon } from "@heroicons/react/outline";
+import { XIcon } from "@heroicons/react/outline";
 import { Dialog, Transition } from "@headlessui/react";
 import {
-  openModal,
   closeModal,
   isModalOpen,
   loginUsingLink,
@@ -90,6 +88,7 @@ const Signup = ({ renderAsPage, goBack }) => {
                         <img
                           src={typeWritter}
                           className="w-full rounded-tl-lg rounded-bl-lg"
+                          alt="poster"
                         />
                         <div className="absolute top-10 left-24 m-auto text-gray-600">
                           <h2 className="text-lg text-center ml-1">
@@ -154,6 +153,7 @@ const Signup = ({ renderAsPage, goBack }) => {
                               <img
                                 src={google}
                                 className="text-center w-full"
+                                alt="google"
                               ></img>
                             </div>
                             <div
@@ -161,7 +161,7 @@ const Signup = ({ renderAsPage, goBack }) => {
                    font-medium tracking-wider border bg-gray-800 border-gray-400 text-gray-600
                    rounded-md hover:shadow-lg hover:bg-gray-900 h-12 w-12"
                             >
-                              <img src={github} className="text-center"></img>
+                              <img src={github} className="text-center" alt="github"></img>
                             </div>
                             <div
                               class="mt-5 md:mb-0 bg-white p-3 text-sm shadow-sm
@@ -171,6 +171,7 @@ const Signup = ({ renderAsPage, goBack }) => {
                               <img
                                 src={linkedin}
                                 className="text-center w-full"
+                                alt="linkedin"
                               ></img>
                             </div>
                             <div
@@ -181,6 +182,7 @@ const Signup = ({ renderAsPage, goBack }) => {
                               <img
                                 src={facebook}
                                 className="text-center h-6 w-6"
+                                alt="facebook"
                               ></img>
                             </div>
                           </div>

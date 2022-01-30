@@ -1,10 +1,8 @@
 import React from "react"
 import ContentEditable from "react-contenteditable"
-import {setCaretToEnd, getCaretCoordinates, objectId} from "../../utils"
-import SelectMenu from "./SelectMenu"
-import TweetInput from "./TweetInput"
+import {getCaretCoordinates, objectId} from "../../utils"
 import {Draggable} from "react-beautiful-dnd"
-import {ViewGridIcon, ViewListIcon, XIcon} from "@heroicons/react/outline"
+import {ViewListIcon, XIcon} from "@heroicons/react/outline"
 import CustomTwitterComponent from "../features/post/CustomTwitterComponent"
 import EmbedCodepen from "./post/EmbedCodepen"
 import EmbedYoutube from "./post/EmbedYoutube"
@@ -16,7 +14,6 @@ class EditableBlock extends React.Component {
     this.contentEditable = React.createRef()
     this.state = {
       description: "",
-      tag: "p",
       tag: "p",
       previousKey: "",
       selectMenuIsOpen: false,
@@ -31,11 +28,11 @@ class EditableBlock extends React.Component {
   }
 
   componentDidMount() {
-    const hasPlaceholder = this.addPlaceholder({
-      block: this.contentEditable.current,
-      position: this.props.position,
-      content: this.props.description || this.props.imageUrl,
-    })
+    // const hasPlaceholder = this.addPlaceholder({
+    //   block: this.contentEditable.current,
+    //   position: this.props.position,
+    //   content: this.props.description || this.props.imageUrl,
+    // })
     // if (!hasPlaceholder) {
     //   this.setState({
     //     ...this.state,
@@ -62,7 +59,7 @@ class EditableBlock extends React.Component {
   // Show a placeholder for blank pages
   addPlaceholder = ({block, position, content}) => {
     const isFirstBlockWithoutHtml = position === 1 && !content
-    const isFirstBlockWithoutSibling = !block.parentElement.nextElementSibling
+    // const isFirstBlockWithoutSibling = !block.parentElement.nextElementSibling
     if (isFirstBlockWithoutHtml) {
       this.setState({
         ...this.state,
@@ -306,9 +303,9 @@ class EditableBlock extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const hasNoPlaceholder = !this.state.placeholder
-    const htmlChanged = this.props.description !== this.state.description
-    const tagChanged = this.props.tag !== this.state.tag
+    // const hasNoPlaceholder = !this.state.placeholder
+    // const htmlChanged = this.props.description !== this.state.description
+    // const tagChanged = this.props.tag !== this.state.tag
     // if ((htmlChanged || tagChanged) && hasNoPlaceholder) {
     //   this.props.updateBlock({
     //     id: this.props.id,
@@ -399,7 +396,7 @@ class EditableBlock extends React.Component {
                 </div>
               ) : this.props.resource_type === "image" ? (
                 <div className="flex w-full justify-center">
-                  <img src={this.props.url} className="object-cover rounded p-5"/>
+                  <img src={this.props.url} className="object-cover rounded p-5" alt="cover"/>
                 </div>
               ) : (
                 <ContentEditable
