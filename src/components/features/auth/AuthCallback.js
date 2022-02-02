@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react"
 import {useQuery} from "./hooks"
 import loading from "../../../assets/images/loading.gif"
 import invalidToken from "../../../assets/images/sad.gif"
-import {login, openModal} from "./AuthSlice"
+import {login, openModal, googleSignin} from "./AuthSlice"
 import {useDispatch} from "react-redux"
 import {useNavigate} from "react-router-dom"
 import {URL_PATH} from "../../../utils/urlPath"
@@ -15,6 +15,26 @@ function AuthCallback() {
   const token = query.get("loginToken")
 
   useEffect(() => {
+    const queryParams = query.toString()
+    const handleLogin = async queryParams => {
+      try {
+        await dispatch(googleSignin(queryParams)).unwrap()
+        navigate(URL_PATH.POST)
+      } catch (e) {
+        dispatch(openModal())
+        setIsValidToken(false)
+      }
+    }
+    if (queryParams) {
+      handleLogin(queryParams)
+    } else {
+      alert("Invalid token")
+      dispatch(openModal())
+      setIsValidToken(false)
+    }
+  }, [token, query, dispatch, navigate])
+
+  useEffect(() => {
     const handleLogin = async token => {
       try {
         await dispatch(login(token)).unwrap()
@@ -25,7 +45,7 @@ function AuthCallback() {
       }
     }
     if (token) {
-      handleLogin(token);
+      handleLogin(token)
     } else {
       alert("Invalid token")
       dispatch(openModal())

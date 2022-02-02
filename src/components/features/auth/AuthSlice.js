@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { sendLoginLink, validateToken, getUserDetailsAPI } from "./AuthAPI";
+import { sendLoginLink, validateToken, getUserDetailsAPI, signinWithGoogle } from "./AuthAPI";
 import SecureLS from "secure-ls";
 const ls = new SecureLS();
 
@@ -35,6 +35,17 @@ export const login = createAsyncThunk("auth/login", async (token) => {
     throw e;
   }
 });
+
+export const googleSignin = createAsyncThunk("auth/googleSignin", async (query)=> {
+  try{
+    const response = await signinWithGoogle(query);
+    ls.set("userSession", response);
+    return response;
+  }catch(e){
+    console.log(e);
+    throw e;
+  }
+})
 
 export const getUserDetail = createAsyncThunk(
   "auth/getUserDetail",

@@ -1,33 +1,33 @@
-import React, {useState, useRef, Fragment } from "react";
-import typeWritter from "../../../assets/images/writter.jpg";
-import google from "../../../assets/Icons/Google.jpg";
-import linkedin from "../../../assets/Icons/in.svg";
-import facebook from "../../../assets/Icons/path4.svg";
-import github from "../../../assets/Icons/path33.svg";
-import { XIcon } from "@heroicons/react/outline";
-import { Dialog, Transition } from "@headlessui/react";
-import {
-  closeModal,
-  isModalOpen,
-  loginUsingLink,
-} from "./AuthSlice";
-import { useSelector, useDispatch } from "react-redux";
+import React, {useState, useRef, Fragment} from "react"
+import typeWritter from "../../../assets/images/writter.jpg"
+import google from "../../../assets/Icons/Google.jpg"
+import linkedin from "../../../assets/Icons/in.svg"
+import facebook from "../../../assets/Icons/path4.svg"
+import github from "../../../assets/Icons/path33.svg"
+import {XIcon} from "@heroicons/react/outline"
+import {Dialog, Transition} from "@headlessui/react"
+import {closeModal, isModalOpen, loginUsingLink} from "./AuthSlice"
+import {useSelector, useDispatch} from "react-redux"
 
-const Signup = ({ renderAsPage, goBack }) => {
-  const dispatch = useDispatch();
-  const isOpen = useSelector(isModalOpen);
-  const open = renderAsPage ? true : isOpen;
-  const cancelButtonRef = useRef(null);
-  const [email, setEmail] = useState("");
-  const [emailSentStatus, setEmailSentStatus] = useState(false);
+const Signup = ({renderAsPage, goBack}) => {
+  const dispatch = useDispatch()
+  const isOpen = useSelector(isModalOpen)
+  const open = renderAsPage ? true : isOpen
+  const cancelButtonRef = useRef(null)
+  const [email, setEmail] = useState("")
+  const [emailSentStatus, setEmailSentStatus] = useState(false)
 
   const handleClickSend = async () => {
-    const result = await dispatch(loginUsingLink(email));
+    const result = await dispatch(loginUsingLink(email))
     if (result) {
-      setEmailSentStatus(true);
-      setEmail("");
+      setEmailSentStatus(true)
+      setEmail("")
     }
-  };
+  }
+
+  const onClickGoogle = () => {
+    window.location.href = `${process.env.REACT_APP_BASE_URL}/connect/google`
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -110,7 +110,7 @@ const Signup = ({ renderAsPage, goBack }) => {
                               <XIcon
                                 className="h-4 w-4 cursor-pointer m-auto"
                                 onClick={() => {
-                                  setEmailSentStatus(false);
+                                  setEmailSentStatus(false)
                                 }}
                               />
                             </div>
@@ -126,8 +126,8 @@ const Signup = ({ renderAsPage, goBack }) => {
                             id="username"
                             type="text"
                             value={email}
-                            onChange={(e) => {
-                              setEmail(e.target.value);
+                            onChange={e => {
+                              setEmail(e.target.value)
                             }}
                             required
                             placeholder="Enter your email address"
@@ -136,7 +136,7 @@ const Signup = ({ renderAsPage, goBack }) => {
                             class="mt-5 md:mb-0 bg-blue-500 border border-blue-500 px-4 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-md
                   hover:shadow-lg hover:bg-blue-600"
                             onClick={() => {
-                              handleClickSend();
+                              handleClickSend()
                             }}
                           >
                             Submit
@@ -154,6 +154,9 @@ const Signup = ({ renderAsPage, goBack }) => {
                                 src={google}
                                 className="text-center w-full"
                                 alt="google"
+                                onClick={() => {
+                                  onClickGoogle()
+                                }}
                               ></img>
                             </div>
                             <div
@@ -161,7 +164,11 @@ const Signup = ({ renderAsPage, goBack }) => {
                    font-medium tracking-wider border bg-gray-800 border-gray-400 text-gray-600
                    rounded-md hover:shadow-lg hover:bg-gray-900 h-12 w-12"
                             >
-                              <img src={github} className="text-center" alt="github"></img>
+                              <img
+                                src={github}
+                                className="text-center"
+                                alt="github"
+                              ></img>
                             </div>
                             <div
                               class="mt-5 md:mb-0 bg-white p-3 text-sm shadow-sm
@@ -205,7 +212,7 @@ const Signup = ({ renderAsPage, goBack }) => {
         </div>
       </Dialog>
     </Transition.Root>
-  );
-};
+  )
+}
 
-export default Signup;
+export default Signup

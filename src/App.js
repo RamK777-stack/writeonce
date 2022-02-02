@@ -36,6 +36,7 @@ const App = () => {
           />
           <Route path={URL_PATH.DRAFT} element={<DraftFeed />} />
           <Route path={URL_PATH.AUTH_CALLBACK} element={<AuthCallback />} />
+          <Route path={URL_PATH.GOOGLE_AUTH_CALLBACK} element={<AuthCallback />} />
           <Route path={URL_PATH.SIGN_IN} element={<SignupContainer />} />
         </Routes>
       </BrowserRouter>
