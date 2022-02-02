@@ -16,7 +16,7 @@ function AuthCallback() {
 
   useEffect(() => {
     const queryParams = query.toString()
-    const handleLogin = async queryParams => {
+    const handleLoginWithGoogle = async queryParams => {
       try {
         await dispatch(googleSignin(queryParams)).unwrap()
         navigate(URL_PATH.POST)
@@ -25,16 +25,6 @@ function AuthCallback() {
         setIsValidToken(false)
       }
     }
-    if (queryParams) {
-      handleLogin(queryParams)
-    } else {
-      alert("Invalid token")
-      dispatch(openModal())
-      setIsValidToken(false)
-    }
-  }, [token, query, dispatch, navigate])
-
-  useEffect(() => {
     const handleLogin = async token => {
       try {
         await dispatch(login(token)).unwrap()
@@ -44,14 +34,18 @@ function AuthCallback() {
         setIsValidToken(false)
       }
     }
-    if (token) {
-      handleLogin(token)
+    if (window.location.pathname.includes("auth/google")) {
+      handleLoginWithGoogle(queryParams)
     } else {
-      alert("Invalid token")
-      dispatch(openModal())
-      setIsValidToken(false)
+      if (token) {
+        handleLogin(token)
+      } else {
+        alert("Invalid token")
+        dispatch(openModal())
+        setIsValidToken(false)
+      }
     }
-  }, [token]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [query, token]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
