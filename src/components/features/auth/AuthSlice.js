@@ -20,7 +20,7 @@ export const loginUsingLink = createAsyncThunk(
     try {
       const response = await sendLoginLink({
         email: email,
-        redirectURI: process.env.REACT_APP_REDIRECT_URI,
+        redirectURI: `${window.location.origin}/auth/callback`,
       })
       // The value we return becomes the `fulfilled` action payload
       return response
