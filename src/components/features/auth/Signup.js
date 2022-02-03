@@ -15,13 +15,17 @@ const Signup = ({renderAsPage, goBack}) => {
   const open = renderAsPage ? true : isOpen
   const cancelButtonRef = useRef(null)
   const [email, setEmail] = useState("")
-  const [emailSentStatus, setEmailSentStatus] = useState(false)
+  const [emailSentStatus, setEmailSentStatus] = useState()
 
   const handleClickSend = async () => {
-    const result = await dispatch(loginUsingLink(email))
-    if (result) {
-      setEmailSentStatus(true)
-      setEmail("")
+    try {
+      const result = await dispatch(loginUsingLink(email)).unwrap()
+      if (result) {
+        setEmailSentStatus("Magic link sent to your email.")
+        setEmail("")
+      }
+    } catch (e) {
+      setEmailSentStatus(e.message || "Unable to send email")
     }
   }
 
@@ -105,12 +109,12 @@ const Signup = ({renderAsPage, goBack}) => {
                           {emailSentStatus && (
                             <div className="flex border-blue-600 mb-5 p-2 border-l-2 bg-blue-300">
                               <p className="text text-blue-900 flex-1">
-                                Magic link sent to your email.
+                                {emailSentStatus}
                               </p>
                               <XIcon
                                 className="h-4 w-4 cursor-pointer m-auto"
                                 onClick={() => {
-                                  setEmailSentStatus(false)
+                                  setEmailSentStatus()
                                 }}
                               />
                             </div>
