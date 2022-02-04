@@ -81,7 +81,7 @@ function PostFeed() {
 
   return (
     <>
-      <div className="p-2 lg:ml-40 mb-20 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
+      <div className="p-2 lg:ml-40 md:ml-20 md:w-3/4 mb-20 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
         <Search value={search} onChange={onChangeSearchtext} />
         {posts.length ? (
           posts.map(detail => {
