@@ -18,14 +18,14 @@ function PostFeed() {
   const posts = useSelector(state => state.post.posts)
   const isLoading = useSelector(state => state.post.isLoading)
   const loader = useRef(null)
-  const [, setSearch] = useState('')
+  const [search, setSearch] = useState("")
 
   useEffect(() => {
     const params = {
       _limit: limit,
       _start: page,
       _sort: "created_at:desc",
-      isAppend: true
+      isAppend: true,
     }
     dispatch(getPosts(params))
   }, [dispatch, page])
@@ -67,7 +67,7 @@ function PostFeed() {
       _start: 0,
       _sort: "created_at:desc",
       search: search,
-      isAppend: false
+      isAppend: false,
     }
     dispatch(getPosts(params))
   }
@@ -81,8 +81,8 @@ function PostFeed() {
 
   return (
     <>
-      <div className="ml-40 mb-20 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
-        <Search onChange={onChangeSearchtext} />
+      <div className="p-2 lg:ml-40 mb-20 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
+        <Search value={search} onChange={onChangeSearchtext} />
         {posts.length ? (
           posts.map(detail => {
             return (

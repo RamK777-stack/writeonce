@@ -37,7 +37,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
 
   return (
     <div
-      className="w-3/4 cursor-pointer"
+      className="w-full lg:w-3/4 cursor-pointer text-sm lg:text-base p-2 lg:p-0"
       onClick={() => {
         redirectToPostDetail(detail.slug)
       }}
@@ -93,24 +93,36 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
         {detail.id ? (
           <div className="flex mt-1 dark:text-slate-300">
             <div className="flex flex-row space-x-2">
-              <div className="flex dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-2 py-1">
+              <div className="flex justify-center dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-2 py-1">
                 <ThumbUpIcon className="h-6 w-6 mr-1 cursor-pointer" />
-                <span>
-                  {!detail.likes || parseInt(detail.likes) === 0
-                    ? "Be the first"
-                    : `${detail.likes} Reactions`}
-                </span>
+                <div className="self-center">
+                  <span className="hidden lg:block">
+                    {!detail.likes || parseInt(detail.likes) === 0
+                      ? "Be the first"
+                      : `${detail.likes}`}
+                  </span>
+                  {parseInt(detail.likes) !== 0 && (
+                    <span className="hidden lg:block">Reactions</span>
+                  )}
+                  <span className="block lg:hidden">
+                    {parseInt(detail.likes)}
+                  </span>
+                </div>
               </div>
               <div className="flex dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-2 py-1">
                 <ChatIcon className="h-6 w-6 mr-1 cursor-pointer" />
                 <span>
                   {!detail.comments || parseInt(detail.comments) === 0
                     ? "Add comment"
-                    : `${detail.comments} comments`}
+                    : `${detail.comments}`}
+
+                  {parseInt(detail.comments) !== 0 && (
+                    <span className="hidden lg:block">comments</span>
+                  )}
                 </span>
               </div>
             </div>
-            <div className="flex-1 justify-end">
+            <div className="flex-1 justify-end self-center">
               <p className="text-right">{detail?.reading_time} read</p>
             </div>
           </div>

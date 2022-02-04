@@ -27,7 +27,7 @@ function Draft() {
   };
 
   return (
-    <div className="ml-40 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
+    <div className="lg:ml-40 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
       <Search />
       {drafts && drafts.length ? (
         drafts.map((block) => (

@@ -153,14 +153,14 @@ const Signup = ({renderAsPage, goBack}) => {
                               class="mt-5 md:mb-0 bg-white p-3 text-sm shadow-sm
                    font-medium tracking-wider border border-gray-400 text-gray-600
                    rounded-md hover:shadow-lg hover:bg-gray-100 h-12 w-12"
+                              onClick={() => {
+                                onClickGoogle()
+                              }}
                             >
                               <img
                                 src={google}
                                 className="text-center w-full"
                                 alt="google"
-                                onClick={() => {
-                                  onClickGoogle()
-                                }}
                               ></img>
                             </div>
                             <div

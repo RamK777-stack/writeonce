@@ -50,7 +50,7 @@ function PostDetail() {
 
   return (
     <div className="flex justify-center">
-      <div className="mb-10 w-1/2">
+      <div className="mb-10 w-full md:w-3/4 lg:w-1/2 px-5 lg:px-0">
         <div className="h-full">
           {detail?.coverImage && (
             <div className="coverImage">
@@ -96,7 +96,7 @@ function PostDetail() {
           </div>
         </div>
       </div>
-      <div className="justify-center ml-20 mt-20">
+      <div className="hidden lg:block justify-center ml-20 mt-20">
         <div className="fixed cursor-pointer">
           {detail?.userReactions?.find(i => i.reactionId === 1) ? (
             <FaThumbsUp
