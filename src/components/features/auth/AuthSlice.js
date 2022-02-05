@@ -12,6 +12,7 @@ const initialState = {
   loggedIn: false,
   isModalOpen: false,
   userDetails: {},
+  isSideBarOpen: false,
 }
 
 export const loginUsingLink = createAsyncThunk(
@@ -86,6 +87,9 @@ export const authSlice = createSlice({
     closeModal: state => {
       state.isModalOpen = false
     },
+    toggleSideBarOpen: state => {
+      state.isSideBarOpen = !state.isSideBarOpen
+    },
   },
   extraReducers: {
     [getUserDetail.fulfilled]: (state, action) => {
@@ -97,7 +101,8 @@ export const authSlice = createSlice({
   },
 })
 
-export const {openModal, closeModal} = authSlice.actions
+export const {openModal, closeModal, toggleSideBarOpen} = authSlice.actions
 export const isModalOpen = state => state.auth.isModalOpen
+export const isSideBarOpen = state => state.auth.isSideBarOpen
 
 export default authSlice.reducer
