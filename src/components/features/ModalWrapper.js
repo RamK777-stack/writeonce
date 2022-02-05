@@ -28,18 +28,18 @@ const ModalWrapper = props => {
   const getSize = size => {
     switch (size) {
       case "md":
-        return "w-96"
+        return "w-full lg:w-96 md:w-96 p-2"
       case "lg":
-        return "w-128"
+        return "w-full lg:w-128 md:w-128 p-2"
       default:
-        return "w-96"
+        return "w-full lg:w-96 md:w-96 p-2"
     }
   }
 
   return (
     <div id={`ModalWrapper-${props.id}`}>
       <div
-        className={`absolute ${getSize(props.size)} flex flex-col justify-end`}
+        className={`z-10 absolute ${getSize(props.size)} flex flex-col justify-end positionAttributes`}
         style={positionAttributes}
       >
         <div

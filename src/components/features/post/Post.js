@@ -439,7 +439,7 @@ const Post = props => {
 
   return (
     <div className="Page flex justify-center mt-18 flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">
-      <div className="w-full lg:w-3/4 px-20 ml-20" id="content-editable">
+      <div className="w-full lg:w-3/4 lg:px-20 md:px-20 lg:ml-20 md:ml-20" id="content-editable">
         <label for="cover">
           <div
             className="ml-12 flex mb-5"

@@ -59,7 +59,7 @@ const Header = () => {
               </button>
 
               {/* Profile dropdown */}
-              <Menu as="div" className="ml-3 relative">
+              <Menu as="div" className="ml-3 relative z-10">
                 {({open}) => (
                   <>
                     <div>
@@ -96,6 +96,19 @@ const Header = () => {
                             >
                               Your Profile
                             </div>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({active}) => (
+                            <Link
+                              className={`cursor-pointer ${classNames(
+                                active ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm text-gray-700",
+                              )}`}
+                              to={URL_PATH.POST}
+                            >
+                              Write an article
+                            </Link>
                           )}
                         </Menu.Item>
                         <Menu.Item>

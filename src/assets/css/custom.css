@@ -41,3 +41,10 @@
   background-color: rgb(75,85,99);
   color: white;
 } */
+
+@media (max-width: 481px) { 
+  .positionAttributes {
+     top: 20 !important;
+     left: 0 !important;
+   }
+}

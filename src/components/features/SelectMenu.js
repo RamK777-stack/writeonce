@@ -29,58 +29,61 @@ const useKeyPress = targetKey => {
 }
 
 const SelectMenu = props => {
-  const allowedTags = useMemo(() => [
-    {
-      id: "page-title",
-      tag: "h1",
-      label: "Page Title",
-    },
-    {
-      id: "heading",
-      tag: "h2",
-      label: "Heading",
-    },
-    {
-      id: "subheading",
-      tag: "h3",
-      label: "Subheading",
-    },
-    {
-      id: "paragraph",
-      tag: "p",
-      label: "Paragraph",
-    },
-    {
-      id: "blockquote",
-      tag: "blockquote",
-      label: "Blockquote",
-    },
-    {
-      id: "code",
-      tag: "code",
-      label: "code",
-    },
-    {
-      id: "ol",
-      tag: "ol",
-      label: "Ordered List",
-    },
-    {
-      id: "ul",
-      tag: "ul",
-      label: "Unordered List",
-    },
-    {
-      id: "tweet",
-      tag: "tweet",
-      label: "Embed tweet, youtube, codepen etc..",
-    },
-    {
-      id: "image",
-      tag: "image",
-      label: "Attach image",
-    },
-  ], []); 
+  const allowedTags = useMemo(
+    () => [
+      {
+        id: "page-title",
+        tag: "h1",
+        label: "Page Title",
+      },
+      {
+        id: "heading",
+        tag: "h2",
+        label: "Heading",
+      },
+      {
+        id: "subheading",
+        tag: "h3",
+        label: "Subheading",
+      },
+      {
+        id: "paragraph",
+        tag: "p",
+        label: "Paragraph",
+      },
+      {
+        id: "blockquote",
+        tag: "blockquote",
+        label: "Blockquote",
+      },
+      {
+        id: "code",
+        tag: "code",
+        label: "code",
+      },
+      {
+        id: "ol",
+        tag: "ol",
+        label: "Ordered List",
+      },
+      {
+        id: "ul",
+        tag: "ul",
+        label: "Unordered List",
+      },
+      {
+        id: "tweet",
+        tag: "tweet",
+        label: "Embed tweet, youtube, codepen etc..",
+      },
+      {
+        id: "image",
+        tag: "image",
+        label: "Attach image",
+      },
+    ],
+    [],
+  )
 
   const [command] = useState("")
   const [items, setItems] = useState(allowedTags)
