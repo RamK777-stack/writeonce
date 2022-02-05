@@ -54,7 +54,7 @@ function PostFeed() {
   }, [dispatch])
 
   const redirectToPost = () => {
-    navigate(URL_PATH.HOME)
+    navigate(URL_PATH.POST)
   }
 
   const redirectToPostDetail = slug => {
@@ -95,8 +95,8 @@ function PostFeed() {
           })
         ) : (
           <NoItemsFound
-            content="No bookmarks added.."
-            buttonText="Go to feed"
+            content="No posts added.."
+            buttonText="Be the first, Write article"
             onClickHandler={redirectToPost}
           />
         )}

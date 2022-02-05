@@ -54,7 +54,7 @@ function DraftFeed() {
   }, [dispatch, page])
 
   const redirectToPost = () => {
-    navigate(URL_PATH.HOME)
+    navigate(URL_PATH.POST)
   }
 
   // const redirectToPostDetail = slug => {
@@ -93,8 +93,8 @@ function DraftFeed() {
           })
         ) : (
           <NoItemsFound
-            content="No bookmarks added.."
-            buttonText="Go to feed"
+            content="No drafts found.."
+            buttonText="Write new article"
             onClickHandler={redirectToPost}
           />
         )}
