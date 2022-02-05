@@ -2,7 +2,7 @@ import React from "react"
 
 export default function Search(props) {
   return (
-    <div className="relative lg:w-3/4 text-gray-600 focus-within:text-gray-400">
+    <div className="relative lg:w-3/4 text-gray-600 focus-within:text-gray-400 -z-10">
       <input
         id="candidates"
         type="search"

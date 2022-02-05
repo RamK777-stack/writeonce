@@ -122,27 +122,25 @@ const Sidebar = () => {
         </nav>
         <div className="px-2 mt-auto mb-10 justify-center cursor-pointer">
           {session ? (
-            <div className="flex">
-              <LoginIcon
-                className="w-8 h-8"
-                data-tip="Logout"
-                onClick={() => {
-                  handleLogOut()
-                }}
-              />
+            <div
+              className="flex"
+              onClick={() => {
+                handleLogOut()
+              }}
+            >
+              <LoginIcon className="w-8 h-8" data-tip="Logout" />
               <div className="justify-center px-2 py-1 block lg:hidden md:hidden">
                 Log out
               </div>
             </div>
           ) : (
-            <div className="flex">
-              <LogoutIcon
-                className="w-8 h-8"
-                data-tip="Login"
-                onClick={() => {
-                  navigate(URL_PATH.SIGN_IN)
-                }}
-              />
+            <div
+              className="flex"
+              onClick={() => {
+                navigate(URL_PATH.SIGN_IN)
+              }}
+            >
+              <LogoutIcon className="w-8 h-8" data-tip="Login" />
               <div className="justify-center px-2 py-1 block lg:hidden md:hidden">
                 Log in
               </div>

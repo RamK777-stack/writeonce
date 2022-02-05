@@ -78,7 +78,7 @@ const Signup = ({renderAsPage, goBack}) => {
               <div className="bg-white">
                 <div className="sm:flex sm:items-start">
                   <div className="">
-                    <div className="grid grid-cols-2">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 md:grid-cols-2">
                       <div className="absolute top-2 right-2">
                         {!renderAsPage && (
                           <XIcon
@@ -88,7 +88,7 @@ const Signup = ({renderAsPage, goBack}) => {
                           />
                         )}
                       </div>
-                      <div className="">
+                      <div className="hidden lg:block md:block">
                         <img
                           src={typeWritter}
                           className="w-full rounded-tl-lg rounded-bl-lg"
