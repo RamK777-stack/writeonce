@@ -43,7 +43,7 @@ const Header = () => {
                   }}
                 />
               </div>
-              <img src={Logo} className="ml-2" alt="logo"></img>
+              <img src={Logo} className="ml-2" alt="logo"></img> 
             </div>
             <div className="flex flex-1 items-center justify-end sm:items-stretch sm:justify-end absolute inset-y-0 right-0 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               <Link

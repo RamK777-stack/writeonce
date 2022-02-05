@@ -28,11 +28,11 @@ const ModalWrapper = props => {
   const getSize = size => {
     switch (size) {
       case "md":
-        return "w-full lg:w-96 md:w-96 p-2"
+        return "w-auto lg:w-96 md:w-96 px-2"
       case "lg":
-        return "w-full lg:w-128 md:w-128 p-2"
+        return "w-auto lg:w-128 md:w-128 px-2"
       default:
-        return "w-full lg:w-96 md:w-96 p-2"
+        return "w-auto lg:w-96 md:w-96 px-2"
     }
   }
 

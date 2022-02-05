@@ -57,9 +57,12 @@ const Sidebar = () => {
         <div className="flex items-center">
           <Link
             to={URL_PATH.HOME}
-            className="items-center spacing-x-2 py-2.5 px-4 mt-5 transition duration-200 ease-in-out"
+            className="flex items-center spacing-x-2 py-2.5 px-4 mt-5 transition duration-200 ease-in-out"
           >
-            <img src={Logo} alt="logo"></img>
+            <img src={Logo} alt="logo"></img>{" "}
+            {isSideBarOpen && (
+              <span className="ml-2 block lg:hidden md:hidden">Writeonce</span>
+            )}
           </Link>
           <div
             className="flex justify-end flex-1 items-center block lg:hidden md:hidden"
