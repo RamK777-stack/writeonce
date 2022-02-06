@@ -1,6 +1,6 @@
 import React, {useEffect} from "react"
 import {AppWrapper} from "../../common/AppWrapper"
-import pic1 from "../../../assets/images/pic-1.jpg"
+import avatar from "../../../assets/images/avatar.png"
 import {getPostDetail} from "./postSlice"
 import {useDispatch, useSelector} from "react-redux"
 import {useLocation} from "react-router-dom"
@@ -63,7 +63,7 @@ function PostDetail() {
           )}
           <div className="flex items-center mt-5">
             <img
-              src={pic1}
+              src={avatar}
               className="object-cover rounded-full contain h-16 w-16"
               alt="cover"
             />
@@ -75,7 +75,7 @@ function PostDetail() {
                   : detail?.author?.username}
               </p>
               <p className="text-sm rounded-full bg-blue-100 text-blue-600 w-20 p-1 text-center cursor-pointer">
-                Following
+                Follow
               </p>
             </div>
           </div>
