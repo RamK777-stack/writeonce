@@ -53,11 +53,11 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
           <div className="object-cover rounded-full contain h-16 w-16 bg-gray-100" />
         )}
         <div className="flex flex-col ml-5 flex-1 dark:text-slate-200">
-          {detail?.author?.user_profile ? (
-            <p className="text-lg font-bold">{`${detail?.author?.user_profile?.firstName} ${detail?.author?.user_profile?.lastName}`}</p>
-          ) : (
-            <Skeleton />
-          )}
+          <p className="text-lg font-bold">
+            {detail?.author?.user_profile
+              ? `${detail?.author?.user_profile?.firstName} ${detail?.author?.user_profile?.lastName}`
+              : detail?.author?.username}
+          </p>
           <p className="text-sm">
             {detail?.created_at ? (
               moment(detail?.created_at).format("MMMM DD, yyyy")

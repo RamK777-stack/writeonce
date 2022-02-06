@@ -9,14 +9,14 @@ import CustomTwitterComponent from "./CustomTwitterComponent"
 import EmbedCodepen from "./EmbedCodepen"
 import EmbedYoutube from "./EmbedYoutube"
 import {FiCopy} from "react-icons/fi"
-import copy from 'copy-to-clipboard';
+import copy from "copy-to-clipboard"
 
 export const syntaxHighlightComponents = {
   code({node, inline, className, children, ...props}) {
     const match = /language-(\w+)/.exec(className || "")
-    
+
     return !inline && match ? (
-      <div className="relative group">
+      <div className="relative grid group">
         <SyntaxHighlighter
           style={nord}
           useInlineStyles={true}

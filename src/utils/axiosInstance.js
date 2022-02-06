@@ -8,6 +8,7 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use((config) => {
   const session = ls.get("userSession");
+  console.log(session, '111111111111')
   if (session?.jwt) {
     config.headers["Authorization"] = `Bearer ${session?.jwt}`;
   }

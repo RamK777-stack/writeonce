@@ -69,13 +69,11 @@ function PostDetail() {
             />
             {/* <div className="object-cover rounded-full contain h-16 w-16 bg-gray-100" /> */}
             <div className="flex flex-col ml-5 flex-1">
-              {detail?.author?.user_profile ? (
-                <p className="font-bold text-lg">
-                  {`${detail?.author?.user_profile?.firstName} ${detail?.author?.user_profile?.lastName}`}
-                </p>
-              ) : (
-                <Skeleton />
-              )}
+              <p className="font-bold text-lg">
+                {detail?.author?.user_profile
+                  ? `${detail?.author?.user_profile?.firstName} ${detail?.author?.user_profile?.lastName}`
+                  : detail?.author?.username}
+              </p>
               <p className="text-sm rounded-full bg-blue-100 text-blue-600 w-20 p-1 text-center cursor-pointer">
                 Following
               </p>

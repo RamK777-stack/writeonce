@@ -81,24 +81,25 @@ function BookmarkFeed() {
     <>
       <div className="p-2 lg:ml-40 md:ml-20 md:w-3/4 mb-20 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
         <Search onChange={onChangeSearchtext} />
-        {posts.length ? (
-          posts.map(detail => {
-            return (
-              <PostListItem
-                detail={detail}
-                redirectToPostDetail={redirectToPostDetail}
-                isBookMarked={true}
-              />
-            )
-          })
-        ) : (
-          <NoItemsFound
-            content="No bookmarks added.."
-            buttonText="Go to feed"
-            onClickHandler={redirectToPost}
-          />
-        )}
-        <div ref={loader} className="text-center">
+        {!isLoading &&
+          (posts.length ? (
+            posts.map(detail => {
+              return (
+                <PostListItem
+                  detail={detail}
+                  redirectToPostDetail={redirectToPostDetail}
+                  isBookMarked={true}
+                />
+              )
+            })
+          ) : (
+            <NoItemsFound
+              content="No bookmarks added.."
+              buttonText="Go to feed"
+              onClickHandler={redirectToPost}
+            />
+          ))}
+        <div ref={loader} className="w-full lg:w-3/4 md:w-3/4 text-center">
           {<ClipLoader loading={isLoading} size={20} />}
         </div>
       </div>
