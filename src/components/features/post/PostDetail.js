@@ -84,7 +84,7 @@ function PostDetail() {
               {detail.title || <Skeleton />}
             </p>
             <div
-              className="mt-5"
+              className="mt-5 text-gray-700 subpixel-antialiased"
               // dangerouslySetInnerHTML={{
               //   __html: detail.description,
               // }}
