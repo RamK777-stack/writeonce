@@ -36,6 +36,10 @@
   background-color: rgb(75,85,99);
   color: white;
 }
+
+code {
+  white-space: pre;
+}
 /* 
 .dark pre {
   background-color: rgb(75,85,99);

@@ -56,7 +56,7 @@ export const syntaxHighlightComponents = {
     } else if (props.href.startsWith("https://www.youtube.com")) {
       return <EmbedYoutube url={props.href} />
     } else {
-      return <a href={props.href}>{props.children}</a>
+      return <a href={props.href} target="_blank" rel="noreferrer">{props.children}</a>
     }
   },
   // blockquote({}){}

@@ -51,7 +51,7 @@ const Post = props => {
 
   const onClickEventHandler = useCallback(
     e => {
-      if (document.getElementById("content-editable")?.contains(e.target)) {
+      if (document.getElementById("content-editable")?.contains(e.target) && !selectMenuIsOpen) {
         // Clicked in box
         if (blocks[blocks.length - 1]?.description) {
           const blockElement = [{id: uid(), description: "", tag: "p"}]
@@ -69,6 +69,69 @@ const Post = props => {
     },
     [blocks, selectMenuIsOpen],
   )
+  // eslint-disable-next-line
+  const updateBlockHandler = currentBlock => {
+    const index = blocks.map(b => b.id).indexOf(currentBlock.id)
+    const updatedBlocks = [...blocks]
+    const {tag, description} = currentBlock
+    updatedBlocks[index] = {
+      ...updatedBlocks[index],
+      tag: currentBlock.tag,
+      description:
+        ["ol", "ul"].includes(tag) &&
+        !["<li>", "</li>"].includes(description) &&
+        !["<li>", "</li>"].some(i => description.includes(i))
+          ? `<li>${description}</li>`
+          : currentBlock.description,
+      imageUrl: currentBlock.imageUrl,
+    }
+    if (
+      index === blocks.length - 1 &&
+      ["code", "blockquote"].includes(currentBlock.tag)
+    ) {
+      const newBlock = {
+        id: objectId(),
+        tag: "p",
+        description: "",
+        imageUrl: "",
+      }
+      updatedBlocks.splice(index + 1, 0, newBlock)
+    }
+    setBlocks(updatedBlocks)
+  }
+
+  const onPasteEventHandler = useCallback(
+    e => {
+      e.preventDefault()
+      // let html = e.clipboardData.getData("text/html")
+      let text = e.clipboardData.getData("text/plain")
+      // console.log(html, text)
+      const block = blocks.find(i => i.id === e.target.id)
+      // let sanitizedContent = html
+      //   ? sanitizeHtml(html).trim().replaceAll(" ", "")
+      //   : text;
+      // console.log(sanitizedContent)
+      updateBlockHandler({
+        id: e.target.id,
+        description: text,
+        tag: block?.tag,
+      })
+      // let sanitizedText = sanitizedContent.trim().replaceAll(" ","")
+      // console.log(sanitizedContent, sanitizedText[0], sanitizedText)
+      // console.log(sanitizedText.split(""))
+      // console.log(sanitizedText.split("").join("").trim().replace(/\s/g, ''))
+      // document.execCommand("insertHTML", false, sanitizedContent)
+      // document.execCommand("insertHTML", false, text);
+    },
+    [blocks, updateBlockHandler],
+  )
+
+  useEffect(() => {
+    document.addEventListener("paste", onPasteEventHandler)
+    return () => {
+      document.removeEventListener("paste", onPasteEventHandler)
+    }
+  }, [blocks, onPasteEventHandler])
 
   useEffect(() => {
     document.addEventListener("click", onClickEventHandler) // need to change this
@@ -167,36 +230,6 @@ const Post = props => {
       }
     }
   }, [blocks, prevBlocks, currentBlockId])
-
-  const updateBlockHandler = currentBlock => {
-    const index = blocks.map(b => b.id).indexOf(currentBlock.id)
-    const updatedBlocks = [...blocks]
-    const {tag, description} = currentBlock
-    updatedBlocks[index] = {
-      ...updatedBlocks[index],
-      tag: currentBlock.tag,
-      description:
-        ["ol", "ul"].includes(tag) &&
-        !["<li>", "</li>"].includes(description) &&
-        !["<li>", "</li>"].some(i => description.includes(i))
-          ? `<li>${description}</li>`
-          : currentBlock.description,
-      imageUrl: currentBlock.imageUrl,
-    }
-    if (
-      index === blocks.length - 1 &&
-      ["code", "blockquote"].includes(currentBlock.tag)
-    ) {
-      const newBlock = {
-        id: objectId(),
-        tag: "p",
-        description: "",
-        imageUrl: "",
-      }
-      updatedBlocks.splice(index + 1, 0, newBlock)
-    }
-    setBlocks(updatedBlocks)
-  }
 
   const addBlockHandler = (currentBlock, addAtPosition) => {
     if (!selectMenuIsOpen) {
@@ -439,7 +472,10 @@ const Post = props => {
 
   return (
     <div className="Page flex justify-center mt-18 flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">
-      <div className="w-full lg:w-3/4 lg:px-20 md:px-20 lg:ml-20 md:ml-20" id="content-editable">
+      <div
+        className="w-full lg:w-3/4 lg:px-20 md:px-20 lg:ml-20 md:ml-20"
+        id="content-editable"
+      >
         <label for="cover">
           <div
             className="ml-12 flex mb-5"

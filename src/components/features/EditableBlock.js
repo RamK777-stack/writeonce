@@ -369,15 +369,15 @@ class EditableBlock extends React.Component {
                 role="button"
                 className="flex items-center mr-5 invisible group-hover:visible"
               >
-                {this.props.url && (
-                  <XIcon
-                    className="h-5 w-5 mr-3"
-                    aria-hidden="true"
-                    onClick={() => {
-                      this.onDeleteURL()
-                    }}
-                  />
-                )}
+                {/* {this.props.url && ( */}
+                <XIcon
+                  className="h-5 w-5 mr-3"
+                  aria-hidden="true"
+                  onClick={() => {
+                    this.onDeleteURL()
+                  }}
+                />
+                {/* )} */}
                 <div tabIndex="0" {...provided.dragHandleProps}>
                   <ViewListIcon className="h-5 w-5" aria-hidden="true" />
                 </div>
@@ -396,7 +396,11 @@ class EditableBlock extends React.Component {
                 </div>
               ) : this.props.resource_type === "image" ? (
                 <div className="flex w-full justify-center">
-                  <img src={this.props.url} className="object-cover rounded p-5" alt="cover"/>
+                  <img
+                    src={this.props.url}
+                    className="object-cover rounded p-5"
+                    alt="cover"
+                  />
                 </div>
               ) : (
                 <ContentEditable
@@ -405,11 +409,14 @@ class EditableBlock extends React.Component {
                   html={this.props.description}
                   tagName={this.props.tag}
                   onChange={this.onChangeHandler}
-                  onKeyDown={this.onKeyDownHandler}
+                  onKeyDown={
+                    !["code"].includes(this.props.tag) && this.onKeyDownHandler
+                  }
                   onKeyUp={e => this.props.onKeyUpHandler(e, this.props.id)}
                   onFocus={this.handleFocus}
                   onBlur={this.handleBlur}
                   data-position={this.props.position}
+                  id={this.props.position}
                 />
               )}
             </div>
