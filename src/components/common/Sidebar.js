@@ -126,7 +126,7 @@ const Sidebar = () => {
         <div className="px-2 mt-auto mb-10 justify-center cursor-pointer">
           {session ? (
             <div
-              className="flex"
+              className="flex lg:justify-center md:justify-center"
               onClick={() => {
                 handleLogOut()
               }}
@@ -138,7 +138,7 @@ const Sidebar = () => {
             </div>
           ) : (
             <div
-              className="flex"
+              className="flex lg:justify-center md:justify-center"
               onClick={() => {
                 navigate(URL_PATH.SIGN_IN)
               }}

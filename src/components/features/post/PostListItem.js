@@ -95,7 +95,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
             <div className="flex flex-row space-x-2">
               <div className="flex justify-center dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-2 py-1">
                 <ThumbUpIcon className="h-6 w-6 mr-1 cursor-pointer" />
-                <div className="self-center">
+                <div className="self-center flex space-x-1">
                   <span className="hidden lg:block">
                     {!detail.likes || parseInt(detail.likes) === 0
                       ? "Be the first"
