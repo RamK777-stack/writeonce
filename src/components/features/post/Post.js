@@ -106,6 +106,7 @@ const Post = props => {
       // let html = e.clipboardData.getData("text/html")
       let text = e.clipboardData.getData("text/plain")
       // console.log(html, text)
+      text = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       const block = blocks.find(i => i.id === e.target.id)
       // let sanitizedContent = html
       //   ? sanitizeHtml(html).trim().replaceAll(" ", "")

@@ -33,7 +33,7 @@ function PostDetail() {
   }
 
   const shareIntoTwitter = () => {
-    const url = `https://twitter.com/share?url=${detail.slug}&text=${detail.title}`
+    const url = `https://twitter.com/share?url=${window.location.href}&text=${detail.title}`
     window.open(url, "_blank", "noopener,noreferrer")
   }
 
