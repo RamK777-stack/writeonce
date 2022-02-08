@@ -11,13 +11,13 @@ const TweetInput = props => {
   return (
     <ModalWrapper {...props} modalWrapperOpen={props.tweetInputOpen}>
       <div className="p-5 border-gray-200 border-opacity-0 p-2 border-light-blue-500 dark:border-gray-100">
-        <label htmlFor="first-name" className="block">
+        <label htmlFor="addLink" className="block">
           Add tweet link
         </label>
         <input
           type="text"
-          name="first-name"
-          id="first-name"
+          name="addLink"
+          id="addLink"
           autoComplete="given-name"
           value={props.url}
           onChange={e => {

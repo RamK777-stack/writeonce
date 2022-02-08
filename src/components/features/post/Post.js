@@ -51,7 +51,10 @@ const Post = props => {
 
   const onClickEventHandler = useCallback(
     e => {
-      if (document.getElementById("content-editable")?.contains(e.target) && !selectMenuIsOpen) {
+      if (
+        document.getElementById("content-editable")?.contains(e.target) &&
+        !selectMenuIsOpen
+      ) {
         // Clicked in box
         if (blocks[blocks.length - 1]?.description) {
           const blockElement = [{id: uid(), description: "", tag: "p"}]
@@ -102,21 +105,23 @@ const Post = props => {
 
   const onPasteEventHandler = useCallback(
     e => {
-      e.preventDefault()
-      // let html = e.clipboardData.getData("text/html")
-      let text = e.clipboardData.getData("text/plain")
-      // console.log(html, text)
-      text = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      const block = blocks.find(i => i.id === e.target.id)
-      // let sanitizedContent = html
-      //   ? sanitizeHtml(html).trim().replaceAll(" ", "")
-      //   : text;
-      // console.log(sanitizedContent)
-      updateBlockHandler({
-        id: e.target.id,
-        description: block.description.concat(text) || text,
-        tag: block?.tag,
-      })
+      if (e.target.id !== "addLink") {
+        e.preventDefault()
+        // let html = e.clipboardData.getData("text/html")
+        let text = e.clipboardData.getData("text/plain")
+        // console.log(html, text)
+        text = text.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        const block = blocks.find(i => parseInt(i.id) === parseInt(e.target.id))
+        // let sanitizedContent = html
+        //   ? sanitizeHtml(html).trim().replaceAll(" ", "")
+        //   : text;
+        // console.log(sanitizedContent)
+        updateBlockHandler({
+          id: parseInt(e.target.id),
+          description: block?.description.concat(text) || text,
+          tag: block?.tag,
+        })
+      }
       // let sanitizedText = sanitizedContent.trim().replaceAll(" ","")
       // console.log(sanitizedContent, sanitizedText[0], sanitizedText)
       // console.log(sanitizedText.split(""))

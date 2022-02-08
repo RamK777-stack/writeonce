@@ -36,7 +36,7 @@ const Toggle = () => {
   }, [theme]);
 
   return (
-    <div className="transition duration-500 ease-in-out transform hover:-translate-y-1 rounded-full">
+    <div className="mt-1 transition duration-500 ease-in-out transform hover:-translate-y-1 rounded-full">
       {theme === "dark" ? (
         <SunIcon
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
