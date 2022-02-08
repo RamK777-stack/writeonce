@@ -4,11 +4,13 @@ import pic6 from "../../../assets/images/pic-6.jpg"
 import moment from "moment"
 import {URL_PATH} from "../../../utils/urlPath"
 import {useNavigate} from "react-router-dom"
+import { sortBy } from 'lodash'
 
 export default function DraftItem({block, deleteDraft}) {
   let navigate = useNavigate()
 
   const handleClick = ({id, draft_blocks}) => {
+    draft_blocks = sortBy(draft_blocks, ["id"])
     navigate(URL_PATH.POST, {state: {id, draft_blocks}})
   }
 

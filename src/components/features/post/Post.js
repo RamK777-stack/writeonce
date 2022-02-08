@@ -114,7 +114,7 @@ const Post = props => {
       // console.log(sanitizedContent)
       updateBlockHandler({
         id: e.target.id,
-        description: text,
+        description: block.description.concat(text) || text,
         tag: block?.tag,
       })
       // let sanitizedText = sanitizedContent.trim().replaceAll(" ","")
