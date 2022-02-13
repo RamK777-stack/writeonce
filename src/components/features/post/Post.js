@@ -107,7 +107,7 @@ const Post = props => {
     e => {
       if (e.target.id !== "addLink") {
         e.preventDefault()
-        const targetId = isNaN(parseInt(e.target.id)) ? e.target.id: parseInt(e.target.id);
+        const targetId = isNaN(Number(e.target.id)) ? e.target.id: Number(e.target.id);
         // let html = e.clipboardData.getData("text/html")
         let text = e.clipboardData.getData("text/plain")
         // console.log(html, text)

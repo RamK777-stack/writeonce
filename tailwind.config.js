@@ -69,6 +69,11 @@ module.exports = {
               },
             ],
           },
+          gray: {
+            css: {
+              '--tw-prose-headings': theme('colors.gray[600]')
+            }
+          }
         }
       },
       width: {
