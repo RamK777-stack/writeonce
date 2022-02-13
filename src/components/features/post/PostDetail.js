@@ -15,6 +15,7 @@ import {GiUnicorn} from "react-icons/gi"
 import {BookmarkIcon} from "@heroicons/react/outline"
 import {BookmarkIcon as BookmarkAltIcon} from "@heroicons/react/solid"
 import {addReactionToPost, createBookMark, deleteBookMark} from "./postSlice"
+import moment from "moment"
 
 function PostDetail() {
   const dispatch = useDispatch()
@@ -69,17 +70,24 @@ function PostDetail() {
             />
             {/* <div className="object-cover rounded-full contain h-16 w-16 bg-gray-100" /> */}
             <div className="flex flex-col ml-5 flex-1">
-              <p className="font-bold text-lg">
-                {detail?.author?.user_profile
-                  ? `${detail?.author?.user_profile?.firstName} ${detail?.author?.user_profile?.lastName}`
-                  : detail?.author?.username}
-              </p>
-              <p className="text-sm rounded-full bg-blue-100 text-blue-600 w-20 p-1 text-center cursor-pointer">
-                Follow
+              <div className="flex flex-row">
+                <p className="font-bold text-lg">
+                  {detail?.author?.user_profile
+                    ? `${detail?.author?.user_profile?.firstName} ${detail?.author?.user_profile?.lastName}`
+                    : detail?.author?.username}
+                </p>
+                {/* <p className="ml-2 text-sm rounded-full bg-blue-100 text-blue-600 w-20 p-1 text-center cursor-pointer">
+                  Follow
+                </p> */}
+              </div>
+              <p>
+                Posted on{" "}
+                {detail?.created_at &&
+                  moment(detail?.created_at).format("MMM DD, yyyy")}
               </p>
             </div>
           </div>
-          <div className="mt-10 prose prose-gray w-full max-w-none">
+          <div className="mt-10 prose w-full max-w-none">
             <p className="font-bold text-xl text-gray-600 dark:text-slate-200">
               {detail.title || <Skeleton />}
             </p>

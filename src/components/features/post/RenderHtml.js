@@ -48,6 +48,9 @@ export const syntaxHighlightComponents = {
   //   console.log(props)
   //   return <blockquote>{props.children}</blockquote>
   // },
+  h3(props){
+    return <h3 className="not-prose dark:text-slate-200">{props.children}</h3>
+  },
   a(props) {
     if (props.href.startsWith("https://twitter.com")) {
       return <CustomTwitterComponent url={props.href} />
@@ -56,7 +59,16 @@ export const syntaxHighlightComponents = {
     } else if (props.href.startsWith("https://www.youtube.com")) {
       return <EmbedYoutube url={props.href} />
     } else {
-      return <a className="dark:text-slate-300" href={props.href} target="_blank" rel="noreferrer">{props.children}</a>
+      return (
+        <a
+          className="dark:text-slate-300 text-blue-500"
+          href={props.href}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {props.children}
+        </a>
+      )
     }
   },
   // blockquote({}){}
