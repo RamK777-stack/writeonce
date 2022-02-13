@@ -34,12 +34,10 @@ const Sidebar = () => {
   }
 
   useEffect(() => {
-    console.log(location.pathname, location.search)
     pageViewAnalytics(location.pathname + location.search)
     // ReactGA.pageview(location.pathname + location.search)
   }, [location])
 
-  console.log(isSideBarOpen)
 
   const handleClickSidebar = () => {
     dispatch(toggleSideBarOpen())

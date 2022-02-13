@@ -107,17 +107,18 @@ const Post = props => {
     e => {
       if (e.target.id !== "addLink") {
         e.preventDefault()
+        const targetId = isNaN(parseInt(e.target.id)) ? e.target.id: parseInt(e.target.id);
         // let html = e.clipboardData.getData("text/html")
         let text = e.clipboardData.getData("text/plain")
         // console.log(html, text)
         text = text.replace(/</g, "&lt;").replace(/>/g, "&gt;")
-        const block = blocks.find(i => parseInt(i.id) === parseInt(e.target.id))
+        const block = blocks.find(i => i.id === targetId)
         // let sanitizedContent = html
         //   ? sanitizeHtml(html).trim().replaceAll(" ", "")
         //   : text;
         // console.log(sanitizedContent)
         updateBlockHandler({
-          id: parseInt(e.target.id),
+          id: targetId,
           description: block?.description.concat(text) || text,
           tag: block?.tag,
         })

@@ -63,7 +63,6 @@ export const syntaxHighlightComponents = {
 }
 
 const RenderHtml = ({markdown}) => {
-  console.log(markdown)
   return (
     <ReactMarkdown
       remarkPlugins={[gfm]}
