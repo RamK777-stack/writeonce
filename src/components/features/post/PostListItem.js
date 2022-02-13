@@ -1,13 +1,14 @@
 import {BookmarkIcon, ChatIcon, ThumbUpIcon} from "@heroicons/react/outline"
 import {BookmarkIcon as BookmarkAltIcon} from "@heroicons/react/solid"
 import React from "react"
-import pic1 from "../../../assets/images/pic-1.jpg"
+// import pic1 from "../../../assets/images/pic-1.jpg"
 import moment from "moment"
 import {createBookMark, deleteBookMark} from "./postSlice"
 import {useDispatch} from "react-redux"
 // import Skeleton from 'react-skeleton-loader';
 import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
+import avatar from "../../../assets/images/avatar4.png"
 
 const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
   const dispatch = useDispatch()
@@ -43,15 +44,15 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
       }}
     >
       <div className="flex items-center">
-        {detail.img ? (
+        {/* {detail.img ? ( */}
           <img
-            src={pic1}
+            src={avatar}
             alt="cover"
             className="object-cover rounded-full contain h-16 w-16"
           />
-        ) : (
-          <div className="object-cover rounded-full contain h-16 w-16 bg-gray-100" />
-        )}
+        {/* // ) : (
+        //   <div className="object-cover rounded-full contain h-16 w-16 bg-gray-100" />
+        // )} */}
         <div className="flex flex-col ml-5 flex-1 dark:text-slate-200">
           <p className="text-lg font-bold">
             {detail?.author?.user_profile
