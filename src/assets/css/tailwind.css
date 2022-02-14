@@ -929,7 +929,7 @@ select {
 
 .prose {
   --tw-prose-body: #374151;
-  --tw-prose-headings: #111827;
+  --tw-prose-headings: #4b5563;
   --tw-prose-lead: #4b5563;
   --tw-prose-links: #111827;
   --tw-prose-bold: #111827;
@@ -1185,10 +1185,6 @@ select {
   z-index: 40;
 }
 
-.-z-10 {
-  z-index: -10;
-}
-
 .m-2 {
   margin: 0.5rem;
 }
@@ -1260,16 +1256,16 @@ select {
   margin-top: 0.5rem;
 }
 
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
 .mt-4 {
   margin-top: 1rem;
 }
 
 .mt-auto {
   margin-top: auto;
-}
-
-.mt-1 {
-  margin-top: 0.25rem;
 }
 
 .mr-3 {
@@ -2203,14 +2199,6 @@ select {
   font-weight: 500;
 }
 
-.font-light {
-  font-weight: 300;
-}
-
-.font-normal {
-  font-weight: 400;
-}
-
 .leading-tight {
   line-height: 1.25;
 }
@@ -2302,11 +2290,6 @@ select {
 .text-blue-500 {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity));
-}
-
-.text-gray-200 {
-  --tw-text-opacity: 1;
-  color: rgb(229 231 235 / var(--tw-text-opacity));
 }
 
 .subpixel-antialiased {
@@ -2890,6 +2873,10 @@ select {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .md\:justify-center {
+    justify-content: center;
+  }
+
   .md\:px-20 {
     padding-left: 5rem;
     padding-right: 5rem;
@@ -2955,6 +2942,10 @@ select {
 
   .lg\:flex-row {
     flex-direction: row;
+  }
+
+  .lg\:justify-center {
+    justify-content: center;
   }
 
   .lg\:space-x-2 > :not([hidden]) ~ :not([hidden]) {
