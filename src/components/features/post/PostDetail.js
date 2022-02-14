@@ -23,15 +23,6 @@ function PostDetail() {
   const slug = location.pathname.replace("/post/", "")
   const detail = useSelector(state => state.post.postDetail)
 
-  // useEffect(() => {
-  //   if (detail?.title) {
-  //     document.title = `${detail?.title} - writeonce`
-  //     document.head.innerHTML += `
-  // <meta name='description' content=${detail.synopsis}/>
-  // <meta name='keywords' content=${detail.title}/>`
-  //   }
-  // }, [detail])
-
   useEffect(() => {
     dispatch(getPostDetail(slug))
   }, [dispatch, slug])
