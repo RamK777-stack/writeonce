@@ -96,6 +96,7 @@ export const getPostDetail = createAsyncThunk(
   "post/getPostDetail",
   async (params, thunkAPI) => {
     const response = await postDetailAPI(params)
+    document.title = `${response?.title} - writeonce`
     return response
   },
 )

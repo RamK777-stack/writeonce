@@ -20,8 +20,17 @@ import moment from "moment"
 function PostDetail() {
   const dispatch = useDispatch()
   const location = useLocation()
-  const slug = location.pathname.replace('/post/','')
+  const slug = location.pathname.replace("/post/", "")
   const detail = useSelector(state => state.post.postDetail)
+
+  useEffect(() => {
+    if (detail?.title) {
+      document.title = `${detail?.title} - writeonce`
+      document.head.innerHTML += `
+  <meta name='description' content=${detail.synopsis}/>
+  <meta name='keywords' content=${detail.title}/>`
+    }
+  }, [detail])
 
   useEffect(() => {
     dispatch(getPostDetail(slug))
@@ -29,7 +38,7 @@ function PostDetail() {
 
   const addReaction = async (post, reaction) => {
     await dispatch(addReactionToPost({post, reaction}))
-    const slug = location.pathname.replace('/post/','')
+    const slug = location.pathname.replace("/post/", "")
     dispatch(getPostDetail(slug))
   }
 
@@ -88,9 +97,9 @@ function PostDetail() {
             </div>
           </div>
           <div className="mt-10 prose w-full max-w-none">
-            <p className="font-bold text-xl text-gray-600 dark:text-slate-200">
+            <h1 className="font-bold text-3xl text-gray-600 dark:text-slate-200">
               {detail.title || <Skeleton />}
-            </p>
+            </h1>
             <div
               className="mt-5 text-gray-700 subpixel-antialiased"
               // dangerouslySetInnerHTML={{
