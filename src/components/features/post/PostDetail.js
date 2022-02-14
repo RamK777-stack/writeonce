@@ -20,7 +20,7 @@ import moment from "moment"
 function PostDetail() {
   const dispatch = useDispatch()
   const location = useLocation()
-  const slug = location.state.slug
+  const slug = location.pathname.replace('/post/','')
   const detail = useSelector(state => state.post.postDetail)
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function PostDetail() {
 
   const addReaction = async (post, reaction) => {
     await dispatch(addReactionToPost({post, reaction}))
-    const slug = location.state.slug
+    const slug = location.pathname.replace('/post/','')
     dispatch(getPostDetail(slug))
   }
 
