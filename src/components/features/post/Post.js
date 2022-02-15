@@ -106,31 +106,24 @@ const Post = props => {
   const onPasteEventHandler = useCallback(
     e => {
       if (e.target.id !== "addLink") {
-        e.preventDefault()
-        const targetId = isNaN(Number(e.target.id)) ? e.target.id: Number(e.target.id);
-        // let html = e.clipboardData.getData("text/html")
+        let targetId = isNaN(Number(e.target.id))
+          ? e.target.id
+          : Number(e.target.id)
+        targetId = targetId || currentBlock.id
         let text = e.clipboardData.getData("text/plain")
-        // console.log(html, text)
         text = text.replace(/</g, "&lt;").replace(/>/g, "&gt;")
         const block = blocks.find(i => i.id === targetId)
-        // let sanitizedContent = html
-        //   ? sanitizeHtml(html).trim().replaceAll(" ", "")
-        //   : text;
-        // console.log(sanitizedContent)
-        updateBlockHandler({
-          id: targetId,
-          description: block?.description.concat(text) || text,
-          tag: block?.tag,
-        })
+        if (block.tag === "code") {
+          updateBlockHandler({
+            id: targetId,
+            description: block?.description.concat(text) || text,
+            tag: block?.tag,
+          })
+          e.preventDefault()
+        }
       }
-      // let sanitizedText = sanitizedContent.trim().replaceAll(" ","")
-      // console.log(sanitizedContent, sanitizedText[0], sanitizedText)
-      // console.log(sanitizedText.split(""))
-      // console.log(sanitizedText.split("").join("").trim().replace(/\s/g, ''))
-      // document.execCommand("insertHTML", false, sanitizedContent)
-      // document.execCommand("insertHTML", false, text);
     },
-    [blocks, updateBlockHandler],
+    [blocks, updateBlockHandler, currentBlock],
   )
 
   useEffect(() => {
