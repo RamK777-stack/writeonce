@@ -13,7 +13,7 @@ import {debounce} from "lodash"
 function PostFeed() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const limit = 5
+  const limit = 10
   const [page, setPage] = useState(0)
   const posts = useSelector(state => state.post.posts)
   const isLoading = useSelector(state => state.post.isLoading)
@@ -41,7 +41,7 @@ function PostFeed() {
     const options = {
       root: null,
       rootMargin: "0px",
-      threshold: 1.0,
+      threshold: 0.25,
     }
     //Intersection observer to watch visibility change of element
     const observer = new window.IntersectionObserver(handleObserver, options)
@@ -83,7 +83,7 @@ function PostFeed() {
     <>
       <div className="p-2 lg:ml-40 md:ml-20 md:w-3/4 mb-20 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
         <Search value={search} onChange={onChangeSearchtext} />
-        {!isLoading && (posts.length ? (
+        {(posts.length ? (
           posts.map(detail => {
             return (
               <PostListItem

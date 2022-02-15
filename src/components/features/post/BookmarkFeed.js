@@ -33,7 +33,7 @@ function BookmarkFeed() {
     const options = {
       root: null,
       rootMargin: "0px",
-      threshold: 1.0,
+      threshold: 0.25,
     }
     const handleObserver = async entities => {
       const target = entities[0]
@@ -81,8 +81,7 @@ function BookmarkFeed() {
     <>
       <div className="p-2 lg:ml-40 md:ml-20 md:w-3/4 mb-20 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
         <Search onChange={onChangeSearchtext} />
-        {!isLoading &&
-          (posts.length ? (
+        { (posts.length ? (
             posts.map(detail => {
               return (
                 <PostListItem
