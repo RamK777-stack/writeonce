@@ -5,10 +5,12 @@ import {BellIcon, MenuIcon} from "@heroicons/react/outline"
 import Logo from "../../assets/images/feather.svg"
 import user from "../../assets/images/avatar2.png"
 import ThemeToggle from "./ThemeToggle"
-import {Link} from "react-router-dom"
+// import {Link} from "react-router-dom"
 import {URL_PATH} from "../../utils/urlPath"
 import {toggleSideBarOpen} from "../features/auth/AuthSlice"
 import {useSelector, useDispatch} from "react-redux"
+import Link from "next/link"
+import Image from "next/image"
 
 const classNames = (...classes) => {
   return classes.filter(Boolean).join(" ")
@@ -43,14 +45,13 @@ const Header = () => {
                   }}
                 />
               </div>
-              <img src={Logo} className="ml-2" alt="logo"></img>
+              <Image src={Logo} className="ml-2" alt="logo" />
             </div>
             <div className="flex flex-1 items-center justify-end sm:items-stretch sm:justify-end absolute inset-y-0 right-0 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <Link
-                to={URL_PATH.POST}
-                className="hidden lg:block md:block py-2 px-4 bg-gray-600 text-white font-bold rounded mr-5"
-              >
-                Write an article
+              <Link href={URL_PATH.POST}>
+                <button className="hidden lg:block md:block py-2 px-4 bg-gray-600 text-white font-bold rounded mr-5">
+                  Write an article
+                </button>
               </Link>
               <ThemeToggle />
               <button className="mt-1 h-8 mr-2 bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -65,9 +66,11 @@ const Header = () => {
                     <div>
                       <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                         <span className="sr-only">Open user menu</span>
-                        <img
+                        <Image
                           className="h-8 w-8 rounded-full"
                           src={user}
+                          width={35}
+                          height={35}
                           alt="user profile"
                         />
                       </Menu.Button>
@@ -100,15 +103,14 @@ const Header = () => {
                         </Menu.Item>
                         <Menu.Item>
                           {({active}) => (
-                            <Link
+                            <div
                               className={`cursor-pointer ${classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700",
                               )}`}
-                              to={URL_PATH.POST}
                             >
-                              Write an article
-                            </Link>
+                              <Link href={URL_PATH.POST}>Write an article</Link>
+                            </div>
                           )}
                         </Menu.Item>
                         <Menu.Item>

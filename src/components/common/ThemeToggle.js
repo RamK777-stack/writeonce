@@ -27,12 +27,14 @@ const Toggle = () => {
     window.localStorage.setItem("color-theme", rawTheme);
   };
 
-  if (theme) {
+  if (theme && typeof window !== "undefined") {
     rawSetTheme(theme);
   }
 
   React.useEffect(() => {
-    rawSetTheme(theme);
+    if (typeof window !== "undefined") {
+      rawSetTheme(theme);
+    }
   }, [theme]);
 
   return (

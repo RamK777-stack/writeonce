@@ -1,10 +1,11 @@
 import {PencilIcon, TrashIcon} from "@heroicons/react/outline"
 import React from "react"
-import pic6 from "../../../assets/images/pic-6.jpg"
 import moment from "moment"
 import {URL_PATH} from "../../../utils/urlPath"
 import {useNavigate} from "react-router-dom"
 import { sortBy } from 'lodash'
+import Image from 'next/image'
+import avatar from "../../../assets/images/avatar4.png"
 
 export default function DraftItem({block, deleteDraft}) {
   let navigate = useNavigate()
@@ -17,8 +18,10 @@ export default function DraftItem({block, deleteDraft}) {
   return (
     <div className="w-full lg:w-3/4">
       <div className="flex content-start">
-        <img
-          src={pic6}
+        <Image
+          src={avatar}
+          height={50}
+          width={50}
           className="object-cover rounded-lg contain h-24 w-28"
           alt="cover"
         />

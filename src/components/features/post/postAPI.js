@@ -47,7 +47,7 @@ export const deleteBookMarkAPI = async bookMarkId => {
 }
 
 export const postDetailAPI = async params => {
-  return axiosInstance.get(`posts/${params}`).then(res => res.data)
+  return axiosInstance.get(`posts/${params}`).then(res => res.data).catch(err => err)
 }
 
 export const getHashtagAPI = async () => {

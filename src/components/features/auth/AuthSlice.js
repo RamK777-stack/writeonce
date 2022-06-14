@@ -6,7 +6,6 @@ import {
   signinWithGoogle,
 } from "./AuthAPI"
 import SecureLS from "secure-ls"
-const ls = new SecureLS()
 
 const initialState = {
   loggedIn: false,
@@ -34,7 +33,10 @@ export const loginUsingLink = createAsyncThunk(
 export const login = createAsyncThunk("auth/login", async token => {
   try {
     const response = await validateToken({loginToken: token})
-    ls.set("userSession", response)
+    if (typeof window !== "undefined") {
+      const ls = new SecureLS()
+      ls.set("userSession", response)
+    }
     return response
   } catch (e) {
     console.log(e)
@@ -47,7 +49,10 @@ export const googleSignin = createAsyncThunk(
   async query => {
     try {
       const response = await signinWithGoogle(query)
-      ls.set("userSession", response)
+      if (typeof window !== "undefined") {
+        const ls = new SecureLS()
+        ls.set("userSession", response)
+      }
       return response
     } catch (e) {
       console.log(e)
@@ -70,11 +75,20 @@ export const getUserDetail = createAsyncThunk(
 )
 
 export const logOut = () => {
-  ls.clear()
+  let ls
+  if (typeof window !== "undefined") {
+    ls = new SecureLS()
+    ls.clear()
+  }
 }
 
 export const isLoggedIn = () => {
-  return ls.get("userSession")
+  let ls
+  if (typeof window !== "undefined") {
+    ls = new SecureLS()
+    return ls.get("userSession")
+  }
+  return {}
 }
 
 export const authSlice = createSlice({

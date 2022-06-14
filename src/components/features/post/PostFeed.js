@@ -1,18 +1,20 @@
 import React, {useEffect, useState, useRef, useCallback} from "react"
-import {AppWrapper} from "../../common/AppWrapper"
 import PostListItem from "./PostListItem"
 import Search from "./Search"
 import {getPosts, clearPost} from "./postSlice"
 import {useDispatch, useSelector} from "react-redux"
 import {URL_PATH} from "../../../utils/urlPath"
 import NoItemsFound from "./NoItemsFound"
-import {useNavigate} from "react-router-dom"
+// import {useNavigate} from "react-router-dom"
 import ClipLoader from "react-spinners/ClipLoader"
 import {debounce} from "lodash"
+import { useRouter } from 'next/router'
+
 
 function PostFeed() {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
+  const router = useRouter()
   const limit = 10
   const [page, setPage] = useState(0)
   const posts = useSelector(state => state.post.posts)
@@ -54,11 +56,13 @@ function PostFeed() {
   }, [dispatch])
 
   const redirectToPost = () => {
-    navigate(URL_PATH.POST)
+    // navigate(URL_PATH.POST)
+    router.push(URL_PATH.POST)
   }
 
   const redirectToPostDetail = slug => {
-    navigate(`${URL_PATH.POST}/${slug}`, {state: {slug}})
+    router.push(`${URL_PATH.POST}/${slug}`, {state: {slug}})
+    // navigate(`${URL_PATH.POST}/${slug}`, {state: {slug}})
   }
 
   const getPostsDebounce = search => {
@@ -108,4 +112,4 @@ function PostFeed() {
   )
 }
 
-export default AppWrapper(PostFeed)
+export default (PostFeed)

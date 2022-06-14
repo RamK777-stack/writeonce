@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useCallback} from "react"
-import {AppWrapper} from "../../common/AppWrapper"
 import {uid, objectId, setCaretToEnd} from "../../../utils/index"
 import EditableBlock from "../EditableBlock"
 import Publish from "./Publish"
@@ -9,7 +8,7 @@ import {PhotographIcon} from "@heroicons/react/outline"
 import {useSelector, useDispatch} from "react-redux"
 import {savePost, saveAsDraft, uploadImage} from "./postSlice"
 import {NodeHtmlMarkdown} from "node-html-markdown"
-import {useLocation, useNavigate} from "react-router-dom"
+// import {useNavigate} from "react-router-dom"
 import {URL_PATH} from "../../../utils/urlPath"
 import sanitizeHtml from "sanitize-html"
 import {getCaretCoordinates} from "../../../utils"
@@ -18,6 +17,7 @@ import TweetInput from "../TweetInput"
 import ImagePicker from "../ImagePicker"
 import {isString} from "lodash"
 import {AiOutlineUndo, AiOutlineClose} from "react-icons/ai"
+import { useRouter } from 'next/router'
 
 const initialBlock = [
   {id: uid(), description: "Title here", tag: "h1"},
@@ -30,8 +30,9 @@ const initialBlock = [
 ]
 
 const Post = props => {
-  const location = useLocation()
-  const navigate = useNavigate()
+  // const location = useLocation()
+  const router = useRouter()
+  // const navigate = useNavigate()
   const [blocks, setBlocks] = useState(initialBlock)
   const [currentBlockId, setCurrentBlockId] = useState(null)
   // const [coverImage, setCoverImage] = useState("https://res.cloudinary.com/diqjnoirx/image/upload/v1642577761/download_uio4z6.jpg")
@@ -190,8 +191,9 @@ const Post = props => {
   }
 
   useEffect(() => {
-    if (location?.state?.id) {
-      const {id, draft_blocks} = location.state
+    // if (location?.state?.id) {
+      if (router?.query?.id) {
+      const {id, draft_blocks} = router.query
       setBlocks(draft_blocks)
       setDraftId(id)
     } else {
@@ -199,7 +201,7 @@ const Post = props => {
       setDraftId()
     }
     // dispatch(getPosts());
-  }, [location.state])
+  }, [router.query])
 
   // Handling the cursor and focus on adding and deleting blocks
   useEffect(() => {
@@ -365,7 +367,7 @@ const Post = props => {
   const handleSavePost = async (isDraft, hashtags) => {
     if (isDraft) {
       await dispatch(saveAsDraft({draftId, blocks, isDraft}))
-      navigate(URL_PATH.DRAFT)
+      router.push(URL_PATH.DRAFT)
     } else {
       const concatedBlocks = concatAllBlocks() || {}
       concatedBlocks["blocks"] = blocks
@@ -373,7 +375,7 @@ const Post = props => {
       concatedBlocks["hashtags"] = hashtags
       concatedBlocks["coverImage"] = coverImage
       await dispatch(savePost(concatedBlocks, isDraft))
-      navigate(URL_PATH.HOME)
+      router.push(URL_PATH.HOME)
     }
   }
 
@@ -476,7 +478,7 @@ const Post = props => {
         className="w-full lg:w-3/4 lg:px-20 md:px-20 lg:ml-20 md:ml-20"
         id="content-editable"
       >
-        <label for="cover">
+        <label htmlFor="cover">
           <div
             className="ml-12 flex mb-5"
             onClick={() => {
@@ -611,4 +613,4 @@ const Post = props => {
   )
 }
 
-export default AppWrapper(Post)
+export default (Post)

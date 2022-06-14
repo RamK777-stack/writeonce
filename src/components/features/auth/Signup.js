@@ -1,5 +1,5 @@
 import React, {useState, useRef, Fragment} from "react"
-import typeWritter from "../../../assets/images/writter.jpg"
+import typeWritter from "../../../../public/writter.jpg"
 import google from "../../../assets/Icons/Google.jpg"
 import linkedin from "../../../assets/Icons/in.svg"
 import facebook from "../../../assets/Icons/path4.svg"
@@ -8,6 +8,7 @@ import {XIcon} from "@heroicons/react/outline"
 import {Dialog, Transition} from "@headlessui/react"
 import {closeModal, isModalOpen, loginUsingLink} from "./AuthSlice"
 import {useSelector, useDispatch} from "react-redux"
+import Image from 'next/image'
 
 const Signup = ({renderAsPage, goBack}) => {
   const dispatch = useDispatch()
@@ -30,7 +31,7 @@ const Signup = ({renderAsPage, goBack}) => {
   }
 
   const onClickGoogle = () => {
-    window.location.href = `${process.env.REACT_APP_BASE_URL}/connect/google`
+    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/connect/google`
   }
 
   return (
@@ -39,7 +40,7 @@ const Signup = ({renderAsPage, goBack}) => {
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
         initialFocus={cancelButtonRef}
-        onClose={() => dispatch(closeModal())}
+        onClose={() => goBack()}
       >
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
@@ -80,19 +81,20 @@ const Signup = ({renderAsPage, goBack}) => {
                   <div className="">
                     <div className="grid grid-cols-1 lg:grid-cols-2 md:grid-cols-2">
                       <div className="absolute top-2 right-2">
-                        {!renderAsPage && (
+                        {/* {!renderAsPage && ( */}
                           <XIcon
                             ref={cancelButtonRef}
                             onClick={() => dispatch(closeModal())}
                             className="h-5 w-5 cursor-pointer"
                           />
-                        )}
+                        {/* )} */}
                       </div>
                       <div className="hidden lg:block md:block">
-                        <img
+                        <Image
                           src={typeWritter}
                           className="w-full rounded-tl-lg rounded-bl-lg"
                           alt="poster"
+                          layout="responsive"
                         />
                         <div className="absolute top-10 left-24 m-auto text-gray-600">
                           <h2 className="text-lg text-center ml-1">
@@ -157,44 +159,44 @@ const Signup = ({renderAsPage, goBack}) => {
                                 onClickGoogle()
                               }}
                             >
-                              <img
+                              <Image
                                 src={google}
                                 className="text-center w-full"
                                 alt="google"
-                              ></img>
+                              />
                             </div>
                             <div
-                              class="mt-5 md:mb-0 bg-white p-3 text-sm shadow-sm
+                              class="mt-5 md:mb-0 p-3 text-sm shadow-sm
                    font-medium tracking-wider border bg-gray-800 border-gray-400 text-gray-600
                    rounded-md hover:shadow-lg hover:bg-gray-900 h-12 w-12"
                             >
-                              <img
+                              <Image
                                 src={github}
-                                className="text-center"
+                                className="text-center w-full"
                                 alt="github"
-                              ></img>
+                              />
                             </div>
                             <div
                               class="mt-5 md:mb-0 bg-white p-3 text-sm shadow-sm
                    font-medium tracking-wider border bg-blue-900 border-gray-400 text-gray-600
                    rounded-md hover:shadow-lg hover:bg-blue-800 h-12 w-12"
                             >
-                              <img
+                              <Image
                                 src={linkedin}
                                 className="text-center w-full"
                                 alt="linkedin"
-                              ></img>
+                              />
                             </div>
                             <div
                               class="mt-5 md:mb-0 bg-white p-3 space-x-1 text-sm shadow-sm
                    font-medium tracking-wider border bg-blue-700 border-gray-400 text-gray-600
-                   rounded-md hover:shadow-lg hover:bg-blue-800 h-12 w-12"
+                   rounded-md hover:shadow-lg hover:bg-blue-800 h-12 w-12 flex justify-center"
                             >
-                              <img
+                              <Image
                                 src={facebook}
                                 className="text-center h-6 w-6"
                                 alt="facebook"
-                              ></img>
+                              />
                             </div>
                           </div>
                           {renderAsPage && (

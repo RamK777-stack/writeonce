@@ -9,8 +9,10 @@ import {useDispatch} from "react-redux"
 import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
 import avatar from "../../../assets/images/avatar4.png"
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import {URL_PATH} from "../../../utils/urlPath"
+import Link from 'next/link'
+import Image from 'next/image'
 
 const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
   const dispatch = useDispatch()
@@ -39,13 +41,15 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
   }
 
   return (
-    <Link to={`${URL_PATH.POST}/${detail.slug}`}>
+    <Link href={`${URL_PATH.HOME}/${detail.slug}`}>
       <div className="w-full lg:w-3/4 cursor-pointer text-sm lg:text-base p-2 lg:p-0">
         <div className="flex items-center">
           {/* {detail.img ? ( */}
-          <img
+          <Image
             src={avatar}
             alt="cover"
+            height={50}
+            width={50}
             className="object-cover rounded-full contain h-16 w-16"
           />
           {/* // ) : (

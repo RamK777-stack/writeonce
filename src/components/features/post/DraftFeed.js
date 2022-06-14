@@ -1,18 +1,17 @@
 import React, {useEffect, useState, useRef, useCallback} from "react"
-import {AppWrapper} from "../../common/AppWrapper"
 import Search from "./Search"
 import {clearPost, getDrafts, deleteDraft} from "./postSlice"
 import {useDispatch, useSelector} from "react-redux"
 import {URL_PATH} from "../../../utils/urlPath"
 import NoItemsFound from "./NoItemsFound"
-import {useNavigate} from "react-router-dom"
 import ClipLoader from "react-spinners/ClipLoader"
 import {debounce} from "lodash"
 import DraftItem from "./DraftItem"
+import { useRouter } from 'next/router'
 
 function DraftFeed() {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const router = useRouter()
   const limit = 10
   const [page, setPage] = useState(0)
   const posts = useSelector(state => state.post.drafts)
@@ -54,7 +53,7 @@ function DraftFeed() {
   }, [dispatch, page])
 
   const redirectToPost = () => {
-    navigate(URL_PATH.POST)
+    router.push(URL_PATH.POST)
   }
 
   // const redirectToPostDetail = slug => {
@@ -106,4 +105,4 @@ function DraftFeed() {
   )
 }
 
-export default AppWrapper(DraftFeed)
+export default (DraftFeed)

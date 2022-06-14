@@ -1,5 +1,5 @@
 import ReactGA from "react-ga4"
-ReactGA.initialize(process.env.REACT_APP_G4_TRACKING_ID)
+ReactGA.initialize(process.env.NEXT_PUBLIC_G4_TRACKING_ID)
 
 export const uid = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2)

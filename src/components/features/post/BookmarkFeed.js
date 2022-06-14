@@ -1,18 +1,17 @@
 import React, {useEffect, useState, useRef, useCallback} from "react"
-import {AppWrapper} from "../../common/AppWrapper"
 import PostListItem from "./PostListItem"
 import Search from "./Search"
 import {getBookMark, clearPost} from "./postSlice"
 import {useDispatch, useSelector} from "react-redux"
 import {URL_PATH} from "../../../utils/urlPath"
 import NoItemsFound from "./NoItemsFound"
-import {useNavigate} from "react-router-dom"
 import ClipLoader from "react-spinners/ClipLoader"
 import {debounce} from "lodash"
+import { useRouter } from 'next/router'
 
 function BookmarkFeed() {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const router = useRouter()
   const limit = 10
   const [page, setPage] = useState(0)
   const posts = useSelector(state => state.post.bookmarks)
@@ -52,11 +51,11 @@ function BookmarkFeed() {
   }, [dispatch, page])
 
   const redirectToPost = () => {
-    navigate(URL_PATH.HOME)
+    router.push(URL_PATH.HOME)
   }
 
   const redirectToPostDetail = slug => {
-    navigate(`${URL_PATH.POST}/${slug}`, {state: {slug}})
+    router.push(`${URL_PATH.POST}/${slug}`, {state: {slug}})
   }
 
   const getDraftsDebounce = search => {
@@ -106,4 +105,4 @@ function BookmarkFeed() {
   )
 }
 
-export default AppWrapper(BookmarkFeed)
+export default (BookmarkFeed)
