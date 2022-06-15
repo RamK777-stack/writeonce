@@ -1,5 +1,4 @@
 import React, {useState, useRef, Fragment} from "react"
-import typeWritter from "../../../../public/writter.jpg"
 import google from "../../../assets/Icons/Google.jpg"
 import linkedin from "../../../assets/Icons/in.svg"
 import facebook from "../../../assets/Icons/path4.svg"
@@ -91,9 +90,11 @@ const Signup = ({renderAsPage, goBack}) => {
                       </div>
                       <div className="hidden lg:block md:block">
                         <Image
-                          src={typeWritter}
+                          src="/writter-min.jpg"
                           className="w-full rounded-tl-lg rounded-bl-lg"
                           alt="poster"
+                          height={400}
+                          width={300}
                           layout="responsive"
                         />
                         <div className="absolute top-10 left-24 m-auto text-gray-600">
