@@ -1,9 +1,30 @@
 import React from "react"
 import PostDetail from "../src/components/features/post/PostDetail"
-import { postDetailAPI, fetchPosts } from "../src/components/features/post/postAPI"
+import {
+  postDetailAPI,
+  fetchPosts,
+} from "../src/components/features/post/postAPI"
+import Head from "next/head"
 
 export default function Post({slug, detail}) {
-  return <PostDetail slug={slug} detail={detail}/>
+  return (
+    <>
+      <Head>
+        <title>{detail?.title}</title>
+        <meta name="title" content={detail?.title} />
+        <meta
+          name="description"
+          content={detail?.synopsis}
+        />
+        <meta
+          property="og:title"
+          content={detail?.title}
+          key="title"
+        />
+      </Head>
+      <PostDetail slug={slug} detail={detail} />
+    </>
+  )
 }
 
 export async function getStaticProps({params}) {
@@ -11,7 +32,7 @@ export async function getStaticProps({params}) {
   return {
     props: {
       slug: params.slug,
-      detail: response
+      detail: response,
     },
   }
 }
@@ -19,7 +40,7 @@ export async function getStaticProps({params}) {
 export async function getStaticPaths() {
   const allPosts = await fetchPosts()
   return {
-    paths: allPosts?.map((post) => `/${post.slug}`) || [],
+    paths: allPosts?.map(post => `/${post.slug}`) || [],
     fallback: false,
   }
 }
