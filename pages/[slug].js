@@ -12,15 +12,35 @@ export default function Post({slug, detail}) {
       <Head>
         <title>{detail?.title}</title>
         <meta name="title" content={detail?.title} />
+        <meta name="description" content={detail?.synopsis} />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta property="og:title" content={detail?.title} key="title" />
         <meta
-          name="description"
+          property="og:url"
+          content={process.env.NEXT_PUBLIC_SITE_URL}
+          key="url"
+        />
+        <meta property="og:type" content="website" key="title" />
+        <meta
+          property="og:description"
           content={detail?.synopsis}
+          key="description"
+        />
+        <meta property="og:image" content={detail?.coverImage} key="image" />
+
+        <meta name="twitter:card" content="summary" key="summary" />
+        <meta name="twitter:title" content={detail?.title} key="title" />
+        <meta
+          name="twitter:description"
+          content={detail?.synopsis}
+          key="description"
         />
         <meta
-          property="og:title"
-          content={detail?.title}
-          key="title"
+          name="twitter:url"
+          content={process.env.NEXT_PUBLIC_SITE_URL}
+          key="url"
         />
+        <meta name="twitter:image" content={detail?.coverImage} key="image" />
       </Head>
       <PostDetail slug={slug} detail={detail} />
     </>
