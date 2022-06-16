@@ -12,7 +12,7 @@ function AuthCallback() {
   const query = useQuery()
   const router = useRouter()
   const dispatch = useDispatch()
-  const token = query.get("loginToken")
+  const token = query["loginToken"]
 
   useEffect(() => {
     const queryParams = query.toString()
