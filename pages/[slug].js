@@ -47,6 +47,16 @@ export default function Post({slug, detail}) {
   )
 }
 
+// export async function getServerSideProps({ query }) {
+//   const response = await postDetailAPI(query.slug)
+//   return {
+//     props: {
+//       slug: query.slug,
+//       detail: response,
+//     },
+//   }
+// }
+
 export async function getStaticProps({params}) {
   const response = await postDetailAPI(params.slug)
   return {
@@ -61,6 +71,6 @@ export async function getStaticPaths() {
   const allPosts = await fetchPosts()
   return {
     paths: allPosts?.map(post => `/${post.slug}`) || [],
-    fallback: false,
+    fallback: true,
   }
 }

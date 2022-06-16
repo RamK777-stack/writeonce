@@ -5,7 +5,7 @@ import invalidToken from "../../../assets/images/sad.gif"
 import {login, openModal, googleSignin} from "./AuthSlice"
 import {useDispatch} from "react-redux"
 import {URL_PATH} from "../../../utils/urlPath"
-import { useRouter } from 'next/router'
+import {useRouter} from "next/router"
 
 function AuthCallback() {
   const [isValidToken, setIsValidToken] = useState(true)
@@ -30,6 +30,7 @@ function AuthCallback() {
         await dispatch(login(token)).unwrap()
         router.push(URL_PATH.POST)
       } catch (e) {
+        alert("Invalid token... Please try again")
         dispatch(openModal())
         setIsValidToken(false)
       }
@@ -37,11 +38,9 @@ function AuthCallback() {
     if (router.pathname.includes("auth/google")) {
       handleLoginWithGoogle(queryParams)
     } else {
-      console.log(token,'1111', query, query.get("loginToken"));
       if (token) {
         handleLogin(token)
       } else {
-        alert("Invalid token")
         dispatch(openModal())
         setIsValidToken(false)
       }
@@ -64,7 +63,7 @@ function AuthCallback() {
         <p
           className="flex text-lg cursor-pointer justify-center text-blue-600 mt-5"
           onClick={() => {
-            dispatch(openModal())
+            router.push(URL_PATH.SIGN_IN)
           }}
         >
           Try again

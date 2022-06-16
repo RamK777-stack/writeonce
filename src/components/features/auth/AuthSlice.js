@@ -40,7 +40,7 @@ export const login = createAsyncThunk("auth/login", async token => {
     return response
   } catch (e) {
     console.log(e)
-    throw e
+    throw new Error(e.response?.data?.message)
   }
 })
 

@@ -83,7 +83,7 @@ const Signup = ({renderAsPage, goBack}) => {
                         {/* {!renderAsPage && ( */}
                           <XIcon
                             ref={cancelButtonRef}
-                            onClick={() => dispatch(closeModal())}
+                            onClick={() => goBack()}
                             className="h-5 w-5 cursor-pointer"
                           />
                         {/* )} */}
