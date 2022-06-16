@@ -37,6 +37,7 @@ function AuthCallback() {
     if (router.pathname.includes("auth/google")) {
       handleLoginWithGoogle(queryParams)
     } else {
+      console.log(token,'1111');
       if (token) {
         handleLogin(token)
       } else {
