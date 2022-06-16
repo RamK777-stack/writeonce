@@ -4,13 +4,13 @@ import loading from "../../../assets/images/loading.gif"
 import invalidToken from "../../../assets/images/sad.gif"
 import {login, openModal, googleSignin} from "./AuthSlice"
 import {useDispatch} from "react-redux"
-import {useNavigate} from "react-router-dom"
 import {URL_PATH} from "../../../utils/urlPath"
+import { useRouter } from 'next/router'
 
 function AuthCallback() {
   const [isValidToken, setIsValidToken] = useState(true)
   const query = useQuery()
-  const navigate = useNavigate()
+  const router = useRouter()
   const dispatch = useDispatch()
   const token = query.get("loginToken")
 
@@ -19,7 +19,7 @@ function AuthCallback() {
     const handleLoginWithGoogle = async queryParams => {
       try {
         await dispatch(googleSignin(queryParams)).unwrap()
-        navigate(URL_PATH.POST)
+        router.push(URL_PATH.POST)
       } catch (e) {
         dispatch(openModal())
         setIsValidToken(false)
@@ -28,13 +28,13 @@ function AuthCallback() {
     const handleLogin = async token => {
       try {
         await dispatch(login(token)).unwrap()
-        navigate(URL_PATH.POST)
+        router.push(URL_PATH.POST)
       } catch (e) {
         dispatch(openModal())
         setIsValidToken(false)
       }
     }
-    if (window.location.pathname.includes("auth/google")) {
+    if (router.pathname.includes("auth/google")) {
       handleLoginWithGoogle(queryParams)
     } else {
       if (token) {

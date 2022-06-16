@@ -93,7 +93,7 @@ const Signup = ({renderAsPage, goBack}) => {
                           src="/writter-min.jpg"
                           className="w-full rounded-tl-lg rounded-bl-lg"
                           alt="poster"
-                          height={400}
+                          height={450}
                           width={300}
                           layout="responsive"
                         />
