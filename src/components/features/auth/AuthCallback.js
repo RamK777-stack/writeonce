@@ -12,7 +12,7 @@ function AuthCallback() {
   const query = useQuery()
   const router = useRouter()
   const dispatch = useDispatch()
-  const token = query["loginToken"]
+  const token = query.get("loginToken")
 
   useEffect(() => {
     const queryParams = query.toString()
@@ -37,7 +37,7 @@ function AuthCallback() {
     if (router.pathname.includes("auth/google")) {
       handleLoginWithGoogle(queryParams)
     } else {
-      console.log(token,'1111');
+      console.log(token,'1111', query, query.get("loginToken"));
       if (token) {
         handleLogin(token)
       } else {
