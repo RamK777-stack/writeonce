@@ -136,6 +136,7 @@ const Signup = ({renderAsPage, goBack}) => {
                             onChange={e => {
                               setEmail(e.target.value)
                             }}
+                            onKeyDown={() => { email && handleClickSend() }}
                             required
                             placeholder="Enter your email address"
                           />

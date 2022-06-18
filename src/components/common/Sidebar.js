@@ -28,11 +28,11 @@ const Sidebar = () => {
   useEffect(() => {
     const ls = new SecureLS()
     setSession(ls.get("userSession"))
-  }, [])
+  })
 
   const handleLogOut = () => {
     logOut()
-    router.push(URL_PATH.HOME)
+    router.push(URL_PATH.SIGN_IN)
   }
 
   useEffect(() => {
@@ -44,18 +44,49 @@ const Sidebar = () => {
     dispatch(toggleSideBarOpen())
   }
 
+  const onMenuItemClick = path => {
+    router.push(path)
+    if (isSideBarOpen) {
+      dispatch(toggleSideBarOpen())
+    }
+  }
+
+  const renderIcon = (icon, iconName) => {
+    return (
+      <Popover className="flex relative">
+        <Popover.Button>{icon}</Popover.Button>
+        <Transition
+          show={true}
+          className="group-hover:block hidden"
+          enter="transition duration-100 ease-out"
+          enterFrom="transform scale-95 opacity-0"
+          enterTo="transform scale-100 opacity-100"
+          leave="transition duration-75 ease-out"
+          leaveFrom="transform scale-100 opacity-100"
+          leaveTo="transform scale-95 opacity-0"
+        >
+          <Popover.Panel className="hidden absolute lg:block md:block ml-3 mt-2 mt-2 bg-slate-500 shadow-lg p-2 rounded text-sm">
+            {iconName}
+          </Popover.Panel>
+        </Transition>
+      </Popover>
+    )
+  }
+
   return (
     <React.Fragment>
       <div
         className={`fixed lg:sticky md:sticky z-50 h-screen dark:bg-slate-900 bg-blue-800 lg:w-16 md:w-16 text-blue-100 px-1 z-10 inset-y-0 transform
         lg:flex md:flex flex-col justify-start md:translate-x-0 transition duration-200 ease-in-out ${
-      !isSideBarOpen ? "-translate-x-full w-16 ease-in-out" : "w-64 ease-in-out"
-    }`}
+          !isSideBarOpen
+            ? "-translate-x-full w-16 ease-in-out"
+            : "w-64 ease-in-out"
+        }`}
       >
         <div className="flex items-center">
           <div
             onClick={() => {
-              router.push(URL_PATH.HOME)
+              onMenuItemClick(URL_PATH.HOME)
             }}
             className="cursor-pointer flex items-center spacing-x-2 py-2.5 px-2 mt-5 transition duration-200 ease-in-out"
           >
@@ -77,7 +108,7 @@ const Sidebar = () => {
           <div
             className="flex lg:justify-center md:justify-center items-center py-2 group hover:scale-105"
             onClick={() => {
-              router.push(URL_PATH.HOME)
+              onMenuItemClick(URL_PATH.HOME)
             }}
           >
             <Popover className="flex relative">
@@ -94,7 +125,7 @@ const Sidebar = () => {
                 leaveFrom="transform scale-100 opacity-100"
                 leaveTo="transform scale-95 opacity-0"
               >
-                <Popover.Panel className="absolute ml-3 mt-2 mt-2 bg-slate-500 shadow-lg p-2 rounded text-sm">
+                <Popover.Panel className="hidden absolute lg:block md:block ml-3 mt-2 mt-2 bg-slate-500 shadow-lg p-2 rounded text-sm">
                   Home
                 </Popover.Panel>
               </Transition>
@@ -110,7 +141,7 @@ const Sidebar = () => {
           <div
             className="flex lg:justify-center md:justify-center items-center py-2 group hover:scale-105"
             onClick={() => {
-              router.push(URL_PATH.DRAFT)
+              onMenuItemClick(URL_PATH.DRAFT)
             }}
           >
             <Popover className="flex relative">
@@ -128,7 +159,7 @@ const Sidebar = () => {
                 leaveFrom="transform scale-100 opacity-100"
                 leaveTo="transform scale-95 opacity-0"
               >
-                <Popover.Panel className="absolute ml-3 mt-2 bg-slate-500 shadow-lg p-2 rounded text-sm">
+                <Popover.Panel className="hidden absolute lg:block md:block ml-3 mt-2 bg-slate-500 shadow-lg p-2 rounded text-sm">
                   Drafts
                 </Popover.Panel>
               </Transition>
@@ -144,7 +175,7 @@ const Sidebar = () => {
           <div
             className="flex lg:justify-center md:justify-center items-center py-2 group hover:scale-105"
             onClick={() => {
-              router.push(URL_PATH.BOOKMARKS)
+              onMenuItemClick(URL_PATH.BOOKMARKS)
             }}
           >
             <Popover className="flex relative">
@@ -162,7 +193,7 @@ const Sidebar = () => {
                 leaveFrom="transform scale-100 opacity-100"
                 leaveTo="transform scale-95 opacity-0"
               >
-                <Popover.Panel className="absolute ml-3 mt-2 bg-slate-500 shadow-lg p-2 rounded text-sm">
+                <Popover.Panel className="hidden absolute lg:block md:block ml-3 mt-2 bg-slate-500 shadow-lg p-2 rounded text-sm">
                   Bookmarks
                 </Popover.Panel>
               </Transition>
@@ -179,25 +210,39 @@ const Sidebar = () => {
         <div className="px-2 mt-auto mb-10 justify-center cursor-pointer">
           {session ? (
             <div
-              className="flex lg:justify-center md:justify-center"
+              className="flex lg:justify-center md:justify-center group hover:scale-105"
               onClick={() => {
                 handleLogOut()
               }}
             >
-              <LoginIcon className="w-8 h-8" data-tip="Logout" />
-              <div className="justify-center px-2 py-1 block lg:hidden md:hidden">
+              {renderIcon(
+                <LoginIcon className="w-8 h-8" data-tip="Logout" />,
+                "Log out",
+              )}
+              <div
+                className={`justify-center px-2 py-1 block lg:hidden md:hidden ${
+                  !isSideBarOpen && "hidden"
+                }`}
+              >
                 Log out
               </div>
             </div>
           ) : (
             <div
-              className="flex lg:justify-center md:justify-center mt-3"
+              className="flex lg:justify-center md:justify-center mt-3 group hover:scale-105"
               onClick={() => {
-                router.push(URL_PATH.SIGN_IN)
+                onMenuItemClick(URL_PATH.SIGN_IN)
               }}
             >
-              <LogoutIcon className="w-8 h-8" data-tip="Login" />
-              <div className="justify-center px-2 py-1 block lg:hidden md:hidden">
+              {renderIcon(
+                <LogoutIcon className="w-8 h-8" data-tip="Login" />,
+                "Log in",
+              )}
+              <div
+                className={`justify-center px-2 py-1 block lg:hidden md:hidden ${
+                  !isSideBarOpen && "hidden"
+                }`}
+              >
                 Log in
               </div>
             </div>
