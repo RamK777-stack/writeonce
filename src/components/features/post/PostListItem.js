@@ -42,7 +42,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
 
   return (
     <Link href={`${URL_PATH.HOME}/${detail.slug}`}>
-      <div className="dark:bg-slate-700 w-full shadow hover:drop-shadow-lg cursor-pointer text-sm lg:text-base p-2 lg:p-5 bg-white rounded-lg">
+      <div className="ml-3 lg:ml-0 md:ml-0 dark:bg-slate-700 w-full shadow hover:drop-shadow-lg cursor-pointer text-sm lg:text-base p-2 lg:p-5 bg-white rounded-lg">
         <div className="flex items-center">
           {/* {detail.img ? ( */}
           <Image
