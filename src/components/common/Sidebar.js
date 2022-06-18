@@ -17,6 +17,7 @@ import {useSelector, useDispatch} from "react-redux"
 import {useRouter} from "next/router"
 import Image from "next/image"
 import {Popover, Transition} from "@headlessui/react"
+import newLogo from "../../assets/images/new.png"
 
 const Sidebar = () => {
   const router = useRouter()
@@ -56,9 +57,9 @@ const Sidebar = () => {
             onClick={() => {
               router.push(URL_PATH.HOME)
             }}
-            className="cursor-pointer flex items-center spacing-x-2 py-2.5 px-4 mt-5 transition duration-200 ease-in-out"
+            className="cursor-pointer flex items-center spacing-x-2 py-2.5 px-2 mt-5 transition duration-200 ease-in-out"
           >
-            <Image src={Logo} alt="logo" />
+            <Image height={40} width={40} src={newLogo} alt="logo" />
             {isSideBarOpen && (
               <span className="ml-2 block lg:hidden md:hidden">Writeonce</span>
             )}

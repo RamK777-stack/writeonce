@@ -2,7 +2,8 @@
 import {Fragment} from "react"
 import {Menu, Transition} from "@headlessui/react"
 import {BellIcon, MenuIcon} from "@heroicons/react/outline"
-import Logo from "../../assets/images/feather.svg"
+// import Logo from "../../assets/images/feather.svg"
+// import newLogo from "../../assets/images/new.png"
 import user from "../../assets/images/avatar2.png"
 import ThemeToggle from "./ThemeToggle"
 // import {Link} from "react-router-dom"
@@ -46,7 +47,7 @@ const Header = () => {
                   }}
                 />
               </div>
-              <Image src={Logo} className="ml-2" alt="logo" />
+              {/* <Image src={newLogo} height={30} width={30} className="ml-2" alt="logo" /> */}
             </div>
 
             <div className="flex-1 lg:flex md:flex w-full right-0 pr-2 sm:static sm:inset-auto">

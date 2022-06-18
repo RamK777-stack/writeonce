@@ -15,7 +15,7 @@ function MyApp({Component, pageProps}) {
       <Layout>
         <Head>
           <title>Writeonce - dev news</title>
-          <link rel="icon" href="/feather.ico" />
+          <link rel="icon" href="/new.ico" />
           <meta name="title" content="writeonce - blogging community" />
           <meta name="description" content="writeonce is a blogging community where one can easily start with writting using interactive editor inspired from notion" />
           <meta property="og:title" content="writeonce - blogging community" key="title" />
