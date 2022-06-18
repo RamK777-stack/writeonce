@@ -6,6 +6,8 @@ import {store} from "../src/store"
 import "prismjs"
 import "prismjs/themes/prism-tomorrow.css"
 import Head from "next/head"
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function MyApp({Component, pageProps}) {
   return (
@@ -23,6 +25,7 @@ function MyApp({Component, pageProps}) {
           />
         </Head>
         <Component {...pageProps} />
+        <ToastContainer />
       </Layout>
     </Provider>
   )

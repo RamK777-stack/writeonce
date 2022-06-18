@@ -1,13 +1,14 @@
 import React, {useEffect, useState, useRef, useCallback} from "react"
 import PostListItem from "./PostListItem"
-import Search from "./Search"
+// import Search from "./Search"
 import {getBookMark, clearPost} from "./postSlice"
 import {useDispatch, useSelector} from "react-redux"
 import {URL_PATH} from "../../../utils/urlPath"
 import NoItemsFound from "./NoItemsFound"
 import ClipLoader from "react-spinners/ClipLoader"
 import {debounce} from "lodash"
-import { useRouter } from 'next/router'
+import {useRouter} from "next/router"
+import Contact from "../../common/Contact"
 
 function BookmarkFeed() {
   const dispatch = useDispatch()
@@ -17,7 +18,7 @@ function BookmarkFeed() {
   const posts = useSelector(state => state.post.bookmarks)
   const isLoading = useSelector(state => state.post.isLoading)
   const loader = useRef(null)
-  const [, setSearch] = useState("")
+  // const [, setSearch] = useState("")
 
   useEffect(() => {
     const params = {
@@ -69,18 +70,18 @@ function BookmarkFeed() {
     dispatch(getBookMark(params))
   }
 
-  const debounceFn = useCallback(debounce(getDraftsDebounce, 1000), []) // eslint-disable-line react-hooks/exhaustive-deps
+  // const debounceFn = useCallback(debounce(getDraftsDebounce, 1000), []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onChangeSearchtext = value => {
-    setSearch(value)
-    debounceFn(value)
-  }
+  // const onChangeSearchtext = value => {
+  //   setSearch(value)
+  //   debounceFn(value)
+  // }
 
   return (
-    <>
-      <div className="p-2 lg:ml-40 md:ml-20 md:w-3/4 mb-20 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
-        <Search onChange={onChangeSearchtext} />
-        { (posts.length ? (
+    <div className="container mx-auto px-0 lg:px-28 md:px-10">
+      <div className="flex">
+        <div className="mt-8 p-1 lg:p-2 md:p-2 mb-20 flex flex-col Page w-full justify-center space-y-3">
+          {posts.length ? (
             posts.map(detail => {
               return (
                 <PostListItem
@@ -96,13 +97,18 @@ function BookmarkFeed() {
               buttonText="Go to feed"
               onClickHandler={redirectToPost}
             />
-          ))}
-        <div ref={loader} className="w-full lg:w-3/4 md:w-3/4 text-center">
-          {<ClipLoader loading={isLoading} size={20} />}
+          )}
+          <div ref={loader} className="w-full lg:w-3/4 md:w-3/4 text-center">
+            {<ClipLoader loading={isLoading} size={20} />}
+          </div>
+        </div>
+
+        <div className="ml-8">
+          <Contact />
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
-export default (BookmarkFeed)
+export default BookmarkFeed

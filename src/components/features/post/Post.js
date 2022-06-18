@@ -17,7 +17,9 @@ import TweetInput from "../TweetInput"
 import ImagePicker from "../ImagePicker"
 import {isString} from "lodash"
 import {AiOutlineUndo, AiOutlineClose} from "react-icons/ai"
-import { useRouter } from 'next/router'
+import {useRouter} from "next/router"
+import {toast} from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 const initialBlock = [
   {id: uid(), description: "Title here", tag: "h1"},
@@ -192,7 +194,7 @@ const Post = props => {
 
   useEffect(() => {
     // if (location?.state?.id) {
-      if (router?.query?.id) {
+    if (router?.query?.id) {
       const {id, draft_blocks} = router.query
       setBlocks(draft_blocks)
       setDraftId(id)
@@ -366,16 +368,32 @@ const Post = props => {
 
   const handleSavePost = async (isDraft, hashtags) => {
     if (isDraft) {
-      await dispatch(saveAsDraft({draftId, blocks, isDraft}))
-      router.push(URL_PATH.DRAFT)
+      try {
+        const response = await dispatch(
+          saveAsDraft({draftId, blocks, isDraft}),
+        ).unwrap()
+        if (response) {
+          router.push(URL_PATH.DRAFT)
+        }
+      } catch (e) {
+        toast.error(e.message)
+      }
     } else {
       const concatedBlocks = concatAllBlocks() || {}
       concatedBlocks["blocks"] = blocks
       concatedBlocks["draftId"] = draftId
       concatedBlocks["hashtags"] = hashtags
       concatedBlocks["coverImage"] = coverImage
-      await dispatch(savePost(concatedBlocks, isDraft))
-      router.push(URL_PATH.HOME)
+      try {
+        const response = await dispatch(
+          savePost(concatedBlocks, isDraft),
+        ).unwrap()
+        if (response) {
+          router.push(URL_PATH.HOME)
+        }
+      } catch (e) {
+        toast.error(e.message)
+      }
     }
   }
 
@@ -473,26 +491,60 @@ const Post = props => {
   }
 
   return (
-    <div className="Page flex justify-center mt-18 flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">
-      <div
-        className="w-full lg:w-3/4 lg:px-20 md:px-20 lg:ml-20 md:ml-20"
-        id="content-editable"
-      >
-        <label htmlFor="cover">
-          <div
-            className="ml-12 flex mb-5"
-            onClick={() => {
-              openCoverImagePicker()
-            }}
-          >
-            {!coverImage && (
-              <>
-                <PhotographIcon className="h-5 w-5 mr-2" />
-                <div className="flex">
-                  <div>Add cover image</div>
+    <div className="container mx-auto px-2 py-2 lg:px-28 lg:py-14">
+      <div className="Page flex justify-center flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0">
+        <div
+          className="w-full lg:w-4/5 bg-white dark:bg-slate-700 rounded-lg min-h-screen"
+          id="content-editable"
+        >
+          <label htmlFor="cover">
+            <div
+              className="flex mb-2"
+              onClick={() => {
+                openCoverImagePicker()
+              }}
+            >
+              {!coverImage && (
+                <div className="flex px-16 py-5">
+                  <PhotographIcon className="h-5 w-5 mr-2" />
+                  <div className="flex">
+                    <div>Add cover image</div>
+                    {isImageUploading && (
+                      <div className="ml-5 flex">
+                        Uploading
+                        <svg
+                          class="ml-3 mt-1 animate-spin h-4 w-4 rounded-full bg-transparent border-t-2 border-r-2 border-opacity-50 border-indigo-800"
+                          viewBox="0 0 24 24"
+                        ></svg>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              {coverImage && (
+                <div className="relative group">
+                  <img
+                    src={coverImage}
+                    alt="cover"
+                    className="block object-cover w-full h-full rounded"
+                  />
+                  <div className="hidden group-hover:block flex absolute top-3 right-5">
+                    <button className="rounded bg-slate-50 p-2" type="button">
+                      <AiOutlineUndo className="h-4 w-4" />
+                    </button>
+                    <button
+                      className="ml-3 rounded bg-slate-50 p-2"
+                      type="button"
+                      onClick={e => {
+                        removeImage(e, {isCoverImage: true})
+                      }}
+                    >
+                      <AiOutlineClose className="h-4 w-4" />
+                    </button>
+                  </div>
                   {isImageUploading && (
-                    <div className="ml-5 flex">
-                      Uploading
+                    <div className="absolute top-3 right-28 flex bg-slate-50 p-2 space-x-2 text-gray-600 rounded">
+                      <span className="text-sm">Uploading</span>
                       <svg
                         class="ml-3 mt-1 animate-spin h-4 w-4 rounded-full bg-transparent border-t-2 border-r-2 border-opacity-50 border-indigo-800"
                         viewBox="0 0 24 24"
@@ -500,117 +552,85 @@ const Post = props => {
                     </div>
                   )}
                 </div>
-              </>
-            )}
-            {coverImage && (
-              <div className="relative group">
-                <img
-                  src={coverImage}
-                  alt="cover"
-                  className="block object-cover w-full h-full rounded"
-                />
-                <div className="hidden group-hover:block flex absolute top-3 right-5">
-                  <button className="rounded bg-slate-50 p-2" type="button">
-                    <AiOutlineUndo className="h-4 w-4" />
-                  </button>
-                  <button
-                    className="ml-3 rounded bg-slate-50 p-2"
-                    type="button"
-                    onClick={e => {
-                      removeImage(e, {isCoverImage: true})
-                    }}
-                  >
-                    <AiOutlineClose className="h-4 w-4" />
-                  </button>
-                </div>
-                {isImageUploading && (
-                  <div className="absolute top-3 right-28 flex bg-slate-50 p-2 space-x-2 text-gray-600 rounded">
-                    <span className="text-sm">Uploading</span>
-                    <svg
-                      class="ml-3 mt-1 animate-spin h-4 w-4 rounded-full bg-transparent border-t-2 border-r-2 border-opacity-50 border-indigo-800"
-                      viewBox="0 0 24 24"
-                    ></svg>
-                  </div>
-                )}
-              </div>
-            )}
-            {/* <input
+              )}
+              {/* <input
               type="file"
               id="cover"
               accept="image/*"
               className="hidden"
               onChange={chooseCoverImage}
             /> */}
-          </div>
-        </label>
-        <DragDropContext onDragEnd={onDragEndHandler}>
-          <Droppable droppableId={uid()}>
-            {provided => (
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                {blocks.map((block, i) => {
-                  const position = blocks.map(b => b.id).indexOf(block.id) + 1
-                  return (
-                    <EditableBlock
-                      index={position}
-                      key={block.id}
-                      position={block.id}
-                      id={block.id}
-                      tag={block.tag}
-                      description={block.description}
-                      imageUrl={block.imageUrl}
-                      pageId={props.id}
-                      addBlock={addBlockHandler}
-                      deleteBlock={deleteBlockHandler}
-                      updateBlock={updateBlockHandler}
-                      moveToBlock={moveToBlock}
-                      isDragDisabled={i === 0}
-                      onKeyUpHandler={onKeyUpHandler}
-                      setHtmlBackUp={setHtmlBackUp}
-                      url={block?.url}
-                      resource_type={block?.resource_type}
-                    />
-                  )
-                })}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-        <SelectMenu
-          position={selectMenuPosition}
-          onSelect={tagSelectionHandler}
-          close={closeSelectMenuHandler}
-          selectMenuIsOpen={selectMenuIsOpen}
-          tweetInputOpen={tweetInputOpen}
-        />
-        <TweetInput
-          position={selectMenuPosition}
-          onSelect={tagSelectionHandler}
-          close={closeTweetInputHandler}
-          tweetInputOpen={tweetInputOpen}
-          embedLink={embedLink}
-          url={url}
-          onChangeURL={url => {
-            setURL(url)
-          }}
-          id="tweetInput"
-          size="md"
-        />
-        <ImagePicker
-          position={selectMenuPosition}
-          onSelect={tagSelectionHandler}
-          close={closeImagePickerHandler}
-          imagePickerOpen={imagePickerOpen}
-          id="imagePicker"
-          size="lg"
-          onSelectImage={onSelectImage}
-        />
-      </div>
-      <div className="w-full lg:w-1/4 text-left pl-5">
-        <Publish savePost={handleSavePost} />
+            </div>
+          </label>
+          <DragDropContext onDragEnd={onDragEndHandler}>
+            <Droppable droppableId={uid()}>
+              {provided => (
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  {blocks.map((block, i) => {
+                    const position = blocks.map(b => b.id).indexOf(block.id) + 1
+                    return (
+                      <EditableBlock
+                        index={position}
+                        key={block.id}
+                        position={block.id}
+                        id={block.id}
+                        tag={block.tag}
+                        description={block.description}
+                        imageUrl={block.imageUrl}
+                        pageId={props.id}
+                        addBlock={addBlockHandler}
+                        deleteBlock={deleteBlockHandler}
+                        updateBlock={updateBlockHandler}
+                        moveToBlock={moveToBlock}
+                        isDragDisabled={i === 0}
+                        onKeyUpHandler={onKeyUpHandler}
+                        setHtmlBackUp={setHtmlBackUp}
+                        url={block?.url}
+                        resource_type={block?.resource_type}
+                      />
+                    )
+                  })}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+          <SelectMenu
+            position={selectMenuPosition}
+            onSelect={tagSelectionHandler}
+            close={closeSelectMenuHandler}
+            selectMenuIsOpen={selectMenuIsOpen}
+            tweetInputOpen={tweetInputOpen}
+          />
+          <TweetInput
+            position={selectMenuPosition}
+            onSelect={tagSelectionHandler}
+            close={closeTweetInputHandler}
+            tweetInputOpen={tweetInputOpen}
+            embedLink={embedLink}
+            url={url}
+            onChangeURL={url => {
+              setURL(url)
+            }}
+            id="tweetInput"
+            size="md"
+          />
+          <ImagePicker
+            position={selectMenuPosition}
+            onSelect={tagSelectionHandler}
+            close={closeImagePickerHandler}
+            imagePickerOpen={imagePickerOpen}
+            id="imagePicker"
+            size="lg"
+            onSelectImage={onSelectImage}
+          />
+        </div>
+        <div className="w-full lg:w-1/4 text-left pl-5">
+          <Publish savePost={handleSavePost} />
+        </div>
       </div>
     </div>
   )
 }
 
-export default (Post)
+export default Post

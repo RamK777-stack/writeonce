@@ -25,11 +25,11 @@ const ImagePicker = props => {
     <ModalWrapper {...props} modalWrapperOpen={props.imagePickerOpen}>
       <Tab.Group>
         <Tab.List className="sticky top-0">
-          <div class="mb-4 border-b dark:bg-slate-900 border-gray-200 dark:border-gray-700 bg-white">
+          <div class="dark:bg-slate-900 dark:border-gray-700 bg-white">
             <Tab>
               {({selected}) => (
                 <button
-                  class={`inline-block py-4 px-4 text-sm font-medium text-center text-gray-500 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 ${
+                  class={`inline-block py-4 px-4 text-sm font-medium text-center text-gray-500 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 ${
                     selected && "border-blue-400"
                   }`}
                 >
@@ -40,7 +40,7 @@ const ImagePicker = props => {
             <Tab>
               {({selected}) => (
                 <button
-                  class={`inline-block py-4 px-4 text-sm font-medium text-center text-gray-500 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 ${
+                  class={`inline-block py-4 px-4 text-sm font-medium text-center text-gray-500 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 ${
                     selected && "border-blue-400"
                   }`}
                 >
@@ -55,9 +55,9 @@ const ImagePicker = props => {
             <p class="text-sm text-gray-500 dark:text-gray-400 p-5 flex justify-center mb-5">
               <label
                 for="File-For"
-                className="cursor-pointer flex justify-center dark:bg-blue-900 font-bold bg-blue-500 text-white font-bold py-2 px-6 rounded"
+                className="cursor-pointer flex justify-center dark:bg-blue-900 font-bold bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold py-2 px-6 rounded"
               >
-                Choose image <CloudUploadIcon className="ml-3 h-4 w-4 mt-1" />
+                Choose Image <CloudUploadIcon className="ml-3 h-4 w-4 mt-1" />
               </label>
               <input
                 id="File-For"

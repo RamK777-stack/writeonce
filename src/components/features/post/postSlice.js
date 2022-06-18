@@ -74,8 +74,12 @@ export const savePost = createAsyncThunk(
       hashtags,
       coverImage,
     }
-    const response = await savePostAPI(params)
-    return response
+    try {
+      const response = await savePostAPI(params)
+      return response
+    } catch (e) {
+      throw e.response?.data?.message
+    }
   },
 )
 
@@ -129,8 +133,12 @@ export const saveAsDraft = createAsyncThunk(
       const response = await updateDraftAPI(params)
       return response
     }
-    const response = await saveDraftAPI(params)
-    return response
+    try {
+      const response = await saveDraftAPI(params)
+      return response
+    } catch (e) {
+      throw e.response?.data?.message
+    }
   },
 )
 

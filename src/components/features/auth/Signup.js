@@ -5,7 +5,7 @@ import facebook from "../../../assets/Icons/path4.svg"
 import github from "../../../assets/Icons/path33.svg"
 import {XIcon} from "@heroicons/react/outline"
 import {Dialog, Transition} from "@headlessui/react"
-import {closeModal, isModalOpen, loginUsingLink} from "./AuthSlice"
+import {isModalOpen, loginUsingLink} from "./AuthSlice"
 import {useSelector, useDispatch} from "react-redux"
 import Image from 'next/image'
 
@@ -37,7 +37,7 @@ const Signup = ({renderAsPage, goBack}) => {
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed z-10 inset-0 overflow-y-auto"
+        className="fixed z-50 inset-0 overflow-y-auto"
         initialFocus={cancelButtonRef}
         onClose={() => goBack()}
       >

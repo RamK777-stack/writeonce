@@ -1,13 +1,14 @@
 import React, {useEffect, useState, useRef, useCallback} from "react"
-import Search from "./Search"
+// import Search from "./Search"
 import {clearPost, getDrafts, deleteDraft} from "./postSlice"
 import {useDispatch, useSelector} from "react-redux"
 import {URL_PATH} from "../../../utils/urlPath"
 import NoItemsFound from "./NoItemsFound"
 import ClipLoader from "react-spinners/ClipLoader"
-import {debounce} from "lodash"
+// import {debounce} from "lodash"
 import DraftItem from "./DraftItem"
-import { useRouter } from 'next/router'
+import {useRouter} from "next/router"
+import Contact from "../../common/Contact"
 
 function DraftFeed() {
   const dispatch = useDispatch()
@@ -17,7 +18,7 @@ function DraftFeed() {
   const posts = useSelector(state => state.post.drafts)
   const isLoading = useSelector(state => state.post.isLoading)
   const loader = useRef(null)
-  const [, setSearch] = useState("")
+  // const [, setSearch] = useState("")
 
   useEffect(() => {
     const params = {
@@ -60,33 +61,33 @@ function DraftFeed() {
   //   navigate(`${URL_PATH.POST}/${slug}`, {state: {slug}})
   // }
 
-  const getDraftsDebounce = search => {
-    const params = {
-      _limit: limit,
-      _start: 0,
-      _sort: "created_at:desc",
-      search: search,
-      isAppend: false,
-    }
-    dispatch(getDrafts(params))
-  }
+  // const getDraftsDebounce = search => {
+  //   const params = {
+  //     _limit: limit,
+  //     _start: 0,
+  //     _sort: "created_at:desc",
+  //     search: search,
+  //     isAppend: false,
+  //   }
+  //   dispatch(getDrafts(params))
+  // }
 
-  const debounceFn = useCallback(debounce(getDraftsDebounce, 1000), []) // eslint-disable-line react-hooks/exhaustive-deps
+  // const debounceFn = useCallback(debounce(getDraftsDebounce, 1000), []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onChangeSearchtext = value => {
-    setSearch(value)
-    debounceFn(value)
-  }
+  // const onChangeSearchtext = value => {
+  //   setSearch(value)
+  //   debounceFn(value)
+  // }
 
   const onDeleteDraft = params => {
     dispatch(deleteDraft(params))
   }
 
   return (
-    <>
-      <div className="p-2 lg:ml-40 md:ml-20 md:w-3/4 mb-20 flex flex-col Page w-full lg:w-3/4 justify-center mt-18 w-full space-x-2 space-y-10">
-        <Search onChange={onChangeSearchtext} />
-        {(posts.length ? (
+    <div className="container mx-auto px-0 lg:px-28 md:px-10">
+      <div className="flex">
+        <div className="mt-8 p-1 lg:p-2 md:p-2 mb-20 flex flex-col Page w-full justify-center space-y-3">
+          {posts.length ? (
             posts.map(detail => {
               return <DraftItem block={detail} deleteDraft={onDeleteDraft} />
             })
@@ -96,13 +97,17 @@ function DraftFeed() {
               buttonText="Write new article"
               onClickHandler={redirectToPost}
             />
-          ))}
-        <div ref={loader} className="w-full lg:w-3/4 md:w-3/4 text-center">
-          {<ClipLoader loading={isLoading} size={20} />}
+          )}
+          <div ref={loader} className="w-full lg:w-3/4 md:w-3/4 text-center">
+            {<ClipLoader loading={isLoading} size={20} />}
+          </div>
+        </div>
+        <div className="ml-8">
+          <Contact />
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
-export default (DraftFeed)
+export default DraftFeed

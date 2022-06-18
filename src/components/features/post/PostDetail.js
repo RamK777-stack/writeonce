@@ -50,7 +50,7 @@ function PostDetail({ slug, detail }) {
 
   return (
     <div className="flex justify-center">
-      <div className="mb-10 w-full md:w-3/4 lg:w-1/2 px-5 lg:px-0">
+      <div className="mb-10 w-full md:w-3/4 lg:w-1/2 px-2 lg:px-0 mt-3">
         <div className="h-full">
           {detail?.coverImage && (
             <div className="coverImage">

@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from "react"
 import {useQuery} from "./hooks"
 import loading from "../../../assets/images/loading.gif"
-import invalidToken from "../../../assets/images/sad.gif"
+import invalidToken from "../../../assets/images/sadEmoji.gif"
 import {login, openModal, googleSignin} from "./AuthSlice"
 import {useDispatch} from "react-redux"
 import {URL_PATH} from "../../../utils/urlPath"
 import {useRouter} from "next/router"
+import {toast} from "react-toastify"
+import Image from "next/image"
 
 function AuthCallback() {
   const [isValidToken, setIsValidToken] = useState(true)
@@ -30,7 +32,7 @@ function AuthCallback() {
         await dispatch(login(token)).unwrap()
         router.push(URL_PATH.POST)
       } catch (e) {
-        alert("Invalid token... Please try again")
+        toast.error("Invalid token... Please try again")
         dispatch(openModal())
         setIsValidToken(false)
       }
@@ -49,14 +51,18 @@ function AuthCallback() {
 
   return (
     <>
-      <div className="flex justify-center mt-20">
-        <h2 className="text-xl text-bold text-gray-700">
+      <div className="flex justify-center">
+        <h2 className="text-xl text-bold text-gray-700 mt-5">
           {!isValidToken ? "Invalid token" : "Authenticating"}...
         </h2>
-        <img
-          className="h-8 w-8 ml-2"
+      </div>
+      <div className="flex justify-center mt-3">
+        <Image
+          className="h-8 w-8 ml-2 rounded-lg"
           src={!isValidToken ? invalidToken : loading}
           alt="loading"
+          height={200}
+          width={200}
         />
       </div>
       {!isValidToken && (

@@ -46,6 +46,7 @@
     "react-skeleton-loader": "^1.0.4",
     "react-spinners": "^0.11.0",
     "react-syntax-highlighter": "^15.4.5",
+    "react-toastify": "^9.0.4",
     "react-tooltip": "^4.2.21",
     "react-twitter-embed": "^3.0.3",
     "react-useanimations": "^2.0.6",

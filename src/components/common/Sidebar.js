@@ -46,8 +46,8 @@ const Sidebar = () => {
   return (
     <React.Fragment>
       <div
-        className={`fixed dark:bg-gray-900 bg-blue-800 lg:w-16 md:w-16 text-blue-100 px-1 z-10 inset-y-0 transform
-    flex flex-col justify-start md:translate-x-0 transition duration-200 ease-in-out ${
+        className={`fixed lg:sticky md:sticky z-50 h-screen dark:bg-slate-900 bg-blue-800 lg:w-16 md:w-16 text-blue-100 px-1 z-10 inset-y-0 transform
+        lg:flex md:flex flex-col justify-start md:translate-x-0 transition duration-200 ease-in-out ${
       !isSideBarOpen ? "-translate-x-full w-16 ease-in-out" : "w-64 ease-in-out"
     }`}
       >
@@ -190,7 +190,7 @@ const Sidebar = () => {
             </div>
           ) : (
             <div
-              className="flex lg:justify-center md:justify-center"
+              className="flex lg:justify-center md:justify-center mt-3"
               onClick={() => {
                 router.push(URL_PATH.SIGN_IN)
               }}

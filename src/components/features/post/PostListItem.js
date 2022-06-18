@@ -11,8 +11,8 @@ import "react-loading-skeleton/dist/skeleton.css"
 import avatar from "../../../assets/images/avatar4.png"
 // import { Link } from 'react-router-dom'
 import {URL_PATH} from "../../../utils/urlPath"
-import Link from 'next/link'
-import Image from 'next/image'
+import Link from "next/link"
+import Image from "next/image"
 
 const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
   const dispatch = useDispatch()
@@ -42,7 +42,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
 
   return (
     <Link href={`${URL_PATH.HOME}/${detail.slug}`}>
-      <div className="w-full lg:w-3/4 cursor-pointer text-sm lg:text-base p-2 lg:p-0">
+      <div className="dark:bg-slate-700 w-full shadow hover:drop-shadow-lg cursor-pointer text-sm lg:text-base p-2 lg:p-5 bg-white rounded-lg">
         <div className="flex items-center">
           {/* {detail.img ? ( */}
           <Image
@@ -85,18 +85,18 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
             </div>
           )}
         </div>
-        <div className="mt-5 ml-1">
+        <div className="mt-3 ml-1">
           <h4 className="text-xl text-gray-600 dark:text-slate-200 font-bold">
             {detail.title || <Skeleton />}
           </h4>
-          {/* <h4 className="text-l mt-3 font-semibold">
-          {detail.synopsis || <Skeleton />}
-        </h4> */}
+          <p className="mt-3 font-semibold">
+            {detail.synopsis || <Skeleton />}
+          </p>
           <div className="mt-1">{renderTags(detail.hashtags)}</div>
           {detail.id ? (
             <div className="flex mt-1 dark:text-slate-300">
-              <div className="flex flex-row space-x-2">
-                <div className="flex justify-center dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-2 py-1">
+              <div className="flex flex-row space-x-2 mt-3">
+                <div className="flex justify-center dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-1 py-1">
                   <ThumbUpIcon className="h-6 w-6 mr-1 cursor-pointer" />
                   <div className="self-center flex space-x-1">
                     <span className="hidden lg:block">
@@ -112,7 +112,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
                     </span>
                   </div>
                 </div>
-                <div className="flex dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-2 py-1">
+                <div className="flex dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-1 py-1">
                   <ChatIcon className="h-6 w-6 mr-1 cursor-pointer" />
                   <span>
                     {!detail.comments || parseInt(detail.comments) === 0
@@ -133,7 +133,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
             <Skeleton />
           )}
         </div>
-        <hr className="mt-5 dark:border-slate-300" />
+        {/* <hr className="mt-5 dark:border-slate-300" /> */}
       </div>
     </Link>
   )

@@ -128,9 +128,9 @@ export default function Publish({savePost}) {
             </div>
           </div>
         </fieldset> */}
-        <fieldset className="mt-5">
-          <legend className="text-base font-medium text-gray-900 dark:text-white">
-            Hash tags
+        <fieldset className="mt-2">
+          <legend className="font-bold text-gray-600 dark:text-white">
+            Hash Tags
           </legend>
           <div className="mt-1 space-y-4">
             <div class="pt-2 pr-2 mx-auto text-gray-600">
@@ -184,13 +184,13 @@ export default function Publish({savePost}) {
           </div>
         </fieldset>
         <button
-          class="mt-5 dark:bg-blue-900  bg-blue-500 text-white font-bold py-2 px-6 rounded"
+          class="mt-5 dark:bg-blue-900 bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold py-2 px-6 rounded"
           onClick={() => handleSavePost(false)}
         >
           Publish
         </button>
         <button
-          class="mt-5 dark:bg-gray-700 bg-gray-500 text-white font-bold py-2 px-6 rounded ml-2"
+          class="mt-5 dark:bg-gray-700 bg-gradient-to-r from-gray-500 to-gray-600 text-white font-bold py-2 px-6 rounded ml-2"
           onClick={() => handleSavePost(true)}
         >
           Save as Draft
