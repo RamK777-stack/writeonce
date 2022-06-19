@@ -1,4 +1,4 @@
-import {BookmarkIcon, ChatIcon, ThumbUpIcon} from "@heroicons/react/outline"
+import {BookmarkIcon, ThumbUpIcon, AnnotationIcon} from "@heroicons/react/outline"
 import {BookmarkIcon as BookmarkAltIcon} from "@heroicons/react/solid"
 import React from "react"
 // import pic1 from "../../../assets/images/pic-1.jpg"
@@ -113,7 +113,7 @@ const PostListItem = ({detail, isBookMarked, redirectToPostDetail}) => {
                   </div>
                 </div>
                 <div className="flex dark:hover:bg-blue-500 dark:hover:text-white hover:bg-blue-50 rounded px-1 py-1">
-                  <ChatIcon className="h-6 w-6 mr-1 cursor-pointer" />
+                  <AnnotationIcon className="h-6 w-6 mr-1 cursor-pointer" />
                   <span>
                     {!detail.comments || parseInt(detail.comments) === 0
                       ? "Add comment"

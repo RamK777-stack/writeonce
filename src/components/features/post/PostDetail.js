@@ -15,9 +15,11 @@ import {BookmarkIcon} from "@heroicons/react/outline"
 import {BookmarkIcon as BookmarkAltIcon} from "@heroicons/react/solid"
 import {addReactionToPost, createBookMark, deleteBookMark} from "./postSlice"
 import moment from "moment"
-import Image from 'next/image'
+import Image from "next/image"
+import {FcLike} from "react-icons/fc"
+import {FcBookmark} from "react-icons/fc"
 
-function PostDetail({ slug, detail }) {
+function PostDetail({slug, detail}) {
   const dispatch = useDispatch()
   // const location = useLocation()
   // const detail = useSelector(state => state.post.postDetail)
@@ -107,70 +109,63 @@ function PostDetail({ slug, detail }) {
       </div>
       <div className="hidden lg:block justify-center ml-20 mt-20">
         <div className="fixed cursor-pointer">
-          {detail?.userReactions?.find(i => i.reactionId === 1) ? (
+          <div className="flex text-center text-gray-700 dark:text-white mt-10">
             <FaThumbsUp
-              className="w-5 h-5 mt-5"
+              className="w-7 h-7"
+              color="#ffdc5d"
               id="1"
               onClick={() => {
                 addReaction(detail?.id, 1)
               }}
             />
-          ) : (
-            <FiThumbsUp
-              className="w-6 h-6 mt-5"
-              id="1"
-              onClick={() => {
-                addReaction(detail?.id, 1)
-              }}
-            />
-          )}
-          <div className="text-center text-gray-700 dark:text-white">
-            {detail?.countReactions?.find(i => i.reactionId === 1)?.count || 0}
+            <p className="text-center ml-2 mt-1">
+              {detail?.countReactions?.find(i => i.reactionId === 1)?.count ||
+                0}
+            </p>
           </div>
-          {detail?.userReactions?.find(i => i.reactionId === 2) ? (
-            <AiFillHeart
-              className="w-6 h-6 mt-5"
-              id="2"
-              onClick={() => {
-                addReaction(detail?.id, 2)
-              }}
-            />
-          ) : (
-            <AiOutlineHeart
-              className="w-6 h-6 mt-5"
-              id="2"
-              onClick={() => {
-                addReaction(detail?.id, 2)
-              }}
-            />
-          )}
-          <div className="text-center text-gray-700 dark:text-white">
-            {detail?.countReactions?.find(i => i.reactionId === 2)?.count || 0}
-          </div>
-          {/* {detail?.userReactions?.find(i => i.reactionId === 3) ? ( */}
-          <GiUnicorn
-            className="w-6 h-6 mt-5"
-            id="3"
-            onClick={() => {
-              addReaction(detail?.id, 3)
-            }}
-          />
 
-          <div className="text-center text-gray-700 dark:text-white">
-            {detail?.countReactions?.find(i => i.reactionId === 3)?.count || 0}
+          <div className="flex text-center text-gray-700 dark:text-white mt-10">
+            <FcLike
+              className="w-7 h-7"
+              id="2"
+              onClick={() => {
+                addReaction(detail?.id, 2)
+              }}
+            />
+            <p className="text-center ml-2 mt-1">
+              {detail?.countReactions?.find(i => i.reactionId === 2)?.count ||
+                0}
+            </p>
           </div>
+
+          <div className="flex text-center text-gray-700 dark:text-white mt-10">
+            <GiUnicorn
+              className="w-7 h-7"
+              id="3"
+              color="#9f90d0"
+              onClick={() => {
+                addReaction(detail?.id, 3)
+              }}
+            />
+            <p className="text-center ml-2 mt-1">
+              {detail?.countReactions?.find(i => i.reactionId === 3)?.count ||
+                0}
+            </p>
+          </div>
+
           <RiTwitterLine
-            className="w-6 h-6 mt-10"
+            className="w-7 h-7 mt-16"
+            color="#00acee"
             onClick={() => shareIntoTwitter()}
           />
           {detail?.isBookMarked ? (
-            <BookmarkAltIcon
-              className="w-6 h-6 mt-5"
+            <FcBookmark
+              className="w-7 h-7 mt-5"
               onClick={e => handleClickBookMark(e)}
             />
           ) : (
             <BookmarkIcon
-              className="w-6 h-6 mt-5"
+              className="w-7 h-7 mt-5"
               onClick={e => handleClickBookMark(e)}
             />
           )}
@@ -180,4 +175,4 @@ function PostDetail({ slug, detail }) {
   )
 }
 
-export default (PostDetail)
+export default PostDetail
