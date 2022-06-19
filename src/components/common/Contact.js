@@ -31,18 +31,18 @@ export default function Contact() {
       <hr className="mt-5" />
       <div className="flex mt-5 gap-12 text-sm">
         <div>
-          <p className="hover:bg-gray-100 hover:rounded cursor-pointer p-1">
+          <p className="hover:bg-blue-100 dark:hover:bg-gray-800 hover:rounded cursor-pointer p-1">
             About
           </p>
-          <p className="hover:bg-gray-100 hover:rounded cursor-pointer p-1">
+          <p className="hover:bg-blue-100 dark:hover:bg-gray-800 hover:rounded cursor-pointer p-1">
             Contact us
           </p>
         </div>
         <div>
-          <p className="hover:bg-gray-100 hover:rounded cursor-pointer p-1">
+          <p className="hover:bg-blue-100 dark:hover:bg-gray-800 hover:rounded cursor-pointer p-1">
             Terms of use
           </p>
-          <p className="hover:bg-gray-100 hover:rounded cursor-pointer p-1">
+          <p className="hover:bg-blue-100 dark:hover:bg-gray-800 hover:rounded cursor-pointer p-1">
             Privacy policy
           </p>
         </div>
