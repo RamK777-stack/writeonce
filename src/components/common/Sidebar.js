@@ -28,7 +28,7 @@ const Sidebar = () => {
   useEffect(() => {
     const ls = new SecureLS()
     setSession(ls.get("userSession"))
-  })
+  }, [global?.window])
 
   const handleLogOut = () => {
     logOut()

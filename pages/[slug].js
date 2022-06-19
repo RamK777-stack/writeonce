@@ -42,7 +42,7 @@ export default function Post({slug, detail}) {
         />
         <meta name="twitter:image" content={detail?.coverImage} key="image" />
       </Head>
-      <PostDetail slug={slug} detail={detail} />
+      <PostDetail slug={slug} />
     </>
   )
 }

@@ -1,32 +1,30 @@
 import React from "react"
 import avatar from "../../../assets/images/avatar.png"
 import {getPostDetail} from "./postSlice"
-import {useDispatch} from "react-redux"
 // import {useLocation} from "react-router-dom"
 import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
 import RenderHtml from "./RenderHtml"
-import {FiThumbsUp} from "react-icons/fi"
 import {FaThumbsUp} from "react-icons/fa"
-import {AiOutlineHeart, AiFillHeart} from "react-icons/ai"
 import {RiTwitterLine} from "react-icons/ri"
 import {GiUnicorn} from "react-icons/gi"
 import {BookmarkIcon} from "@heroicons/react/outline"
-import {BookmarkIcon as BookmarkAltIcon} from "@heroicons/react/solid"
 import {addReactionToPost, createBookMark, deleteBookMark} from "./postSlice"
 import moment from "moment"
 import Image from "next/image"
 import {FcLike} from "react-icons/fc"
 import {FcBookmark} from "react-icons/fc"
+import {useSelector, useDispatch} from "react-redux"
+import { useEffect } from 'react'
 
-function PostDetail({slug, detail}) {
+function PostDetail({ slug }) {
   const dispatch = useDispatch()
   // const location = useLocation()
-  // const detail = useSelector(state => state.post.postDetail)
+  const detail = useSelector(state => state.post.postDetail)
 
-  // useEffect(() => {
-  //   dispatch(getPostDetail(slug))
-  // }, [dispatch, slug])
+  useEffect(() => {
+    dispatch(getPostDetail(slug))
+  }, [dispatch, slug])
 
   const addReaction = async (post, reaction) => {
     await dispatch(addReactionToPost({post, reaction}))
@@ -49,6 +47,8 @@ function PostDetail({slug, detail}) {
       dispatch(getPostDetail(slug))
     }
   }
+
+  console.log(detail)
 
   return (
     <div className="flex justify-center">
